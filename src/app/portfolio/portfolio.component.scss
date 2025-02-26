@@ -602,10 +602,6 @@ footer {
         gap: 3rem;
     }
 
-    .glitch {
-        // font-size: 2.5rem;
-    }
-
     .scroll-indicator {
         left: 90%;
     }
@@ -613,6 +609,20 @@ footer {
     .cursor,
     .cursor-follower {
         display: none !important;
+    }
+
+    .hero {
+        flex-direction: column; /* Stack vertically */
+        text-align: center; /* Center text */
+    }
+
+    .hero-right {
+        order: -1; /* Moves the carousel above the text */
+        margin-bottom: 20px; /* Adds spacing between text and carousel */
+    }
+
+    .hero-left {
+        text-align: center; /* Center the text */
     }
 
 }
