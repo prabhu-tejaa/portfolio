@@ -329,73 +329,81 @@ export class PortfolioComponent implements OnInit, AfterViewInit {
 
   private initParticles() {
     const canvas = document.getElementById('particlesCanvas') as HTMLCanvasElement;
-    if (!canvas) return; // 🛑 Stop if no canvas found
+    if (!canvas) return; 
 
     const ctx = canvas.getContext('2d')!;
-    if (!ctx) return; // ✅ Double check to avoid runtime errors
+    if (!ctx) return; 
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    let particlesArray: any[] = [];
+    let particlesArray: Particle[] = [];
     const numberOfParticles = 100;
 
     class Particle {
-      x: number;
-      y: number;
-      size: number;
-      speedX: number;
-      speedY: number;
+        x: number;
+        y: number;
+        size: number;
+        speedX: number;
+        speedY: number;
 
-      constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 3 + 1;
-        this.speedX = Math.random() * 2 - 1;
-        this.speedY = Math.random() * 2 - 1;
-      }
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 3 + 1;
+            this.speedX = Math.random() * 2 - 1;
+            this.speedY = Math.random() * 2 - 1;
+        }
 
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
 
-        if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
-        if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
-      }
+            if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+            if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+        }
 
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = 'white';
-        ctx.fill();
-      }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+        }
     }
 
     function init() {
-      particlesArray = [];
-      for (let i = 0; i < numberOfParticles; i++) {
-        particlesArray.push(new Particle());
-      }
+        for (let i = 0; i < numberOfParticles; i++) {
+            particlesArray.push(new Particle());
+        }
     }
 
     function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particlesArray.forEach(particle => {
-        particle.update();
-        particle.draw();
-      });
-      requestAnimationFrame(animate);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particlesArray.forEach(particle => {
+            particle.update();
+            particle.draw();
+        });
+        requestAnimationFrame(animate);
     }
 
+    // ✅ Resize without recreating particles from scratch
     window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      init();
+        const oldParticles = [...particlesArray]; // Store previous particles
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        particlesArray = oldParticles.map(p => {
+            p.x = Math.random() * canvas.width; // Adjust positions
+            p.y = Math.random() * canvas.height;
+            return p;
+        });
     });
 
     init();
     animate();
-  }
+}
+
 
 }
 
