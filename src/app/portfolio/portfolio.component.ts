@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Renderer2, ElementRef, OnInit, HostListener  } from '@angular/core';
+import { Component, AfterViewInit, Renderer2, ElementRef, OnInit, HostListener } from '@angular/core';
 import { NgFor } from '@angular/common';
 import {
   CarouselCaptionComponent,
@@ -22,11 +22,12 @@ export class PortfolioComponent implements OnInit, AfterViewInit {
   isInHomeSection = false;
   observer: IntersectionObserver = {} as IntersectionObserver; // Initialize here
   versiChargeConfigurator = "./assets/imgs/versi charge configurator.jpeg"
+  private animationFrameId: number | null = null;
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
     const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-    
+
     if (currentScroll > this.lastScrollTop) {
       this.isScrollingDown = true;
     } else {
@@ -35,9 +36,9 @@ export class PortfolioComponent implements OnInit, AfterViewInit {
 
     this.lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // Prevent negative scrolling
   }
-  
 
-  constructor(private renderer: Renderer2, private el: ElementRef) {}
+
+  constructor(private renderer: Renderer2, private el: ElementRef) { }
 
   ngAfterViewInit() {
     // Custom cursor
@@ -54,7 +55,7 @@ export class PortfolioComponent implements OnInit, AfterViewInit {
           this.renderer.setStyle(follower, 'left', `${e.clientX}px`);
           this.renderer.setStyle(follower, 'top', `${e.clientY}px`);
         }
-      }, 100); 
+      }, 100);
     });
 
     // Scroll animations
@@ -81,7 +82,7 @@ export class PortfolioComponent implements OnInit, AfterViewInit {
         }
       });
     }, observerOptions);
-    
+
 
     const elementsToObserve = this.el.nativeElement.querySelectorAll('.reveal-up, .reveal-left, .reveal-right, .skill-bar');
     elementsToObserve.forEach((el: HTMLElement) => observer.observe(el));
@@ -117,31 +118,8 @@ export class PortfolioComponent implements OnInit, AfterViewInit {
     };
 
     setTimeout(typeWriter, 1000);
+    this.initParticles();
 
-    // Particle animation
-    const createParticle = () => {
-      const particle = this.renderer.createElement('div');
-      this.renderer.addClass(particle, 'particle');
-    
-      // Random position for both top and left
-      this.renderer.setStyle(particle, 'left', `${Math.random() * 100}vw`);
-      this.renderer.setStyle(particle, 'top', `${Math.random() * 100}vh`);
-    
-      // Random animation duration for each particle
-      this.renderer.setStyle(particle, 'animationDuration', `${Math.random() * 3 + 2}s`);
-    
-      const particlesContainer = this.el.nativeElement.querySelector('.particles');
-      if (particlesContainer) {
-        this.renderer.appendChild(particlesContainer, particle);
-    
-        // Remove the particle after the animation completes (5 seconds)
-        setTimeout(() => this.renderer.removeChild(particlesContainer, particle), 5000);
-      }
-    };
-    
-    // Call createParticle every 20 milliseconds
-    setInterval(createParticle, 1);
-    
   }
 
   ngOnInit(): void {
@@ -326,7 +304,7 @@ export class PortfolioComponent implements OnInit, AfterViewInit {
       title: 'Twenty nine slide',
       subtitle: 'Praesent commodo cursus magna, vel scelerisque nisl consectetur.'
     };
-    
+
   }
 
 
@@ -348,6 +326,77 @@ export class PortfolioComponent implements OnInit, AfterViewInit {
       this.observer.observe(homeSection);
     }
   }
+
+  private initParticles() {
+    const canvas = document.getElementById('particlesCanvas') as HTMLCanvasElement;
+    if (!canvas) return; // 🛑 Stop if no canvas found
+
+    const ctx = canvas.getContext('2d')!;
+    if (!ctx) return; // ✅ Double check to avoid runtime errors
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particlesArray: any[] = [];
+    const numberOfParticles = 100;
+
+    class Particle {
+      x: number;
+      y: number;
+      size: number;
+      speedX: number;
+      speedY: number;
+
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 3 + 1;
+        this.speedX = Math.random() * 2 - 1;
+        this.speedY = Math.random() * 2 - 1;
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+        if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+      }
+    }
+
+    function init() {
+      particlesArray = [];
+      for (let i = 0; i < numberOfParticles; i++) {
+        particlesArray.push(new Particle());
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particlesArray.forEach(particle => {
+        particle.update();
+        particle.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      init();
+    });
+
+    init();
+    animate();
   }
-  
-  
+
+}
+
+

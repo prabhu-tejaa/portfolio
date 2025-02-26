@@ -9,6 +9,27 @@
     transition: transform 0.2s ease;
 }
 
+
+.hero-left span {
+    font-size: clamp(27px, 7vw, 64px);
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+.typing-text {
+    font-size: clamp(16px, 2.5vw, 32px);
+}
+
+#particlesCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: -1;
+}
+
 .cursor-follower {
     width: 30px;
     height: 30px;
@@ -25,8 +46,6 @@
     top: 0;
     width: 100%;
     padding: 1.5rem;
-    background: rgba(10, 25, 47, 0.95);
-    backdrop-filter: blur(10px);
     z-index: 1000;
 }
 
@@ -55,6 +74,8 @@
     font-weight: 500;
     position: relative;
     padding: 0.5rem;
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
 }
 
 .nav-link::after {
@@ -594,14 +615,4 @@ footer {
         display: none !important;
     }
 
-}
-
-.hero-left span {
-    font-size: clamp(27px, 7vw, 64px);
-    font-weight: bold;
-    line-height: 1.2;
-}
-
-.typing-text {
-    font-size: clamp(16px, 2.5vw, 32px);
 }
