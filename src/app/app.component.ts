@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { PortfolioComponent } from './portfolio/portfolio.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [PortfolioComponent],
+  imports: [RouterModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

@@ -8,6 +8,8 @@ import {
   CarouselItemComponent,
   ThemeDirective
 } from '@coreui/angular';
+
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-portfolio',
   templateUrl: './portfolio.component.html',
@@ -22,6 +24,7 @@ export class PortfolioComponent implements OnInit, AfterViewInit {
   isInHomeSection = false;
   observer: IntersectionObserver = {} as IntersectionObserver; // Initialize here
   versiChargeConfigurator = "./assets/imgs/versi charge configurator.jpeg"
+  musicVisualizer = "./assets/imgs/musicVisualizer.png"
   private animationFrameId: number | null = null;
 
   @HostListener('window:scroll', [])
@@ -38,7 +41,7 @@ export class PortfolioComponent implements OnInit, AfterViewInit {
   }
 
 
-  constructor(private renderer: Renderer2, private el: ElementRef) { }
+  constructor(private renderer: Renderer2, private el: ElementRef, private router: Router) { }
 
   ngAfterViewInit() {
     // Custom cursor
@@ -329,81 +332,181 @@ export class PortfolioComponent implements OnInit, AfterViewInit {
 
   private initParticles() {
     const canvas = document.getElementById('particlesCanvas') as HTMLCanvasElement;
-    if (!canvas) return; 
-
+    if (!canvas) return;
+  
     const ctx = canvas.getContext('2d')!;
-    if (!ctx) return; 
-
+    if (!ctx) return;
+  
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
+  
     let particlesArray: Particle[] = [];
     const numberOfParticles = 100;
-
-    class Particle {
-        x: number;
-        y: number;
-        size: number;
-        speedX: number;
-        speedY: number;
-
-        constructor() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 3 + 1;
-            this.speedX = Math.random() * 2 - 1;
-            this.speedY = Math.random() * 2 - 1;
-        }
-
-        update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-
-            if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
-            if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
-        }
-
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fillStyle = 'white';
-            ctx.fill();
-        }
-    }
-
-    function init() {
-        for (let i = 0; i < numberOfParticles; i++) {
-            particlesArray.push(new Particle());
-        }
-    }
-
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particlesArray.forEach(particle => {
-            particle.update();
-            particle.draw();
-        });
-        requestAnimationFrame(animate);
-    }
-
-    // ✅ Resize without recreating particles from scratch
-    window.addEventListener('resize', () => {
-        const oldParticles = [...particlesArray]; // Store previous particles
-
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        particlesArray = oldParticles.map(p => {
-            p.x = Math.random() * canvas.width; // Adjust positions
-            p.y = Math.random() * canvas.height;
-            return p;
-        });
+    const colorPalette = ['#FF6B6B', '#4ECDC4', '#C7F464', '#FFE66D', '#FF9F1C']; // Multi-color palette
+  
+    // Track mouse position
+    let mouse = {
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      radius: 100, // Radius of influence around the mouse
+    };
+  
+    // Update mouse position on move
+    window.addEventListener('mousemove', (event) => {
+      mouse.x = event.clientX;
+      mouse.y = event.clientY;
     });
-
+  
+    class Particle {
+      x: number;
+      y: number;
+      size: number;
+      speedX: number;
+      speedY: number;
+      color: string;
+      baseSize: number;
+      targetColor: string;
+      currentColor: string;
+  
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.baseSize = Math.random() * 5 + 2;
+        this.size = this.baseSize;
+        this.speedX = Math.random() * 2 - 1;
+        this.speedY = Math.random() * 2 - 1;
+        this.color = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+        this.targetColor = this.color;
+        this.currentColor = this.color;
+      }
+  
+      update() {
+        // Fluid movement using Perlin noise or smoother functions
+        this.x += this.speedX + Math.sin(this.y * 0.01) * 0.5;
+        this.y += this.speedY + Math.cos(this.x * 0.01) * 0.5;
+  
+        // Bounce off edges
+        if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+        if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+  
+        // Pulsating effect
+        this.size = this.baseSize + Math.sin(Date.now() * 0.005) * 2;
+  
+        // Smooth color transition
+        if (this.currentColor !== this.targetColor) {
+          this.currentColor = this.lerpColor(this.currentColor, this.targetColor, 0.05);
+        } else {
+          this.targetColor = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+        }
+  
+        // Move particles away from the mouse
+        const dx = mouse.x - this.x;
+        const dy = mouse.y - this.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+  
+        if (distance < mouse.radius) {
+          const force = (mouse.radius - distance) / mouse.radius;
+          const angle = Math.atan2(dy, dx);
+          this.x -= Math.cos(angle) * force * 10; // Move particle away from the mouse
+          this.y -= Math.sin(angle) * force * 10;
+        }
+      }
+  
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.currentColor;
+        ctx.fill();
+      }
+  
+      lerpColor(color1: string, color2: string, amount: number): string {
+        const hexToRgb = (hex: string) => {
+          const bigint = parseInt(hex.slice(1), 16);
+          return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+        };
+  
+        const rgb1 = hexToRgb(color1);
+        const rgb2 = hexToRgb(color2);
+  
+        const r = Math.round(rgb1[0] + (rgb2[0] - rgb1[0]) * amount);
+        const g = Math.round(rgb1[1] + (rgb2[1] - rgb1[1]) * amount);
+        const b = Math.round(rgb1[2] + (rgb2[2] - rgb1[2]) * amount);
+  
+        return `rgb(${r}, ${g}, ${b})`;
+      }
+    }
+  
+    function init() {
+      for (let i = 0; i < numberOfParticles; i++) {
+        particlesArray.push(new Particle());
+      }
+    }
+  
+    function animate() {
+      // Dark gradient background
+      const gradient = ctx.createLinearGradient(
+        0, 0, // Start at top-left
+        canvas.width, canvas.height // End at bottom-right
+      );
+      gradient.addColorStop(0, '#0A192F'); // Dark blue
+      gradient.addColorStop(1, '#000000'); // Black
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+      // Draw particles
+      particlesArray.forEach(particle => {
+        particle.update();
+        particle.draw();
+      });
+  
+      // Draw connection lines
+      drawConnectionLines();
+  
+      requestAnimationFrame(animate);
+    }
+  
+    function drawConnectionLines() {
+      const maxDistance = 100; // Maximum distance to draw a line
+      for (let i = 0; i < particlesArray.length; i++) {
+        for (let j = i + 1; j < particlesArray.length; j++) {
+          const dx = particlesArray[i].x - particlesArray[j].x;
+          const dy = particlesArray[i].y - particlesArray[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+  
+          if (distance < maxDistance) {
+            const opacity = 1 - distance / maxDistance;
+            ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
+            ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+  
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      const oldParticles = [...particlesArray];
+  
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+  
+      particlesArray = oldParticles.map(p => {
+        p.x = Math.random() * canvas.width;
+        p.y = Math.random() * canvas.height;
+        return p;
+      });
+    });
+  
     init();
     animate();
-}
+  }
 
+navigateToVisualizer() {
+  this.router.navigate(['/visualizerComponent']); // Replace '/visualizer' with the actual route to the visualizer component
+}
 
 }
 

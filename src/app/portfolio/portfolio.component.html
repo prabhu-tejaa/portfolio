@@ -9,6 +9,7 @@
                 <a href="#home" class="nav-link">Home</a>
                 <a href="#about" class="nav-link">About</a>
                 <a href="#work" class="nav-link">Work</a>
+                <a href="#experica" class="nav-link">Experica</a>
                 <a href="#contact" class="nav-link">Contact</a>
             </div>
         </div>
@@ -21,7 +22,7 @@
         </div>
 
         <div class="hero-right">
-            <c-carousel [animate]="true" transition="crossfade" [touch]="true">
+            <c-carousel [animate]="true" transition="crossfade" [touch]="true" [interval]="1377">
                 <c-carousel-inner>
                     <c-carousel-item class="carousel-item" *ngFor="let slide of slides">
                         <img [src]="slide.src" alt="{{slide.title}}" class="carousel-img d-block w-100"
@@ -76,7 +77,6 @@
             </div>
         </div>
     </section>
-</div>
 
 <section id="work" class="work">
     <div class="section-content">
@@ -119,6 +119,25 @@
     </div>
 </section>
 
+<section id="experica" class="experica">
+    <div class="section-content">
+        <h2 class="section-title">Experica</h2>
+        <div class="experica-grid">
+            <div class="experica-card reveal-up">
+                <div class="experica-image">
+                    <img [src]="musicVisualizer" alt="Versi Charger App">
+                    <div class="experica-overlay">
+                        <h3>Music Wiz</h3>
+                        <p>Upload music to watch the Visualization</p>
+                        <button (click)="navigateToVisualizer()" class="experica-link">Experience</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+</section>
+
+
 <section id="contact" class="contact">
     <div class="section-content">
         <h2 class="section-title">Get In Touch</h2>
@@ -159,3 +178,4 @@
 <footer>
     <p>&copy; 2025 All rights reserved</p>
 </footer>
+</div>

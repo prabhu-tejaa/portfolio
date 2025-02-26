@@ -1,0 +1,158 @@
+ 
+  /* Canvas Fullscreen */
+  canvas {
+    display: block;
+  }
+  
+  /* Upload Button - Positioned Above Player */
+  .upload-container {
+    position: absolute; 
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+  
+  .upload-container button {
+    background: white;
+    color: black;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    // box-shadow: 0 4px 6px rgba(255, 255, 255, 0.2);
+    transition: 0.3s;
+  }
+  
+  .upload-container button:hover {
+    background: #f0f0f0;
+  }
+  
+  /* Audio Control Box - Centered */
+  #audioControl {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+    width: 520px;
+    padding: 20px;
+    border-radius: 12px;
+    // background: rgba(255, 255, 255, 0.1);
+    // backdrop-filter: blur(10px);
+    // box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Song Name - Scrolling if Long */
+  .song-name {
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-align: center;
+  }
+  
+  .song-name marquee {
+    display: inline-block;
+    width: 100%;
+  }
+  
+
+  
+  .progress-container input {
+    flex-grow: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    background: white;
+    border-radius: 10px;
+    outline: none;
+    cursor: pointer;
+  }
+  
+  .progress-container input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    background: black;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  /* Round Play/Pause Button */
+  .play-button {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+  }
+  
+  .play-button button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    background: white;
+    color: black;
+    font-size: 28px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+    transition: 0.3s;
+  }
+  
+  .play-button button:hover {
+    background: #f0f0f0;
+  }
+  
+
+  /* Progress Bar Custom Styling */
+.progress-container input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    background: cyan; /* Cyan color */
+    border-radius: 5px;
+    outline: none;
+    transition: background 0.3s;
+  }
+  
+  /* Customizing the slider thumb */
+  .progress-container input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    background: black;
+    border: 2px solid cyan;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  .progress-container input[type="range"]::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    background: black;
+    border: 2px solid cyan;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  #particlesCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: -1;
+  }

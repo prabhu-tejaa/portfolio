@@ -1,0 +1,32 @@
+
+<canvas id="particlesCanvas"></canvas>
+
+<canvas #canvas></canvas>
+
+<div class="upload-container">
+    <button (click)="audioFileRef.nativeElement.click()" *ngIf="choseFile">Upload</button>
+    <input #audioFile type="file" accept="audio/*" (change)="onFileChange($event)" hidden />
+</div>
+<div id="audioControl">
+    <!-- Upload Button in Center Top -->
+
+    <!-- Scrolling Song Name Above Progress Bar -->
+    <div *ngIf="selectedFileName" class="song-name">
+        <marquee *ngIf="selectedFileName.length > 20">{{ selectedFileName }}</marquee>
+        <span *ngIf="selectedFileName.length <= 20">{{ selectedFileName }}</span>
+    </div>
+
+    <!-- Audio Progress Bar -->
+    <div *ngIf="audioLoaded" class="progress-container">
+        <span>{{ formatTime(currentTime) }}</span>
+        <input type="range" min="0" [max]="duration" [(ngModel)]="currentTime" (input)="seekAudio($event)" />
+        <span>{{ formatTime(duration) }}</span>
+    </div>
+
+    <!-- Round Play/Pause Button at Bottom -->
+    <div *ngIf="audioLoaded" class="play-button">
+        <button (click)="togglePlayPause()" [disabled]="!(audioFileRef.nativeElement.files?.length)">
+            {{ isPlaying ? '❚❚' : '►' }}
+        </button>
+    </div>
+</div>
