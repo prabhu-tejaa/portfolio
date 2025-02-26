@@ -14,28 +14,23 @@
         </div>
     </nav>
 
-    <section id="home" class="hero">
-        <div class="hero-content">
-            <h1 class="glitch" data-text="Software Engineer">Prabhu Teja Pamula</h1>
-            <div class="typing-text"></div>
-        </div>
+<section id="home" class="hero d-flex align-items-center">
+    <div class="hero-left">
+        <span class="glitch" data-text="Software Engineer">Prabhu Teja Pamula</span>
+        <div class="typing-text"></div>
+    </div>
 
-        <div class="personal-images d-flex justify-content-center align-items-center">
-            <c-carousel [animate]="true" transition="crossfade" [touch]="true">
-                <c-carousel-inner>
-                    <c-carousel-item class="carousel-item" *ngFor="let slide of slides">
-                        <img [src]="slide.src" alt="{{slide.title}}" class="carousel-img d-block w-10" loading="lazy" />
-                    </c-carousel-item>
-                </c-carousel-inner>
-            </c-carousel>
-        </div>
+    <div class="hero-right">
+        <c-carousel [animate]="true" transition="crossfade" [touch]="true">
+            <c-carousel-inner>
+                <c-carousel-item class="carousel-item" *ngFor="let slide of slides">
+                    <img [src]="slide.src" alt="{{slide.title}}" class="carousel-img d-block w-100" loading="lazy" />
+                </c-carousel-item>
+            </c-carousel-inner>
+        </c-carousel>
+    </div>
+</section>
 
-
-        <div class="scroll-indicator" [class.hide]="isScrollingDown || !isInHomeSection">
-            <div class="mouse"></div>
-        </div>
-
-    </section>
 
     <section id="about" class="about">
         <div class="section-content">
