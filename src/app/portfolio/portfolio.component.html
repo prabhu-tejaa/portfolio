@@ -6,8 +6,8 @@
         <div class="logo"></div>
         <div class="nav-content">
             <div class="nav-links">
-                <a href="#home" class="nav-link">Home</a>
-                <a href="#about" class="nav-link">About</a>
+                <!-- <a href="#home" class="nav-link">Home</a> -->
+                <a href="#about" class="nav-link">Home</a>
                 <a href="#work" class="nav-link">Work</a>
                 <a href="#experica" class="nav-link">Experica</a>
                 <a href="#contact" class="nav-link">Contact</a>
@@ -15,7 +15,7 @@
         </div>
     </nav>
 
-    <section id="home" class="hero d-flex align-items-center">
+    <!-- <section id="home" class="hero d-flex align-items-center">
         <div class="hero-left">
             <span class="glitch" data-text="Software Engineer">Prabhu Teja Pamula</span>
             <div class="typing-text"></div>
@@ -31,12 +31,16 @@
                 </c-carousel-inner>
             </c-carousel>
         </div>
-    </section>
+    </section> -->
 
-
+    
     <section id="about" class="about">
         <div class="section-content">
-            <h2 class="section-title">About Me</h2>
+            <!-- <h2 class="section-title">About Me</h2> -->
+            <div class="hero-left">
+                <span class="glitch" data-text="Software Engineer">Prabhu Teja Pamula</span>
+                <div class="typing-text"></div>
+            </div>
             <div class="about-grid">
                 <div class="about-text reveal-left">
                     <p>With 2 years of industry experience, I worked as a Software Engineer at Siemens, Bangalore,
@@ -130,6 +134,18 @@
                         <h3>Music Wiz</h3>
                         <p>Upload music to watch the Visualization</p>
                         <button (click)="navigateToVisualizer()" class="experica-link">Experience</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="experica-grid">
+            <div class="experica-card reveal-up">
+                <div class="experica-image">
+                    <img [src]="spotify" alt="Versi Charger App">
+                    <div class="experica-overlay">
+                        <h3>Spotify Fun</h3>
+                        <p>Spotify iframe</p>
+                        <button (click)="navigateToSpotify()" class="experica-link">Experience</button>
                     </div>
                 </div>
             </div>

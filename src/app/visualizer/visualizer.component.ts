@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-visualizer',
@@ -32,6 +33,16 @@ export class VisualizerComponent implements AfterViewInit {
   private particlesArray: Particle[] = [];
   private numberOfParticles = 100;
   private colorPalette = ['#FF6B6B', '#4ECDC4', '#C7F464', '#FFE66D', '#FF9F1C']; // Multi-color palette
+
+  playlistId = '5W9YOseBdX1xOoLA8tppEh'; // Replace with your Spotify playlist ID
+  playlistUrl: SafeResourceUrl;
+
+  constructor(private sanitizer: DomSanitizer) {
+    // Construct the Spotify embed URL
+    const url = `https://open.spotify.com/embed/playlist/${this.playlistId}?utm_source=generator&theme=1&autoplay=1`;
+    // Sanitize the URL to prevent security issues
+    this.playlistUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
 
   onFileChange(event: Event) {
     const fileInput = this.audioFileRef.nativeElement;
@@ -240,6 +251,8 @@ class Particle {
   baseSize: number;
 
   constructor(private canvas: HTMLCanvasElement) {
+
+    
     this.x = Math.random() * canvas.width;
     this.y = Math.random() * canvas.height;
     this.baseSize = Math.random() * 5 + 2; // Base size for pulsating effect

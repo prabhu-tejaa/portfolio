@@ -14,5 +14,11 @@ export const routes: Routes = [
         loadComponent: () =>
             import('./visualizer/visualizer.component').then((c) => c.VisualizerComponent),
         title: 'Visualizer Component'
+    },
+    {
+        path: "spotifyComponent",
+        loadComponent: () =>
+            import('./spotify/spotify.component').then((c) => c.SpotifyComponent),
+        title: 'Spotify Component'
     }
 ];
