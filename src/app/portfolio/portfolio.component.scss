@@ -216,7 +216,7 @@
 .about-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    gap: 2rem;
     align-items: center;
 }
 
@@ -354,7 +354,7 @@
 
 .contact {
     padding: 8rem 2rem;
-    height: 100vv;
+    height: 100vh   ;
 }
 
 .contact-content {
