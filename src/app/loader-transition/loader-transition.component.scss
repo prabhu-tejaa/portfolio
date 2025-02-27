@@ -1,0 +1,47 @@
+/* Full-screen centered loader */
+.loader-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full screen height */
+    text-align: center;
+  }
+  
+  /* Styling for better mobile visibility */
+  h4 {
+    color: white;
+    margin-top: 10px;
+    font-size: 16px;
+  }
+  
+  /* SVG container */
+  svg {
+    width: 100%;
+    max-width: 800px;
+    height: 200px;
+  }
+  
+  /* Animated Handwriting Effect */
+  .stroke-text {
+    font-size: 100px;
+    font-weight: bold;
+    fill: none;
+    stroke: white;
+    stroke-width: 2;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: drawText 3s ease-in-out forwards;
+    font-family: 'Dancing Script', cursive;
+  }
+  
+  /* Animation to "draw" the text from left to right in 3 seconds */
+  @keyframes drawText {
+    from {
+      stroke-dashoffset: 1000;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  
