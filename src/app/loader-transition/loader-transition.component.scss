@@ -45,3 +45,13 @@
     }
   }
   
+
+  h4 {
+    display: block; /* Show by default */
+}
+
+@media (min-width: 768px) { /* Target screens wider than 768px (desktop) */
+    h4 {
+        display: none; /* Hide on desktop */
+    }
+}
