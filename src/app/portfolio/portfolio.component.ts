@@ -13,7 +13,9 @@ export class PortfolioComponent implements OnInit, AfterViewInit {
   isScrollingDown = false;
   isInHomeSection = false;
   observer: IntersectionObserver = {} as IntersectionObserver; // Initialize here
-  versiChargeConfigurator = "./assets/imgs/versi charge configurator.jpeg"
+  versiChargeConfigurator = "./assets/imgs/versi charge configurator.jpeg";
+  sifinityFleet = "./assets/imgs/sifinity-fleet.png";
+  sifinitySetup = "./assets/imgs/sifinity-setup.png";
   musicVisualizer = "./assets/imgs/musicVisualizer.png"
   private animationFrameId: number | null = null;
   spotify = "./assets/imgs/spotify-iFrames.png";

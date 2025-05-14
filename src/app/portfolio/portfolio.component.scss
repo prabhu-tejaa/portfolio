@@ -285,6 +285,7 @@
 }
 
 .work-grid {
+    padding-top: 2rem;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
@@ -301,8 +302,8 @@
 }
 
 .work-image img {
-    width: 100%;
-    height: 300px;
+    width: 55vh;
+    height: 30vh;
     object-fit: cover;
     transition: transform 0.3s ease;
 }
