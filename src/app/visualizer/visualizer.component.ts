@@ -70,7 +70,6 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy {
         this.duration = this.audio.duration;
       });
   
-      // Add this listener to handle the audio end
       this.audio.addEventListener('ended', () => {
         this.isPlaying = false;
         this.audioLoaded = true; // If you want to show the "Upload" button again
@@ -314,5 +313,5 @@ class Particle {
     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
     ctx.fillStyle = this.color;
     ctx.fill();
-  }
-}
+    }
+    }

@@ -129,10 +129,9 @@ canvas {
 .play-button button {
   width: 56px;
   height: 56px;
-  border-radius: 50%;
   border: none;
-  background: white;
-  color: black;
+  background: transparent;
+  border-radius: 50%;
   font-size: 28px;
   cursor: pointer;
   display: flex;
