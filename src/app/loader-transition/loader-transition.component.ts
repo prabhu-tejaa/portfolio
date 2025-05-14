@@ -21,7 +21,7 @@ export class LoaderTransitionComponent implements OnInit {
       setTimeout(() => {
         this.showLoader = false;
         this.showMainContent = true; // show main content with fade-in
-      }, 700); // wait 1s for fade-out animation to finish
-    }, 1500); // wait 3s before starting fade-out
+      }, 600); // wait 1s for fade-out animation to finish
+    }, 1100); // wait 3s before starting fade-out
   }
 }
