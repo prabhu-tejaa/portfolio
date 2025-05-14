@@ -187,7 +187,7 @@ h4 {
 
 /* Pulse rings */
 .pulse-ring {
-  position: fixed; /* Changed from absolute to fixed to ensure full viewport coverage */
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -196,6 +196,9 @@ h4 {
   border-radius: 50%;
   background: rgba(0, 231, 255, 0.7);
   animation: pulse 1.5s ease-out forwards;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 @keyframes pulse {
@@ -212,6 +215,7 @@ h4 {
     opacity: 0;
   }
 }
+
 
 
 /* Glitch effect for text */
