@@ -25,23 +25,28 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy {
   public audioLoaded = false;
   selectedFileName = '';
   public choseFile = true;
-
   public currentTime = 0;
   public duration = 0;
 
   // Particles
   private particlesArray: Particle[] = [];
   private numberOfParticles = 100;
-  private colorPalette = ['#FF6B6B', '#4ECDC4', '#C7F464', '#FFE66D', '#FF9F1C']; // Multi-color palette
+  private colorPalette = ['#FF6B6B', '#4ECDC4', '#C7F464', '#FFE66D', '#FF9F1C'];
 
-  playlistId = '5W9YOseBdX1xOoLA8tppEh'; // Replace with your Spotify playlist ID
+  playlistId = '5W9YOseBdX1xOoLA8tppEh';
   playlistUrl: SafeResourceUrl;
 
+  // --- MOBILE DETECTION FLAG ---
+  public isMobile = false;
+
   constructor(private sanitizer: DomSanitizer) {
-    // Construct the Spotify embed URL
     const url = `https://open.spotify.com/embed/playlist/${this.playlistId}?utm_source=generator&theme=1&autoplay=1`;
-    // Sanitize the URL to prevent security issues
     this.playlistUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+
+  // --- DETECT MOBILE BASED ON WINDOW WIDTH ---
+  checkIfMobile() {
+    this.isMobile = window.innerWidth <= 600; // You can adjust the breakpoint
   }
 
   onFileChange(event: Event) {
@@ -51,14 +56,12 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy {
       this.selectedFileName = file.name;
       const fileURL = URL.createObjectURL(file);
 
-      // Reset the audio element if it already exists
       if (this.audio) {
         this.audio.pause();
-        this.audio.currentTime = 0; // Reset the playback position
-        this.audio.src = ''; // Clear the previous source
+        this.audio.currentTime = 0;
+        this.audio.src = '';
       }
 
-      // Create a new audio element
       this.audio = new Audio(fileURL);
       this.audio.addEventListener('timeupdate', () => this.updateProgress());
       this.audio.addEventListener('loadedmetadata', () => {
@@ -104,6 +107,8 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.setupCanvas();
     this.initParticles();
+    this.checkIfMobile(); // Initial check
+    window.addEventListener('resize', this.checkIfMobile.bind(this)); // Listen for resize
     this.animate();
   }
 
@@ -135,7 +140,7 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy {
   animate() {
     requestAnimationFrame(() => this.animate());
 
-    // Get frequency data
+    if (!this.analyser) return; // Prevent error before audio loads
     this.analyser.getByteFrequencyData(this.dataArray);
 
     const canvas = this.canvasRef.nativeElement;
@@ -143,13 +148,14 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy {
     const width = canvas.width;
     const height = canvas.height;
 
-    // Clear the canvas
     ctx.clearRect(0, 0, width, height);
 
-    // Draw your existing visualizer
-    this.drawAudioVisualizer();
+    // --- ONLY DRAW VISUALIZER IF NOT MOBILE ---
+    if (!this.isMobile) {
+      this.drawAudioVisualizer();
+    }
 
-    // Update and draw particles
+    // --- ALWAYS DRAW PARTICLES ---
     this.updateParticles(this.dataArray);
   }
 
@@ -159,64 +165,55 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy {
     const width = canvas.width;
     const height = canvas.height;
     const barCount = this.bufferLength / 2;
-    const barWidth = width / barCount; // Full width, no gaps
-    const barHeightScale = height / 256; // Scale height based on canvas height
-
-    // Define a higher bass threshold (adjust this value as needed)
-    const bassThreshold = 500; // Increased threshold for very high bass
+    const barWidth = width / barCount;
+    const barHeightScale = height / 256;
+    const bassThreshold = 500;
 
     for (let i = 0; i < barCount; i++) {
-      let barHeight = this.dataArray[i] * barHeightScale; // Scale height dynamically
-
-      // Apply bass threshold logic
+      let barHeight = this.dataArray[i] * barHeightScale;
       if (this.dataArray[i] < bassThreshold) {
-        // Scale down the bar height for lower bass levels
         barHeight = (this.dataArray[i] / bassThreshold) * height;
       }
-
-      // Generate random HSL colors for dynamic gradients
-      const hue1 = Math.random() * 360; // Random hue between 0 and 360
-      const hue2 = (hue1 + 120) % 360; // Complementary hue
-      const hue3 = (hue1 + 240) % 360; // Another complementary hue
-
+      const hue1 = Math.random() * 360;
+      const hue2 = (hue1 + 120) % 360;
+      const hue3 = (hue1 + 240) % 360;
       const gradient = ctx.createLinearGradient(0, 0, 0, height);
-      gradient.addColorStop(0, `hsl(${hue1}, 100%, 50%)`); // Bright color
-      gradient.addColorStop(0.5, `hsl(${hue2}, 100%, 50%)`); // Complementary color
-      gradient.addColorStop(1, `hsl(${hue3}, 100%, 50%)`); // Another complementary color
+      gradient.addColorStop(0, `hsl(${hue1}, 100%, 50%)`);
+      gradient.addColorStop(0.5, `hsl(${hue2}, 100%, 50%)`);
+      gradient.addColorStop(1, `hsl(${hue3}, 100%, 50%)`);
       ctx.fillStyle = gradient;
 
-      // Reverse the index for top and right sides
       const reverseIndex = barCount - 1 - i;
 
-      // 🔵 **TOP (Reverse of bottom, triangles pointing upward)**
+      // Top
       ctx.beginPath();
-      ctx.moveTo(reverseIndex * barWidth, 0); // Top-left corner (reversed)
-      ctx.lineTo(reverseIndex * barWidth + barWidth, 0); // Top-right corner (reversed)
-      ctx.lineTo(reverseIndex * barWidth + barWidth / 2, barHeight); // Bottom center (reversed)
+      ctx.moveTo(reverseIndex * barWidth, 0);
+      ctx.lineTo(reverseIndex * barWidth + barWidth, 0);
+      ctx.lineTo(reverseIndex * barWidth + barWidth / 2, barHeight);
       ctx.closePath();
       ctx.fill();
 
-      // 🔴 **BOTTOM (Triangles pointing upward, normal)**
+      // Bottom
       ctx.beginPath();
-      ctx.moveTo(i * barWidth, height); // Bottom-left corner
-      ctx.lineTo(i * barWidth + barWidth, height); // Bottom-right corner
-      ctx.lineTo(i * barWidth + barWidth / 2, height - barHeight); // Top center
+      ctx.moveTo(i * barWidth, height);
+      ctx.lineTo(i * barWidth + barWidth, height);
+      ctx.lineTo(i * barWidth + barWidth / 2, height - barHeight);
       ctx.closePath();
       ctx.fill();
 
-      // 🟢 **LEFT (Triangles pointing rightward, normal)**
+      // Left
       ctx.beginPath();
-      ctx.moveTo(0, i * barWidth); // Top-left corner
-      ctx.lineTo(0, i * barWidth + barWidth); // Bottom-left corner
-      ctx.lineTo(barHeight, i * barWidth + barWidth / 2); // Right center
+      ctx.moveTo(0, i * barWidth);
+      ctx.lineTo(0, i * barWidth + barWidth);
+      ctx.lineTo(barHeight, i * barWidth + barWidth / 2);
       ctx.closePath();
       ctx.fill();
 
-      // 🟡 **RIGHT (Reverse of left, triangles pointing leftward)**
+      // Right
       ctx.beginPath();
-      ctx.moveTo(width, reverseIndex * barWidth); // Top-right corner (reversed)
-      ctx.lineTo(width, reverseIndex * barWidth + barWidth); // Bottom-right corner (reversed)
-      ctx.lineTo(width - barHeight, reverseIndex * barWidth + barWidth / 2); // Left center (reversed)
+      ctx.moveTo(width, reverseIndex * barWidth);
+      ctx.lineTo(width, reverseIndex * barWidth + barWidth);
+      ctx.lineTo(width - barHeight, reverseIndex * barWidth + barWidth / 2);
       ctx.closePath();
       ctx.fill();
     }
@@ -225,8 +222,6 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy {
   updateParticles(frequencyData: Uint8Array) {
     const canvas = this.canvasRef.nativeElement;
     const ctx = this.ctx;
-
-    // Update and draw particles
     this.particlesArray.forEach(particle => {
       particle.update(frequencyData);
       particle.draw(ctx);
@@ -242,10 +237,10 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.audio) {
-      const fadeOutDuration = 1000; // in ms
-      const fadeStep = 50; // interval steps
+      const fadeOutDuration = 1000;
+      const fadeStep = 50;
       const volumeStep = this.audio.volume / (fadeOutDuration / fadeStep);
-  
+
       const fadeOut = setInterval(() => {
         if (this.audio.volume - volumeStep > 0) {
           this.audio.volume -= volumeStep;
@@ -259,12 +254,13 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy {
         }
       }, fadeStep);
     }
-  
+
     window.removeEventListener('resize', this.resizeCanvas.bind(this));
+    window.removeEventListener('resize', this.checkIfMobile.bind(this));
   }
-  
 }
 
+// --- PARTICLE CLASS UNCHANGED ---
 class Particle {
   x: number;
   y: number;
@@ -275,11 +271,9 @@ class Particle {
   baseSize: number;
 
   constructor(private canvas: HTMLCanvasElement) {
-
-    
     this.x = Math.random() * canvas.width;
     this.y = Math.random() * canvas.height;
-    this.baseSize = Math.random() * 5 + 2; // Base size for pulsating effect
+    this.baseSize = Math.random() * 5 + 2;
     this.size = this.baseSize;
     this.speedX = Math.random() * 2 - 1;
     this.speedY = Math.random() * 2 - 1;
@@ -287,19 +281,13 @@ class Particle {
   }
 
   update(frequencyData: Uint8Array) {
-    const bass = frequencyData[0]; // Low-frequency data (bass)
-    const treble = frequencyData[frequencyData.length - 1]; // High-frequency data (treble)
-
-    // Wave-like movement for music effect
-    this.x += this.speedX + Math.sin(this.y * 0.01) * (bass / 128); // Bass affects horizontal movement
-    this.y += this.speedY + Math.cos(this.x * 0.01) * (treble / 128); // Treble affects vertical movement
-
-    // Bounce off edges
+    const bass = frequencyData[0];
+    const treble = frequencyData[frequencyData.length - 1];
+    this.x += this.speedX + Math.sin(this.y * 0.01) * (bass / 128);
+    this.y += this.speedY + Math.cos(this.x * 0.01) * (treble / 128);
     if (this.x > this.canvas.width || this.x < 0) this.speedX *= -1;
     if (this.y > this.canvas.height || this.y < 0) this.speedY *= -1;
-
-    // Pulsating effect based on bass
-    this.size = this.baseSize + (bass / 256) * 10; // Size changes with bass
+    this.size = this.baseSize + (bass / 256) * 10;
   }
 
   draw(ctx: CanvasRenderingContext2D) {
