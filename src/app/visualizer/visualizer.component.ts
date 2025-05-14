@@ -119,6 +119,9 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy {
     this.initParticles();
     this.checkIfMobile(); // Initial check
     window.addEventListener('resize', this.checkIfMobile.bind(this)); // Listen for resize
+    if (this.isMobile) {
+      this.numberOfParticles = 200; // More particles for mobile
+    }  
     this.animate();
   }
 
@@ -291,12 +294,18 @@ class Particle {
   }
 
   update(frequencyData: Uint8Array) {
-    const bass = frequencyData[0];
-    const treble = frequencyData[frequencyData.length - 1];
+    const bass = frequencyData[0];  // Bass frequency (first element)
+    const treble = frequencyData[frequencyData.length - 1];  // Treble frequency (last element)
+
+    // Update position based on frequency data
     this.x += this.speedX + Math.sin(this.y * 0.01) * (bass / 128);
     this.y += this.speedY + Math.cos(this.x * 0.01) * (treble / 128);
+
+    // Bounce off canvas edges
     if (this.x > this.canvas.width || this.x < 0) this.speedX *= -1;
     if (this.y > this.canvas.height || this.y < 0) this.speedY *= -1;
+
+    // Make particles expand based on bass (low frequencies)
     this.size = this.baseSize + (bass / 256) * 10;
   }
 
