@@ -55,74 +55,76 @@ canvas {
   z-index: 2;
 }
 
-/* Song Name */
-.song-name {
-  margin-bottom: 10px;
-  font-size: 16px;
-  font-weight: bold;
-  white-space: nowrap;
-  overflow: hidden;
-  text-align: center;
+/* CIRCULAR Progress Wrapper */
+.circular-wrapper {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 15px auto;
 }
 
-.song-name marquee {
-  display: inline-block;
+.circular-progress {
   width: 100%;
-}
-
-/* Progress Bar Styling */
-.progress-container {
+  height: 100%;
+  border-radius: 50%;
+  background: conic-gradient(rgb(120, 120, 120) var(--progress), #000000 var(--progress));
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
+  justify-content: center;
+  position: relative;
 }
 
-.progress-container input[type="range"] {
-  flex-grow: 1;
+.circular-text {
+  position: absolute;
   width: 100%;
-  height: 4px;
-  background: cyan;
-  border-radius: 5px;
-  outline: none;
-  transition: background 0.3s;
-  -webkit-appearance: none;
-  appearance: none;
+  height: 100%;
+  animation: rotateText 12s linear infinite;
 }
 
-/* Slider Thumb */
-.progress-container input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 14px;
-  height: 14px;
-  background: black;
-  border: 2px solid cyan;
-  border-radius: 50%;
-  cursor: pointer;
+.rotating-text {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: rotate(0deg);
 }
-.progress-container input[type="range"]::-moz-range-thumb {
-  width: 14px;
-  height: 14px;
-  background: black;
-  border: 2px solid cyan;
-  border-radius: 50%;
-  cursor: pointer;
+
+.rotating-text span {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform-origin: 0 100px;
+  font-size: 13px;
+  color: white;
+  white-space: nowrap;
+  transform: rotate(calc(var(--i) * 360deg / var(--text-length))) translateY(-100px);
 }
-.progress-container input[type="range"]::-ms-thumb {
-  width: 14px;
-  height: 14px;
-  background: black;
-  border: 2px solid cyan;
-  border-radius: 50%;
-  cursor: pointer;
+
+@keyframes rotateText {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.time-display {
+  color: white;
+  font-size: 12px;
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 /* Play/Pause Button */
 .play-button {
-  display: flex;
-  justify-content: center;
-  margin-top: 15px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
+
 
 .play-button button {
   width: 56px;
@@ -144,43 +146,101 @@ canvas {
 }
 
 /* RESPONSIVE STYLES */
-@media (max-width: 600px) {
+/* RESPONSIVE STYLES */
+@media (max-width: 768px) {
+  .upload-container {
+    top: 18%;
+  }
+
   #audioControl {
-    width: 98vw;
-    padding: 10px 2vw;
-    font-size: 15px;
+    width: 95vw;
+    padding: 12px 2vw;
+    font-size: 14px;
     top: 60%;
   }
-  .upload-container {
-    top: 20%;
+
+  .circular-wrapper {
+    width: 140px;
+    height: 140px;
   }
-  .song-name {
-    font-size: 14px;
+
+  .rotating-text span {
+    font-size: 10px;
+    transform: rotate(calc(var(--i) * 360deg / var(--text-length))) translateY(-70px);
   }
-  .progress-container {
-    gap: 6px;
-  }
+
   .play-button button {
-    width: 44px;
-    height: 44px;
-    font-size: 22px;
+    width: 42px;
+    height: 42px;
+    font-size: 20px;
   }
-  .progress-container input[type="range"] {
-    height: 3px;
+
+  .time-display {
+    font-size: 11px;
+    bottom: -24px;
   }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 480px) {
+  .upload-container {
+    top: 16%;
+  }
+
   #audioControl {
+    width: 98vw;
+    padding: 10px 2vw;
     font-size: 13px;
-    padding: 6px 1vw;
+    top: 62%;
   }
-  .song-name {
-    font-size: 12px;
+
+  .circular-wrapper {
+    width: 120px;
+    height: 120px;
   }
+
+  .rotating-text span {
+    font-size: 9px;
+    transform: rotate(calc(var(--i) * 360deg / var(--text-length))) translateY(-60px);
+  }
+
   .play-button button {
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     font-size: 18px;
+  }
+
+  .time-display {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .upload-container {
+    top: 14%;
+  }
+
+  #audioControl {
+    font-size: 12px;
+    top: 64%;
+  }
+
+  .circular-wrapper {
+    width: 100px;
+    height: 100px;
+  }
+
+  .rotating-text span {
+    font-size: 8px;
+    transform: rotate(calc(var(--i) * 360deg / var(--text-length))) translateY(-50px);
+  }
+
+  .play-button button {
+    width: 34px;
+    height: 34px;
+    font-size: 16px;
+  }
+
+  .time-display {
+    font-size: 9px;
   }
 }

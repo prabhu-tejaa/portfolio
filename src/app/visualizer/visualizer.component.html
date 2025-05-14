@@ -3,29 +3,42 @@
 <canvas #canvas></canvas>
 
 <div class="upload-container">
-    <button (click)="audioFileRef.nativeElement.click()" *ngIf="choseFile">Upload</button>
-    <input #audioFile type="file" accept="audio/*" (change)="onFileChange($event)" hidden />
+  <button (click)="audioFileRef.nativeElement.click()" *ngIf="choseFile">Upload music</button>
+  <input #audioFile type="file" accept="audio/*" (change)="onFileChange($event)" hidden />
 </div>
+
 <div id="audioControl">
-    <!-- Upload Button in Center Top -->
-
-    <!-- Scrolling Song Name Above Progress Bar -->
-    <div *ngIf="selectedFileName" class="song-name">
-        <marquee *ngIf="selectedFileName.length > 20">{{ selectedFileName }}</marquee>
-        <span *ngIf="selectedFileName.length <= 20">{{ selectedFileName }}</span>
-    </div>
-
-    <!-- Audio Progress Bar -->
-    <div *ngIf="audioLoaded" class="progress-container">
-        <span>{{ formatTime(currentTime) }}</span>
-        <input type="range" min="0" [max]="duration" [(ngModel)]="currentTime" (input)="seekAudio($event)" />
-        <span>{{ formatTime(duration) }}</span>
-    </div>
-
-    <!-- Round Play/Pause Button at Bottom -->
-    <div *ngIf="audioLoaded" class="play-button">
+  <!-- Circular Progress with Rotating Text -->
+  <div *ngIf="audioLoaded" class="circular-wrapper">
+    <div
+      class="circular-progress"
+      [style.--progress]="(currentTime / duration) * 360 + 'deg'"
+    >
+      <div class="circular-text">
+        <div class="rotating-text">
+          <ng-container *ngIf="selectedFileName">
+            <span
+              *ngFor="let char of selectedFileName.split(''); let i = index"
+              [style.--i]="i"
+              [style.--text-length]="selectedFileName.length"
+            >
+              {{ char }}
+            </span>
+          </ng-container>
+        </div>
+      </div>
+  
+      <!-- 🎯 Centered Play/Pause button -->
+      <div class="play-button">
         <button (click)="togglePlayPause()" [disabled]="!(audioFileRef.nativeElement.files?.length)">
-            {{ isPlaying ? '❚❚' : '►' }}
+          {{ isPlaying ? '❚❚' : '►' }}
         </button>
+      </div>
+  
+      <!-- Time below circle -->
+      <div class="time-display">
+        {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
+      </div>
     </div>
-</div>
+  </div>
+  

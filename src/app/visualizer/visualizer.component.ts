@@ -34,6 +34,8 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy {
   private colorPalette = ['#FF6B6B', '#4ECDC4', '#C7F464', '#FFE66D', '#FF9F1C'];
 
   playlistId = '5W9YOseBdX1xOoLA8tppEh';
+
+  circumference = 2 * Math.PI * 90; // r = 90 from SVG
   playlistUrl: SafeResourceUrl;
 
   // --- MOBILE DETECTION FLAG ---
@@ -55,24 +57,32 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy {
       const file = fileInput.files[0];
       this.selectedFileName = file.name;
       const fileURL = URL.createObjectURL(file);
-
+  
       if (this.audio) {
         this.audio.pause();
         this.audio.currentTime = 0;
         this.audio.src = '';
       }
-
+  
       this.audio = new Audio(fileURL);
       this.audio.addEventListener('timeupdate', () => this.updateProgress());
       this.audio.addEventListener('loadedmetadata', () => {
         this.duration = this.audio.duration;
       });
-
+  
+      // Add this listener to handle the audio end
+      this.audio.addEventListener('ended', () => {
+        this.isPlaying = false;
+        this.audioLoaded = true; // If you want to show the "Upload" button again
+        this.choseFile = true;
+        this.currentTime = 0; // Reset the current time
+      });
+  
       this.setupAudioContext();
       this.audioLoaded = true;
       this.choseFile = true;
     }
-  }
+  }  
 
   togglePlayPause() {
     if (!this.audio) return;
