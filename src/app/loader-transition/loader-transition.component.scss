@@ -1,57 +1,86 @@
 /* Full-screen centered loader */
 .loader-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* Full screen height */
-    text-align: center;
-  }
-  
-  /* Styling for better mobile visibility */
-  h4 {
-    color: white;
-    margin-top: 10px;
-    font-size: 16px;
-  }
-  
-  /* SVG container */
-  svg {
-    width: 100%;
-    max-width: 800px;
-    height: 200px;
-  }
-  
-  /* Animated Handwriting Effect */
-  .stroke-text {
-    font-size: 100px;
-    font-weight: bold;
-    fill: none;
-    stroke: white;
-    stroke-width: 2;
-    stroke-dasharray: 1000;
-    stroke-dashoffset: 1000;
-    animation: drawText 3s ease-in-out forwards;
-    font-family: 'Dancing Script', cursive;
-  }
-  
-  /* Animation to "draw" the text from left to right in 3 seconds */
-  @keyframes drawText {
-    from {
-      stroke-dashoffset: 1000;
-    }
-    to {
-      stroke-dashoffset: 0;
-    }
-  }
-  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full screen height */
+  text-align: center;
+}
 
-  h4 {
-    display: block; /* Show by default */
+/* Styling for better mobile visibility */
+h4 {
+  color: white;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+/* SVG container */
+svg {
+  width: 100%;
+  max-width: 800px;
+  height: 200px;
+}
+
+/* Animated Handwriting Effect */
+.stroke-text {
+  font-size: 100px;
+  font-weight: bold;
+  fill: none;
+  stroke: white;
+  stroke-width: 2;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawText 3s ease-in-out forwards;
+  font-family: 'Dancing Script', cursive;
+}
+
+/* Animation to "draw" the text from left to right in 3 seconds */
+@keyframes drawText {
+  0% {
+    stroke-dashoffset: 1000;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Hide the loader text on desktop */
+h4 {
+  display: block; /* Show by default */
 }
 
 @media (min-width: 768px) { /* Target screens wider than 768px (desktop) */
-    h4 {
-        display: none; /* Hide on desktop */
-    }
+  h4 {
+    display: none; /* Hide on desktop */
+  }
+}
+
+/* Fade-out animation for loader */
+.loader {
+  opacity: 1;
+  transition: opacity 1s ease-in-out; /* Smooth fade-out */
+}
+
+.fade-out {
+  opacity: 0; /* Fade-out effect */
+}
+
+/* Fade-in animation for main content */
+.fade-in {
+  animation: fadeIn 1s ease-in-out forwards; /* Smooth fade-in */
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0; /* Start hidden */
+  }
+  100% {
+    opacity: 1; /* Fully visible */
+  }
+}
+
+/* Optional enhancement: Adding a subtle shadow to loader text */
+.stroke-text {
+  text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }

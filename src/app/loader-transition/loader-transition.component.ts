@@ -2,26 +2,26 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
-
-
 @Component({
   selector: 'app-loader-transition',
+  standalone: true,
   imports: [RouterModule, CommonModule],
   templateUrl: './loader-transition.component.html',
   styleUrls: ['./loader-transition.component.scss']
 })
 export class LoaderTransitionComponent implements OnInit {
   showLoader = true;
-  showDesktopView = false;
   showMainContent = false;
+  startFadeOut = false;
 
   ngOnInit() {
     setTimeout(() => {
-      this.showLoader = false;
-      this.showDesktopView = true;
+      this.startFadeOut = true; // start fading out
 
-      this.showDesktopView = false;
-      this.showMainContent = true; 
-    }, 3000);
+      setTimeout(() => {
+        this.showLoader = false;
+        this.showMainContent = true; // show main content with fade-in
+      }, 700); // wait 1s for fade-out animation to finish
+    }, 1500); // wait 3s before starting fade-out
   }
 }

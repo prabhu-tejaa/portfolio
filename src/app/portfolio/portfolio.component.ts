@@ -1,20 +1,10 @@
 import { Component, AfterViewInit, Renderer2, ElementRef, OnInit, HostListener } from '@angular/core';
-import { NgFor } from '@angular/common';
-import {
-  CarouselCaptionComponent,
-  CarouselComponent,
-  CarouselControlComponent,
-  CarouselInnerComponent,
-  CarouselItemComponent,
-  ThemeDirective
-} from '@coreui/angular';
 
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-portfolio',
   templateUrl: './portfolio.component.html',
-  styleUrls: ['./portfolio.component.scss'],
-  imports: [ThemeDirective, CarouselComponent, CarouselInnerComponent, NgFor, CarouselItemComponent]
+  styleUrls: ['./portfolio.component.scss']
 })
 export class PortfolioComponent implements OnInit, AfterViewInit {
 

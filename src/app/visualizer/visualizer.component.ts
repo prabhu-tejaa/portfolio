@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
@@ -9,7 +9,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrls: ['./visualizer.component.scss'],
   imports: [CommonModule, FormsModule]
 })
-export class VisualizerComponent implements AfterViewInit {
+export class VisualizerComponent implements AfterViewInit, OnDestroy {
   @ViewChild('canvas', { static: true }) canvasRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('audioFile', { static: true }) audioFileRef!: ElementRef<HTMLInputElement>;
 
@@ -239,6 +239,30 @@ export class VisualizerComponent implements AfterViewInit {
       this.particlesArray.push(new Particle(canvas));
     }
   }
+
+  ngOnDestroy() {
+    if (this.audio) {
+      const fadeOutDuration = 1000; // in ms
+      const fadeStep = 50; // interval steps
+      const volumeStep = this.audio.volume / (fadeOutDuration / fadeStep);
+  
+      const fadeOut = setInterval(() => {
+        if (this.audio.volume - volumeStep > 0) {
+          this.audio.volume -= volumeStep;
+        } else {
+          clearInterval(fadeOut);
+          this.audio.pause();
+          this.audio.src = '';
+          if (this.audioContext) {
+            this.audioContext.close();
+          }
+        }
+      }, fadeStep);
+    }
+  
+    window.removeEventListener('resize', this.resizeCanvas.bind(this));
+  }
+  
 }
 
 class Particle {
