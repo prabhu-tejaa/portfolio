@@ -58,8 +58,8 @@ canvas {
 /* CIRCULAR Progress Wrapper */
 .circular-wrapper {
   position: relative;
-  width: 50vmin;
-  height: 50vmin;
+  width: 20vmin;
+  height: 20vmin;
   margin: 0 auto 15px auto;
 }
 
@@ -74,11 +74,17 @@ canvas {
   position: relative;
 }
 
+.circular-text,
+.rotating-text {
+  pointer-events: none;
+}
+
 .circular-text {
   position: absolute;
   width: 100%;
   height: 100%;
   animation: rotateText 12s linear infinite;
+
 }
 
 .rotating-text {
@@ -92,11 +98,11 @@ canvas {
   position: absolute;
   left: 50%;
   top: 0;
-  transform-origin: 0 25vmin;
+  transform-origin: 0 10vmin;
   font-size: 2.5vmin;
   color: white;
   white-space: nowrap;
-  transform: rotate(calc(var(--i) * 360deg / var(--text-length))) translateY(-25vmin);
+  transform: rotate(calc(var(--i) * 360deg / var(--text-length))) translateY(-9vmin);
 }
 
 @keyframes rotateText {
