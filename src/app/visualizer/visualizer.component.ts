@@ -332,18 +332,24 @@ class Particle {
   update(frequencyData: Uint8Array, isPlaying: boolean) {
     const bass = frequencyData[0];
     const treble = frequencyData[frequencyData.length - 1];
-
+    const mid = frequencyData[Math.floor(frequencyData.length / 2)];
+  
     const t = Date.now() * 0.001;
-    const mid = frequencyData[Math.floor(frequencyData.length/2)];
-
+  
+    // Smooth values with easing (optional)
+    const smoothBass = bass / 256;
+    const smoothMid = mid / 256;
+    const smoothTreble = treble / 256;
+  
+    // Soothing movement (less noise, smoother sin/cos)
     this.x += this.speedX
-      + Math.sin(this.y * 0.01 + t * 0.5) * (bass / 128)
-      + (Math.random() - 0.5) * (mid / 64);
-
+      + Math.sin(this.y * 0.005 + t * 0.3) * smoothBass * 2
+      + (Math.random() - 0.5) * smoothMid * 0.5;
+  
     this.y += this.speedY
-      + Math.cos(this.x * 0.008 - t * 0.3) * (treble / 96)
-      + Math.sin(t * 0.7) * (mid / 128);
-
+      + Math.cos(this.x * 0.005 - t * 0.2) * smoothTreble * 2
+      + Math.sin(t * 0.3) * smoothMid * 1;
+  
     if (isPlaying) {
       if (this.x > this.canvas.width) this.x = 0;
       if (this.x < 0) this.x = this.canvas.width;
@@ -353,13 +359,15 @@ class Particle {
       if (this.x > this.canvas.width || this.x < 0) this.speedX *= -1;
       if (this.y > this.canvas.height || this.y < 0) this.speedY *= -1;
     }
-
-    this.size = this.baseSize
-      + (bass / 256) * 8
-      - (treble / 512) * 6;
-
-    this.size = Math.max(this.baseSize * 0.5, this.size);
+  
+    // Soothing size changes
+    const sizeBass = smoothBass * 6;    // make bass influence more subtle
+    const sizeTreble = smoothTreble * 4;
+  
+    this.size = this.baseSize + sizeBass - sizeTreble;
+    this.size = Math.max(this.baseSize * 0.7, this.size);
   }
+  
 
   draw(ctx: CanvasRenderingContext2D) {
     ctx.beginPath();
