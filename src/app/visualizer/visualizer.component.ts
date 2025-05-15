@@ -41,6 +41,8 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy {
   // --- MOBILE DETECTION FLAG ---
   public isMobile = false;
 
+  maxChars = 3
+
   // --- TWINKLING STARS ---
   // private twinkleStars: TwinkleStar[] = [];
   private twinkleCount = 7;
@@ -55,6 +57,12 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy {
     this.isMobile = window.innerWidth <= 600;
   }
 
+  truncateFilename(name: string, maxLength: number): string {
+    if (!name) return '';
+    if (name.length <= maxLength) return name;
+    return name.slice(0, maxLength - 3) + '...';
+  }
+  
   onFileChange(event: Event) {
     const fileInput = this.audioFileRef.nativeElement;
     if (fileInput.files && fileInput.files.length > 0) {

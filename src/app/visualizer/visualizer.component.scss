@@ -99,7 +99,7 @@ canvas {
   left: 50%;
   top: 0;
   transform-origin: 0 10vmin;
-  font-size: 2.5vmin;
+  font-size: 1.5vmin;
   color: white;
   white-space: nowrap;
   transform: rotate(calc(var(--i) * 360deg / var(--text-length))) translateY(-9vmin);
