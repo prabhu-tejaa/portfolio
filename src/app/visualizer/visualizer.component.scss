@@ -58,8 +58,8 @@ canvas {
 /* CIRCULAR Progress Wrapper */
 .circular-wrapper {
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: 50vmin;
+  height: 50vmin;
   margin: 0 auto 15px auto;
 }
 
@@ -92,11 +92,11 @@ canvas {
   position: absolute;
   left: 50%;
   top: 0;
-  transform-origin: 0 100px;
-  font-size: 13px;
+  transform-origin: 0 25vmin;
+  font-size: 2.5vmin;
   color: white;
   white-space: nowrap;
-  transform: rotate(calc(var(--i) * 360deg / var(--text-length))) translateY(-100px);
+  transform: rotate(calc(var(--i) * 360deg / var(--text-length))) translateY(-25vmin);
 }
 
 @keyframes rotateText {
@@ -158,10 +158,10 @@ canvas {
     top: 60%;
   }
 
-  .circular-wrapper {
-    width: 140px;
-    height: 140px;
-  }
+  // .circular-wrapper {
+  //   // width: 140px;
+  //   // height: 140px;
+  // }
 
   .rotating-text span {
     font-size: 10px;
@@ -192,10 +192,10 @@ canvas {
     top: 62%;
   }
 
-  .circular-wrapper {
-    width: 120px;
-    height: 120px;
-  }
+  // .circular-wrapper {
+  //   width: 50vh;
+  //   height: 50vmin;
+  // }
 
   .rotating-text span {
     font-size: 9px;
@@ -223,10 +223,10 @@ canvas {
     top: 64%;
   }
 
-  .circular-wrapper {
-    width: 100px;
-    height: 100px;
-  }
+  // .circular-wrapper {
+  //   width: 100px;
+  //   height: 100px;
+  // }
 
   .rotating-text span {
     font-size: 8px;
