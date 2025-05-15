@@ -369,11 +369,11 @@ class Particle {
     }
   
     // Soothing size changes
-    const sizeBass = smoothBass * 6;    // make bass influence more subtle
-    const sizeTreble = smoothTreble * 4;
+    const sizeBass = smoothBass * 3;    // make bass influence more subtle
+    const sizeTreble = smoothTreble * 1;
   
     this.size = this.baseSize + sizeBass - sizeTreble;
-    this.size = Math.max(this.baseSize * 0.7, this.size);
+    this.size = Math.max(this.baseSize * 0.5, this.size);
   }
   
 
