@@ -119,7 +119,7 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy {
     this.checkIfMobile(); // Initial check
     window.addEventListener('resize', this.checkIfMobile.bind(this)); // Listen for resize
     if (this.isMobile) {
-      this.numberOfParticles = 200; // More particles for mobile
+      this.numberOfParticles = 37; // More particles for mobile
     }  
     this.animate();
   }
@@ -235,7 +235,7 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy {
     const canvas = this.canvasRef.nativeElement;
     const ctx = this.ctx;
     this.particlesArray.forEach(particle => {
-      particle.update(frequencyData);
+      particle.update(frequencyData, this.isPlaying);
       particle.draw(ctx);
     });
   }
@@ -289,24 +289,53 @@ class Particle {
     this.size = this.baseSize;
     this.speedX = Math.random() * 2 - 1;
     this.speedY = Math.random() * 2 - 1;
-    this.color = ['#FF6B6B', '#4ECDC4', '#C7F464', '#FFE66D', '#FF9F1C'][Math.floor(Math.random() * 5)];
+    this.color = [
+      '#4ECDC4', '#C7F464', '#FFE66D', '#FF9F1C',
+      '#FF6B6B', '#1A535C', '#6A4C93', '#FFB5E8',
+      '#B8F2E6', '#D0E6A5', '#FFDAC1', '#F4A261',
+      '#2A9D8F', '#E76F51', '#9D4EDD', '#00B4D8',
+      '#F72585', '#3A86FF', '#8338EC', '#FFD6A5',
+      '#06D6A0'
+    ][Math.floor(Math.random() * 20)];
   }
 
-  update(frequencyData: Uint8Array) {
-    const bass = frequencyData[0];  // Bass frequency (first element)
-    const treble = frequencyData[frequencyData.length - 1];  // Treble frequency (last element)
+  update(frequencyData: Uint8Array, isPlaying: boolean) {
+    const bass = frequencyData[0];
+    const treble = frequencyData[frequencyData.length - 1];
 
     // Update position based on frequency data
-    this.x += this.speedX + Math.sin(this.y * 0.01) * (bass / 128);
-    this.y += this.speedY + Math.cos(this.x * 0.01) * (treble / 128);
+    const t = Date.now() * 0.001; // Time in seconds
+    const mid = frequencyData[Math.floor(frequencyData.length/2)]; // Mid-range frequencies
+    
+    this.x += this.speedX 
+      + Math.sin(this.y * 0.01 + t * 0.5) * (bass / 128) 
+      + (Math.random() - 0.5) * (mid / 64); // Add noise
+    
+    this.y += this.speedY 
+      + Math.cos(this.x * 0.008 - t * 0.3) * (treble / 96) 
+      + Math.sin(t * 0.7) * (mid / 128); // Add sway
 
-    // Bounce off canvas edges
-    if (this.x > this.canvas.width || this.x < 0) this.speedX *= -1;
-    if (this.y > this.canvas.height || this.y < 0) this.speedY *= -1;
+    if (isPlaying) {
+      // --- WRAP-AROUND LOGIC ---
+      if (this.x > this.canvas.width) this.x = 0;
+      if (this.x < 0) this.x = this.canvas.width;
+      if (this.y > this.canvas.height) this.y = 0;
+      if (this.y < 0) this.y = this.canvas.height;
+    } else {
+      // --- BOUNCE LOGIC ---
+      if (this.x > this.canvas.width || this.x < 0) this.speedX *= -1;
+      if (this.y > this.canvas.height || this.y < 0) this.speedY *= -1;
+    }
 
     // Make particles expand based on bass (low frequencies)
-    this.size = this.baseSize + (bass / 256) * 10;
+    this.size = this.baseSize 
+    + (bass / 256) * 8  // Expand with bass
+    - (treble / 512) * 6; // Shrink with treble
+
+  // Ensure minimum size
+  this.size = Math.max(this.baseSize * 0.5, this.size);
   }
+  
 
   draw(ctx: CanvasRenderingContext2D) {
     ctx.beginPath();
