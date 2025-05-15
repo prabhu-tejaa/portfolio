@@ -1,7 +1,7 @@
 <canvas #canvas></canvas>
 
 <div class="upload-container">
-  <button (click)="audioFileRef.nativeElement.click()">Upload music</button>
+  <button *ngIf="choseFile" (click)="audioFileRef.nativeElement.click()">Upload music</button>
   <input #audioFile type="file" accept="audio/*" (change)="onFileChange($event)" hidden />
 </div>
 
