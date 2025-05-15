@@ -42,7 +42,7 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy {
   public isMobile = false;
 
   // --- TWINKLING STARS ---
-  private twinkleStars: TwinkleStar[] = [];
+  // private twinkleStars: TwinkleStar[] = [];
   private twinkleCount = 7;
 
   constructor(private sanitizer: DomSanitizer) {
@@ -122,9 +122,9 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy {
     this.checkIfMobile(); // Set isMobile flag first
     this.numberOfParticles = this.isMobile ? 37 : 100; // Set correct particle count
     this.initParticles();
-    this.initTwinkleStars();
+    // this.initTwinkleStars();
     window.addEventListener('resize', this.checkIfMobile.bind(this));
-    window.addEventListener('resize', this.handleResizeTwinkleStars.bind(this));
+    // window.addEventListener('resize', this.handleResizeTwinkleStars.bind(this));
     this.animate();
   }
 
@@ -175,7 +175,7 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy {
     this.updateParticles(this.dataArray);
 
     // --- DRAW TWINKLING STARS ---
-    this.updateTwinkleStars();
+    // this.updateTwinkleStars();
   }
 
   drawAudioVisualizer() {
@@ -256,25 +256,25 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy {
   }
 
   // === TWINKLING STARS LOGIC ===
-  private initTwinkleStars() {
-    const canvas = this.canvasRef.nativeElement;
-    this.twinkleStars = [];
-    for (let i = 0; i < this.twinkleCount; i++) {
-      this.twinkleStars.push(new TwinkleStar(canvas));
-    }
-  }
+  // private initTwinkleStars() {
+  //   const canvas = this.canvasRef.nativeElement;
+  //   this.twinkleStars = [];
+  //   for (let i = 0; i < this.twinkleCount; i++) {
+  //     this.twinkleStars.push(new TwinkleStar(canvas));
+  //   }
+  // }
 
-  private updateTwinkleStars() {
-    const ctx = this.ctx;
-    this.twinkleStars.forEach(star => {
-      star.update();
-      star.draw(ctx);
-    });
-  }
+  // private updateTwinkleStars() {
+  //   const ctx = this.ctx;
+  //   this.twinkleStars.forEach(star => {
+  //     star.update();
+  //     star.draw(ctx);
+  //   });
+  // }
 
-  private handleResizeTwinkleStars() {
-    this.initTwinkleStars();
-  }
+  // private handleResizeTwinkleStars() {
+  //   this.initTwinkleStars();
+  // }
 
   ngOnDestroy() {
     if (this.audio) {
@@ -298,7 +298,7 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy {
 
     window.removeEventListener('resize', this.resizeCanvas.bind(this));
     window.removeEventListener('resize', this.checkIfMobile.bind(this));
-    window.removeEventListener('resize', this.handleResizeTwinkleStars.bind(this));
+    // window.removeEventListener('resize', this.handleResizeTwinkleStars.bind(this));
   }
 }
 
@@ -369,90 +369,91 @@ class Particle {
   }
 }
 
+
 // --- TWINKLE STAR CLASS (Enhanced) ---
-class TwinkleStar {
-  x: number;
-  y: number;
-  baseX: number;
-  baseY: number;
-  radius: number;
-  radiusBase: number;
-  radiusPulse: number;
-  alpha: number;
-  speed: number;
-  direction: number;
-  floatAngle: number;
-  floatRadius: number;
-  color: string;
-  private canvas: HTMLCanvasElement;
+// class TwinkleStar {
+//   x: number;
+//   y: number;
+//   baseX: number;
+//   baseY: number;
+//   radius: number;
+//   radiusBase: number;
+//   radiusPulse: number;
+//   alpha: number;
+//   speed: number;
+//   direction: number;
+//   floatAngle: number;
+//   floatRadius: number;
+//   color: string;
+//   private canvas: HTMLCanvasElement;
 
-  constructor(canvas: HTMLCanvasElement) {
+//   constructor(canvas: HTMLCanvasElement) {
     
-    this.canvas = canvas;
+//     this.canvas = canvas;
 
-    // Position
-    this.baseX = Math.random() * canvas.width;
-    this.baseY = Math.random() * canvas.height;
-    this.x = this.baseX;
-    this.y = this.baseY;
+//     // Position
+//     this.baseX = Math.random() * canvas.width;
+//     this.baseY = Math.random() * canvas.height;
+//     this.x = this.baseX;
+//     this.y = this.baseY;
 
-    // Radius
-    this.radiusBase = 1 + Math.random() * 1.2;
-    this.radiusPulse = 0.05 + Math.random() * 0.05;
-    this.radius = this.radiusBase;
+//     // Radius
+//     this.radiusBase = 1 + Math.random() * 1.2;
+//     this.radiusPulse = 0.05 + Math.random() * 0.05;
+//     this.radius = this.radiusBase;
 
-    // Twinkle properties
-    this.alpha = Math.random();
-    this.speed = 0.002 + Math.random() * 0.003; // slower twinkle
-    this.direction = Math.random() > 0.5 ? 1 : -1;
+//     // Twinkle properties
+//     this.alpha = Math.random();
+//     this.speed = 0.002 + Math.random() * 0.003; // slower twinkle
+//     this.direction = Math.random() > 0.5 ? 1 : -1;
 
-    // Floating motion
-    this.floatAngle = Math.random() * Math.PI * 2;
-    this.floatRadius = 0.3 + Math.random() * 0.5;
+//     // Floating motion
+//     this.floatAngle = Math.random() * Math.PI * 2;
+//     this.floatRadius = 0.3 + Math.random() * 0.5;
 
-    // Slight color variation
-    const colors = ['#fffbe6', '#ffeedd', '#e6f7ff'];
-    this.color = colors[Math.floor(Math.random() * colors.length)];
+//     // Slight color variation
+//     const colors = ['#fffbe6', '#ffeedd', '#e6f7ff'];
+//     this.color = colors[Math.floor(Math.random() * colors.length)];
     
-  }
+//   }
 
-  update() {
-    // Twinkling alpha
-    this.alpha += this.speed * this.direction;
-    if (this.alpha <= 0.1) {
-      this.alpha = 0.1;
-      this.direction = 1;
-    }
-    if (this.alpha >= 1) {
-      this.alpha = 1;
-      this.direction = -1;
-    }
+//   update() {
+//     // Twinkling alpha
+//     this.alpha += this.speed * this.direction;
+//     if (this.alpha <= 0.1) {
+//       this.alpha = 0.1;
+//       this.direction = 1;
+//     }
+//     if (this.alpha >= 1) {
+//       this.alpha = 1;
+//       this.direction = -1;
+//     }
 
-    // Floating motion
-    this.floatAngle += 0.01;
-    this.x = this.baseX + Math.cos(this.floatAngle) * this.floatRadius;
-    this.y = this.baseY + Math.sin(this.floatAngle) * this.floatRadius;
+//     // Floating motion
+//     this.floatAngle += 0.01;
+//     this.x = this.baseX + Math.cos(this.floatAngle) * this.floatRadius;
+//     this.y = this.baseY + Math.sin(this.floatAngle) * this.floatRadius;
 
-    // Pulsing radius
-    this.radius = this.radiusBase + Math.sin(Date.now() * 0.005 * this.speed) * this.radiusPulse;
-  }
+//     // Pulsing radius
+//     this.radius = this.radiusBase + Math.sin(Date.now() * 0.005 * this.speed) * this.radiusPulse;
+//   }
 
-  draw(ctx: CanvasRenderingContext2D) {
-    ctx.save();
+//   draw(ctx: CanvasRenderingContext2D) {
+//     ctx.save();
   
-    ctx.globalAlpha = this.alpha;
+//     ctx.globalAlpha = this.alpha;
   
-    // Smooth soft glow
-    ctx.shadowBlur = 3 + this.alpha * 6; // max blur when alpha is high
-    ctx.shadowColor = this.color;
+//     // Smooth soft glow
+//     ctx.shadowBlur = 3 + this.alpha * 6; // max blur when alpha is high
+//     ctx.shadowColor = this.color;
   
-    // Core star
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
-    ctx.fillStyle = this.color;
-    ctx.fill();
+//     // Core star
+//     ctx.beginPath();
+//     ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+//     ctx.fillStyle = this.color;
+//     ctx.fill();
   
-    ctx.restore();
-  }
+//     ctx.restore();
+//   }
   
-}
+// }
