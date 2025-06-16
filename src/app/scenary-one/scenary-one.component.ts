@@ -20,6 +20,7 @@ export class ScenaryOneComponent implements AfterViewInit {
   // Component properties
   rainCount: number = 150;
   butterflyCount: number = 5;
+  isControlsOpen = false;
 
   private ctx!: CanvasRenderingContext2D;
 
