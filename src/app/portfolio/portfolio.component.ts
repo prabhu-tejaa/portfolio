@@ -20,6 +20,7 @@ export class PortfolioComponent implements OnInit, AfterViewInit {
   private animationFrameId: number | null = null;
   spotify = "./assets/imgs/spotify-iFrames.png";
   rainyDay = "./assets/imgs/rainyDay.png";
+  galaxy = "./assets/imgs/galaxy.png";
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
@@ -511,6 +512,12 @@ navigateToScenary(){
   this.router.navigate(['/scenaryComponent']); // Replace '/visualizer' with the actual route to the visualizer component
 
 }
+
+navigateToGalaxy(){
+  this.router.navigate(['/galaxyComponent']); // Replace '/visualizer' with the actual route to the visualizer component
+
+}
+
 
 }
 

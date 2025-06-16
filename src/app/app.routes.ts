@@ -26,5 +26,11 @@ export const routes: Routes = [
         loadComponent: () =>
             import('./scenary-one/scenary-one.component').then((c) => c.ScenaryOneComponent),
         title: 'Scenary Component'
+    },
+    {
+        path: "galaxyComponent",
+        loadComponent: () =>
+            import('./galaxy/galaxy.component').then((c) => c.GalaxyComponent),
+        title: 'Galaxy Component'
     }
 ];
