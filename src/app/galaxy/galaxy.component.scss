@@ -157,4 +157,54 @@
         }
     }
   }
+
+
+  #fullscreen-prompt {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.7);
+    padding: 12px 20px;
+    border-radius: 10px;
+    color: white;
+    text-align: center;
+    z-index: 1002;
+  
+    button {
+      margin-top: 8px;
+      padding: 8px 16px;
+      background-color: #2a75bb;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+    }
+  }
+  
+  .fullscreen-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1002;
+    padding: 12px 20px;
+    font-size: 1em;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: none;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    transition: background 0.3s ease;
+  
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+  }
+  
+  @media (min-width: 769px) {
+    .fullscreen-btn {
+      display: none; // Hide on desktop
+    }
+  }
   

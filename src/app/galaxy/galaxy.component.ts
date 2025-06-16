@@ -209,4 +209,17 @@ export class GalaxyComponent implements AfterViewInit, OnDestroy {
         this.composer.render();
     });
   }
+
+  public toggleFullscreen(): void {
+  const elem = this.canvas;
+
+  if (!document.fullscreenElement) {
+    elem.requestFullscreen().catch(err => {
+      console.error(`Error trying to enable fullscreen mode: ${err.message}`);
+    });
+  } else {
+    document.exitFullscreen();
+  }
+}
+
 }
