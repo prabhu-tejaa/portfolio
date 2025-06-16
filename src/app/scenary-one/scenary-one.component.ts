@@ -21,6 +21,8 @@ export class ScenaryOneComponent implements AfterViewInit {
   rainCount: number = 150;
   butterflyCount: number = 5;
   isControlsOpen = false;
+  private sunVisible: boolean = false;
+
 
   private ctx!: CanvasRenderingContext2D;
 
@@ -44,8 +46,37 @@ export class ScenaryOneComponent implements AfterViewInit {
     const target = event.target as HTMLInputElement;
     this.rainCount = parseInt(target.value, 10);
     this.updateElements('.rain', this.rainCount, this.createRaindrop.bind(this));
+    if (this.rainCount === 0 && !this.sunVisible) {
+      this.drawSun();
+      this.sunVisible = true;
+    } else if (this.rainCount > 0 && this.sunVisible) {
+      this.clearSun();
+      this.sunVisible = false;
+    }
   }
-
+  private clearSun(): void {
+    if (!this.ctx) return;
+  
+    const canvas = this.canvasRef.nativeElement;
+    const sunRadius = 40;
+    const sunX = canvas.width - sunRadius - 80;
+    const sunY = sunRadius + 60;
+    const glowRadius = sunRadius * 2.2; // cover entire glow
+  
+    // Save canvas state
+    this.ctx.save();
+  
+    // Clear circular region with glow buffer
+    this.ctx.beginPath();
+    this.ctx.arc(sunX, sunY, glowRadius, 0, Math.PI * 2);
+    this.ctx.clip();  // clip to circular region
+    this.ctx.clearRect(sunX - glowRadius, sunY - glowRadius, glowRadius * 2, glowRadius * 2);
+  
+    // Restore canvas state
+    this.ctx.restore();
+  }
+  
+  
   onButterflySliderChange(event: Event): void {
     const target = event.target as HTMLInputElement;
     this.butterflyCount = parseInt(target.value, 10);
@@ -57,72 +88,165 @@ export class ScenaryOneComponent implements AfterViewInit {
     const canvas = this.canvasRef.nativeElement;
     canvas.width = this.el.nativeElement.offsetWidth;
     canvas.height = this.el.nativeElement.offsetHeight;
-    
+  
     this.ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+  
     const mountainColors = ['#6B8E23', '#556B2F', '#8FBC8F'];
-    
-    const hill1Points = this.drawMountainRange(mountainColors[0], 0.85, 200, 10);
-    const hill2Points = this.drawMountainRange(mountainColors[1], 0.75, 150, 15);
+  
+    const hill1Points = this.drawMountainRange(mountainColors[0], 0.85, 200, 20);
+    const hill2Points = this.drawMountainRange(mountainColors[1], 0.75, 150, 20);
     const hill3Points = this.drawMountainRange(mountainColors[2], 0.65, 100, 20);
-
-    for(let i=0; i<30; i++) {
-        const randX = Math.random() * canvas.width;
-        const hillSegment = Math.floor(randX / (canvas.width / 10));
-        if (hillSegment >= hill1Points.length -1) continue;
-
-        const y1 = hill1Points[hillSegment].y;
-        const y2 = hill1Points[hillSegment + 1] ? hill1Points[hillSegment + 1].y : y1;
-        const x1 = hill1Points[hillSegment].x;
-        const x2 = hill1Points[hillSegment + 1] ? hill1Points[hillSegment + 1].x : x1;
-        const y = y1 + ((y2 - y1) * ((randX - x1)/(x2 - x1 || 1)));
-
-        if (y < canvas.height) {
-             this.drawTree(randX, y - 5);
-        }
+  
+    // Plant more trees on closer hills
+    this.plantTreesOnHill(hill3Points, 50);
+    this.plantTreesOnHill(hill2Points, 60);
+    this.plantTreesOnHill(hill1Points, 70);
+    if(this.rainCount == 0){
+      this.drawSun();
     }
+
+  
     console.log('Canvas size:', canvas.width, canvas.height);
+  }
+  
 
+  
+private drawMountainRange(color: string, yRatio: number, roughness: number, segments: number): { x: number, y: number }[] {
+  const canvas = this.canvasRef.nativeElement;
+  const ctx = this.ctx;
+
+  const gradient = ctx.createLinearGradient(0, canvas.height * yRatio, 0, canvas.height);
+  gradient.addColorStop(0, color);
+  gradient.addColorStop(1, '#3a3a3a'); // darker bottom for depth
+
+  ctx.fillStyle = gradient;
+  ctx.beginPath();
+  ctx.moveTo(-40, canvas.height);
+
+  const points: { x: number, y: number }[] = [];
+
+  for (let i = 0; i <= segments + 2; i++) {
+      const x = ((canvas.width + 80) / segments) * i - 40;
+      const y = canvas.height * yRatio - (Math.random() * roughness + roughness / 2);
+      points.push({ x, y });
+
+      if (i === 0) {
+          ctx.lineTo(x, y);
+      } else {
+          const prev = points[i - 1];
+          const cx = (prev.x + x) / 2;
+          const cy = (prev.y + y) / 2;
+          ctx.quadraticCurveTo(prev.x, prev.y, cx, cy);
+      }
   }
 
-  private drawMountainRange(color: string, yRatio: number, roughness: number, segments: number): {x: number, y: number}[] {
-    const canvas = this.canvasRef.nativeElement;
-    this.ctx.fillStyle = color;
-    this.ctx.beginPath();
-    this.ctx.moveTo(-1, canvas.height);
+  ctx.lineTo(canvas.width + 40, canvas.height);
+  ctx.lineTo(-40, canvas.height);
+  ctx.closePath();
+  ctx.fill();
 
-    let points = [];
-    for (let i = 0; i <= segments; i++) {
-        const x = (canvas.width / segments) * i;
-        const y = (canvas.height * yRatio) - (Math.random() * roughness) + (roughness / 2);
-        points.push({x: x, y: y});
-        this.ctx.lineTo(x, y);
+  return points;
+}
+
+private plantTreesOnHill(points: { x: number, y: number }[], treeCount: number): void {
+  const canvas = this.canvasRef.nativeElement;
+
+  for (let i = 0; i < treeCount; i++) {
+    const randX = Math.random() * canvas.width;
+    const segmentWidth = canvas.width / (points.length - 1);
+    const segmentIndex = Math.floor(randX / segmentWidth);
+
+    if (segmentIndex < 0 || segmentIndex >= points.length - 1) continue;
+
+    const p1 = points[segmentIndex];
+    const p2 = points[segmentIndex + 1];
+    const t = (randX - p1.x) / (p2.x - p1.x || 1);
+    const curveY = p1.y + (p2.y - p1.y) * t;
+
+    // Define a Y-band BELOW the curve for trees only
+    const minY = curveY + 50;                      // trees start 50px below hill curve
+    const maxY = Math.min(canvas.height - 20, minY + 80); // up to 80px tall band
+
+    const y = canvas.height - 300 + Math.random() * 300;
+
+
+    if (y < canvas.height) {
+      this.drawTree(randX, y);
     }
-    this.ctx.lineTo(canvas.width + 1, canvas.height);
-    this.ctx.closePath();
-    this.ctx.fill();
-    return points;
+  }
+}
+
+private drawSun(): void {
+  if (!this.ctx) return;
+  const canvas = this.canvasRef.nativeElement;
+
+  const sunRadius = 40;
+  const sunX = canvas.width - sunRadius - 80;
+  const sunY = sunRadius + 60;
+  
+  
+
+  // Draw sun body
+  this.ctx.beginPath();
+  this.ctx.arc(sunX, sunY, sunRadius, 0, Math.PI * 2);
+  this.ctx.fillStyle = '#FFD700'; // golden yellow
+  this.ctx.fill();
+  this.ctx.closePath();
+
+  // Optional: light glow
+  const gradient = this.ctx.createRadialGradient(sunX, sunY, sunRadius * 0.5, sunX, sunY, sunRadius * 2);
+  gradient.addColorStop(0, 'rgba(255, 215, 0, 0.5)');
+  gradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
+  this.ctx.beginPath();
+  this.ctx.arc(sunX, sunY, sunRadius * 2, 0, Math.PI * 2);
+  this.ctx.fillStyle = gradient;
+  this.ctx.fill();
+}
+
+
+
+
+private drawTree(x: number, y: number): void {
+  const ctx = this.ctx;
+  if (!ctx) return;
+
+  const trunkWidth = 3 + Math.random(); 
+  const trunkHeight = 12 + Math.random() * 4;
+  const trunkX = x - trunkWidth / 2;
+  const trunkY = y - trunkHeight;
+
+  const trunkGradient = ctx.createLinearGradient(trunkX, trunkY, trunkX, y);
+  trunkGradient.addColorStop(0, '#7B3F00');
+  trunkGradient.addColorStop(1, '#3E2615');
+  ctx.fillStyle = trunkGradient;
+  ctx.fillRect(trunkX, trunkY, trunkWidth, trunkHeight);
+
+  const foliageHeight = 30 + Math.random() * 15;
+  const layerCount = 3;
+  const layerSpacing = foliageHeight / layerCount;
+
+  const greens = ['#2E8B57', '#1E5631', '#4CAF50', '#3C9D55'];
+  ctx.fillStyle = greens[Math.floor(Math.random() * greens.length)];
+
+  for (let i = 0; i < layerCount; i++) {
+      const layerY = y - trunkHeight - i * layerSpacing;
+      const width = 22 - i * 6;
+      ctx.beginPath();
+      ctx.moveTo(x, layerY - layerSpacing);
+      ctx.lineTo(x - width / 2, layerY);
+      ctx.lineTo(x + width / 2, layerY);
+      ctx.closePath();
+      ctx.fill();
   }
 
-  private drawTree(x: number, y: number): void {
-      this.ctx.fillStyle = '#1A4314';
-      this.ctx.fillRect(x - 2, y - 10, 4, 10);
-      
-      this.ctx.fillStyle = '#228B22';
-      this.ctx.beginPath();
-      this.ctx.moveTo(x, y - 50);
-      this.ctx.lineTo(x - 15, y - 20);
-      this.ctx.lineTo(x + 15, y - 20);
-      this.ctx.closePath();
-      this.ctx.fill();
+  // Soft shadow
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+  ctx.beginPath();
+  ctx.ellipse(x, y, 6, 2, 0, 0, Math.PI * 2);
+  ctx.fill();
+}
 
-      this.ctx.beginPath();
-      this.ctx.moveTo(x, y - 30);
-      this.ctx.lineTo(x - 12, y - 10);
-      this.ctx.lineTo(x + 12, y - 10);
-      this.ctx.closePath();
-      this.ctx.fill();
-  }
+
 
   private updateElements(selector: string, count: number, createFn: () => void): void {
     if (!this.sceneContainerRef) return;
