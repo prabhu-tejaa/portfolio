@@ -35,6 +35,7 @@ export class GalaxyComponent implements AfterViewInit, OnDestroy {
     this.initScene();
     this.animate();
     this.hideInfo();
+    this.toggleFullscreen();
   }
 
   ngOnDestroy(): void {
