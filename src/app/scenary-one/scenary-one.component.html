@@ -1,0 +1,17 @@
+<!-- This is the view for your component. -->
+<div class="scene-container" #sceneContainer>
+    <canvas #backgroundCanvas id="background-canvas"></canvas>
+  </div>
+  
+  <!-- UI Controls for the simulation -->
+  <div class="controls">
+      <div class="control-group">
+          <label for="rain-slider">Rain Amount: <span>{{ rainCount }}</span></label>
+          <input type="range" id="rain-slider" min="0" max="500" [value]="rainCount" (input)="onRainSliderChange($event)">
+      </div>
+      <div class="control-group">
+          <label for="butterfly-slider">Butterflies: <span>{{ butterflyCount }}</span></label>
+          <input type="range" id="butterfly-slider" min="0" max="20" [value]="butterflyCount" (input)="onButterflySliderChange($event)">
+      </div>
+  </div>
+  

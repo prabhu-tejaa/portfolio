@@ -20,5 +20,11 @@ export const routes: Routes = [
         loadComponent: () =>
             import('./spotify/spotify.component').then((c) => c.SpotifyComponent),
         title: 'Spotify Component'
+    },
+    {
+        path: "scenaryComponent",
+        loadComponent: () =>
+            import('./scenary-one/scenary-one.component').then((c) => c.ScenaryOneComponent),
+        title: 'Scenary Component'
     }
 ];
