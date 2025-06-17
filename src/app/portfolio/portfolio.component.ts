@@ -21,7 +21,7 @@ export class PortfolioComponent implements OnInit, AfterViewInit {
   spotify = "./assets/imgs/spotify-iFrames.png";
   rainyDay = "./assets/imgs/rainyDay.png";
   galaxy = "./assets/imgs/galaxy.png";
-  // activeSection = 'about';
+  activeSection = 'about';
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
@@ -37,18 +37,18 @@ export class PortfolioComponent implements OnInit, AfterViewInit {
 
 
 
-    // const sectionIds = ['about', 'work', 'experica', 'contact'];
-    // for (const id of sectionIds) {
-    //   const section = document.getElementById(id);
-    //   if (section) {
-    //     const rect = section.getBoundingClientRect();
-    //     // Adjust offset (e.g., 100) for your navbar height if needed
-    //     if (rect.top <= 100 && rect.bottom > 100) {
-    //       this.activeSection = id;
-    //       break;
-    //     }
-    //   }
-    // }
+    const sectionIds = ['about', 'work', 'experica', 'contact'];
+    for (const id of sectionIds) {
+      const section = document.getElementById(id);
+      if (section) {
+        const rect = section.getBoundingClientRect();
+        // Adjust offset (e.g., 100) for your navbar height if needed
+        if (rect.top <= 100 && rect.bottom > 100) {
+          this.activeSection = id;
+          break;
+        }
+      }
+    }
   }
 
 
