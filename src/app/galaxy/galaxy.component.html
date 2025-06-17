@@ -1,68 +1,60 @@
-<div class="galaxy-container">
-    <!-- Hamburger Menu Icon -->
-    <div class="menu-toggle" (click)="toggleSidebar()">
-      <div class="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
+<div class="galaxy-container" (click)="onContainerClick($event)">
+  <!-- Hamburger Menu Icon -->
+  <div class="menu-toggle" (click)="toggleSidebar($event)">
+    <div class="hamburger star-style" [class.open]="isSidebarOpen">
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
-  
-    <!-- Sidebar for controls -->
-    <div class="sidebar" [class.open]="isSidebarOpen">
-      <h2>Controls</h2>
-      
-      <!-- Speed Control -->
-      <div class="control-group">
-        <label for="speed-slider">Rotation Speed</label>
-        <input 
-          id="speed-slider" 
-          type="range" 
-          min="0" 
-          max="20" 
-          step="1" 
-          [value]="rotationSpeed * 10000"
-          (input)="setRotationSpeed($event)"
-        />
-      </div>
-  
-      <!-- Color Controls -->
-      <div class="control-group">
-        <label for="core-color">Core Color</label>
-        <input 
-          id="core-color" 
-          type="color" 
-          [value]="coreColor"
-          (input)="setCoreColor($event)"
-        />
-      </div>
-  
-      <div class="control-group">
-        <label for="arm-color">Arm Color</label>
-        <input 
-          id="arm-color" 
-          type="color" 
-          [value]="armColor"
-          (input)="setArmColor($event)"
-        />
-      </div>
-      
-      <button (click)="regenerateGalaxy()">Apply Changes</button>
-    </div>
-  
-  
-    <!-- Info box for instructions -->
-    <div id="info">
-      <h1>Spiral Galaxy</h1>
-      <p>Drag to rotate | Scroll to zoom | Right-click drag to pan</p>
-    </div>
-  
-    <!-- Loader element -->
-    <div id="loader">Loading Galaxy...</div>
-  
-    <!-- The #canvas template reference allows us to get this element in the component's TypeScript file -->
-    <canvas #canvas class="galaxy-canvas"></canvas>
   </div>
-  
 
-  <button class="fullscreen-btn" (click)="toggleFullscreen()">Fullscreen</button>
+  <!-- Sidebar for controls -->
+  <div class="sidebar" [class.open]="isSidebarOpen" #sidebar>
+    <h2>Controls</h2>
+    <!-- Controls go here -->
+    <div class="control-group">
+      <label for="speed-slider">Rotation Speed</label>
+      <input 
+        id="speed-slider" 
+        type="range" 
+        min="0" 
+        max="20" 
+        step="1" 
+        [value]="rotationSpeed * 10000"
+        (input)="setRotationSpeed($event)"
+      />
+    </div>
+    <div class="control-group">
+      <label for="core-color">Core Color</label>
+      <input 
+        id="core-color" 
+        type="color" 
+        [value]="coreColor"
+        (input)="setCoreColor($event)"
+      />
+    </div>
+    <div class="control-group">
+      <label for="arm-color">Arm Color</label>
+      <input 
+        id="arm-color" 
+        type="color" 
+        [value]="armColor"
+        (input)="setArmColor($event)"
+      />
+    </div>
+  </div>
+
+  <!-- Info box for instructions -->
+  <div id="info">
+    <h1>Spiral Galaxy</h1>
+    <p>Drag to rotate | Scroll to zoom | Right-click drag to pan</p>
+  </div>
+
+  <!-- Loader element -->
+  <div id="loader" *ngIf="isLoading">Loading Galaxy...</div>
+
+  <!-- Canvas -->
+  <canvas #canvas class="galaxy-canvas"></canvas>
+</div>
+
+<button class="fullscreen-btn" (click)="toggleFullscreen()">Fullscreen</button>
