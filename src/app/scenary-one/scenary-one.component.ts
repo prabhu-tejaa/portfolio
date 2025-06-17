@@ -98,9 +98,9 @@ export class ScenaryOneComponent implements AfterViewInit {
     const hill3Points = this.drawMountainRange(mountainColors[2], 0.65, 100, 20);
   
     // Plant more trees on closer hills
-    this.plantTreesOnHill(hill3Points, 50);
-    this.plantTreesOnHill(hill2Points, 60);
-    this.plantTreesOnHill(hill1Points, 70);
+    // this.plantTreesOnHill(hill3Points, 50);
+    // this.plantTreesOnHill(hill2Points, 60);
+    this.plantTreesOnHill(hill1Points, 37);
     if(this.rainCount == 0){
       this.drawSun();
     }
