@@ -1,0 +1,41 @@
+<!-- This is the view for your component. -->
+<div class="scene-container" #sceneContainer>
+    <canvas #backgroundCanvas id="background-canvas"></canvas>
+  </div>
+  
+  <!-- UI Controls for the simulation -->
+<!-- Bottom-right controls navbar -->
+<div class="bottom-controls" [class.open]="isControlsOpen">
+    <div class="toggle-btn" (click)="isControlsOpen = !isControlsOpen">
+      ⚙️
+    </div>
+  
+    <div class="controls-content">
+      <h2>Scene Controls</h2>
+  
+      <div class="control-group">
+        <label for="rain-slider">Rain Amount: <span>{{ rainCount }}</span></label>
+        <input 
+          id="rain-slider"
+          type="range"
+          min="0"
+          max="500"
+          [value]="rainCount"
+          (input)="onRainSliderChange($event)"
+        />
+      </div>
+  
+      <div class="control-group">
+        <label for="butterfly-slider">Butterflies: <span>{{ butterflyCount }}</span></label>
+        <input 
+          id="butterfly-slider"
+          type="range"
+          min="0"
+          max="20"
+          [value]="butterflyCount"
+          (input)="onButterflySliderChange($event)"
+        />
+      </div>
+    </div>
+  </div>
+  

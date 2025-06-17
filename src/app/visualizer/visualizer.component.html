@@ -1,0 +1,42 @@
+<canvas #canvas></canvas>
+
+<div class="upload-container">
+  <button *ngIf="choseFile" (click)="audioFileRef.nativeElement.click()">Upload music</button>
+  <input #audioFile type="file" accept="audio/*" (change)="onFileChange($event)" hidden />
+</div>
+
+<div id="audioControl">
+  <!-- Circular Progress with Rotating Text -->
+  <div *ngIf="audioLoaded" class="circular-wrapper">
+    <div
+      class="circular-progress"
+      [style.--progress]="(currentTime / duration) * 360 + 'deg'"
+    >
+      <div class="circular-text">
+        <div class="rotating-text">
+          <ng-container *ngIf="selectedFileName">
+            <span
+              *ngFor="let char of truncateFilename(selectedFileName, 70).split(''); let i = index"
+              [style.--i]="i"
+              [style.--text-length]="truncateFilename(selectedFileName, 70).length"
+            >
+              {{ char }}
+            </span>
+          </ng-container>
+        </div>
+      </div>
+  
+      <!-- 🎯 Centered Play/Pause button -->
+      <div class="play-button">
+        <button (click)="togglePlayPause()" [disabled]="!(audioFileRef.nativeElement.files?.length)">
+          {{ isPlaying ? '❚❚' : '►' }}
+        </button>
+      </div>
+  
+      <!-- Time below circle -->
+      <div class="time-display">
+        {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,228 @@
+<div class="cursor"></div>
+<div class="cursor-follower"></div>
+<div class="hero-background">
+    <canvas id="particlesCanvas"></canvas>
+    <nav class="navbar">
+        <div class="logo"></div>
+        <div class="nav-content">
+            <div class="nav-links">
+                <!-- <a href="#home" class="nav-link">Home</a> -->
+                <a href="#about" class="nav-link" [class.active]="activeSection === 'about'">Home</a>
+                <a href="#work" class="nav-link" [class.active]="activeSection === 'work'">Work</a>
+                <a href="#experica" class="nav-link" [class.active]="activeSection === 'experica'">Demos</a>
+                <a href="#contact" class="nav-link" [class.active]="activeSection === 'contact'">Contact</a>                
+            </div>
+        </div>
+    </nav>
+
+    <!-- <section id="home" class="hero d-flex align-items-center">
+        <div class="hero-left">
+            <span class="glitch" data-text="Software Engineer">Prabhu Teja Pamula</span>
+            <div class="typing-text"></div>
+        </div>
+
+        <div class="hero-right">
+            <c-carousel [animate]="true" transition="crossfade" [touch]="true" [interval]="1377">
+                <c-carousel-inner>
+                    <c-carousel-item class="carousel-item" *ngFor="let slide of slides">
+                        <img [src]="slide.src" alt="{{slide.title}}" class="carousel-img d-block w-100"
+                            loading="lazy" />
+                    </c-carousel-item>
+                </c-carousel-inner>
+            </c-carousel>
+        </div>
+    </section> -->
+
+
+    <section id="about" class="about">
+        <div class="section-content">
+            <!-- <h2 class="section-title">About Me</h2> -->
+            <h3>Myself</h3>
+            <div class="hero-left">
+                <span class="glitch" data-text="Software Engineer">Prabhu Teja</span>
+                <div class="typing-text"></div>
+            </div>
+            <div class="about-grid">
+                <div class="about-text reveal-left">
+                    <p>Over 2 years of industry experience developing sophisticated desktop and mobile applications, delivering innovative solutions that drive measurable business value.</p>
+                    <div class="skills">
+                        <div class="skill">
+                            <span class="skill-name">Frontend</span>
+                            <div class="skill-bar" data-percent="90"></div>
+                        </div>
+                        <div class="skill">
+                            <span class="skill-name">Backend</span>
+                            <div class="skill-bar" data-percent="85"></div>
+                        </div>
+                        <div class="skill">
+                            <span class="skill-name">Desktop Dev</span>
+                            <div class="skill-bar" data-percent="80"></div>
+                        </div>
+                        <div class="skill">
+                            <span class="skill-name">Mobile Dev</span>
+                            <div class="skill-bar" data-percent="75"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-stats reveal-right">
+                    <div class="stat">
+                        <span class="stat-number">2+</span>
+                        <span class="stat-label">Years Experience</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">15+</span>
+                        <span class="stat-label">Projects</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">3</span>
+                        <span class="stat-label">Major Apps</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="work" class="work">
+        <div class="section-content">
+            <h2 class="section-title">Featured Work</h2>
+            <div class="text-center">
+                <p>During my tenure at Siemens, I contributed to these key projects that enhanced industrial efficiency
+                    and digital transformation</p>
+            </div>
+            <div class="work-grid">
+                <div class="work-card reveal-up">
+                    <div class="work-image">
+                        <img [src]="versiChargeConfigurator" alt="Versi Charger App">
+                        <div class="work-overlay">
+                            <h3>Versi Charger Configurator</h3>
+                            <p>Desktop app to Commission Versi Chargers</p>
+                            <a href="https://support.industry.siemens.com/cs/document/109798469/versicharge-ac-wallbox-commissioning-tools?dti=0&lc=en-IN"
+                                target="_blank" class="work-link">View Project</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="work-card reveal-up" data-delay="400">
+                    <div class="work-image">
+                        <img [src]="sifinitySetup" alt="Sifinity Setup App">
+                        <div class="work-overlay">
+                            <h3>Sifinity Setup</h3>
+                            <p>Mobile app to Commission Versi Chargers</p>
+                            <a href="https://play.google.com/store/apps/details?id=com.siemens.sifinitysetup&hl=en"
+                                target="_blank" class="work-link">View Project</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="work-card reveal-up" data-delay="200">
+                    <div class="work-image"> <!-- Added class "in-progress" -->
+                        <img [src]="sifinityFleet" alt="Sifinity Fleet App">
+                        <div class="work-overlay">
+                            <h3>Sifinity Fleet</h3>
+                            <p>Web app developed using Mendix to cater different roles and work flows</p>
+                            <a href="https://sifinity.fleet.emobility.io/" target="_blank" class="work-link">View
+                                Project</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="experica" class="experica">
+        <div class="section-content">
+            <h2 class="section-title">Demos</h2>
+            <div class="text-center">
+                <p>Fun projects I explored to enhance my technical skills and creative problem solving</p>
+            </div>
+            <div class="experica-grid">
+                <div class="experica-card reveal-up">
+                    <div class="experica-image">
+                        <img [src]="galaxy" alt="galaxy">
+                        <div class="experica-overlay">
+                            <!-- <h3>Galaxy</h3> -->
+                            <p>3d Galaxy</p>
+                            <button (click)="navigateToGalaxy()" class="experica-link">Experience</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="experica-grid">
+                <div class="experica-card reveal-up">
+                    <div class="experica-image">
+                        <img [src]="musicVisualizer" alt="music">
+                        <div class="experica-overlay">
+                            <!-- <h3>Music Wiz</h3> -->
+                            <p>Upload music to watch the Visualization</p>
+                            <button (click)="navigateToVisualizer()" class="experica-link">Experience</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="experica-grid">
+                <div class="experica-card reveal-up">
+                    <div class="experica-image">
+                        <img [src]="rainyDay" alt="Rainy day">
+                        <div class="experica-overlay">
+                            <!-- <h3>Rainy Feels</h3> -->
+                            <p>A perfect day Simulation</p>
+                            <button (click)="navigateToScenary()" class="experica-link">Experience</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="experica-grid">
+                <div class="experica-card reveal-up">
+                    <div class="experica-image">
+                        <img [src]="spotify" alt="spotify">
+                        <div class="experica-overlay">
+                            <!-- <h3>Spotify Fun</h3> -->
+                            <p>Spotify iframe</p>
+                            <button (click)="navigateToSpotify()" class="experica-link">Experience</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="contact" class="contact">
+        <div class="section-content">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-content">
+                <div class="contact-info reveal-left">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:prabhutejapamula@yahoo.com">prabhutejapamula&#64;yahoo.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fa-solid fa-phone"></i>
+                        <a href="tel:+919642434164" class="contact-link">
+                            +91 96424 34164
+                        </a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <a href="https://maps.app.goo.gl/xFqzyR2oD89NnkBS9" target="_blank" class="contact-text">
+                            Hyderabad, India
+                        </a>
+                    </div>
+                </div>
+                <div class="social-links reveal-right">
+                    <a href="https://www.linkedin.com/in/prabhu-tejaa/" target="_blank" class="social-link">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="https://github.com/prabhu-tejaa" target="_blank" class="social-link">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://leetcode.com/u/prabhu-tejaa/" target="_blank" class="social-link">
+                        <i class="fas fa-code"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 All rights reserved</p>
+    </footer>
+</div>

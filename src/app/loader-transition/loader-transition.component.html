@@ -1,0 +1,72 @@
+<!-- Loader -->
+<div class="loader" *ngIf="showLoader" [class.fade-out]="startFadeOut">
+  <div class="loader-container">
+    <svg viewBox="0 0 800 200">
+      <text x="50%" y="50%" text-anchor="middle" class="stroke-text">
+        hi
+      </text>
+    </svg>
+    <!-- <h4>Better viewing experience on desktop</h4> -->
+  </div>
+</div>
+
+<!-- Futuristic Animation -->
+<div class="futuristic-animation" *ngIf="showLoader">
+  <!-- Grid background -->
+  <div class="grid"></div>
+  
+  <!-- Circuit patterns -->
+  <!-- <div class="circuit"></div> -->
+  
+  <!-- Pulse rings -->
+  <!-- <div class="pulse-ring"></div> />
+  
+  <!-- Data streams -->
+  <div class="data-stream"></div>
+  
+  <!-- Glitch overlay -->
+  <!-- <div class="glitch-overlay"></div> -->
+  
+  <!-- Energy particles -->
+  <div class="particles-container">
+    <!-- Starting from top and going clockwise -->
+    <div class="particle-energy" style="--tx: 0; --ty: 15vh; animation-delay: 0.1s; left: 50%; top: 20%;">P</div>
+    
+    <!-- Top-right section -->
+    <div class="particle-energy" style="--tx: -10vw; --ty: 10vh; animation-delay: 0.15s; left: 70%; top: 30%;">R</div>
+    
+    <div class="particle-energy" style="--tx: -15vw; --ty: 5vh; animation-delay: 0.2s; left: 80%; top: 40%;">A</div>
+    
+    <div class="particle-energy" style="--tx: -15vw; --ty: -5vh; animation-delay: 0.25s; left: 80%; top: 60%;">B</div>
+    
+    <!-- Bottom-right section -->
+    <div class="particle-energy" style="--tx: -10vw; --ty: -10vh; animation-delay: 0.3s; left: 70%; top: 70%;">H</div>
+    
+    <!-- Bottom section -->
+    <div class="particle-energy" style="--tx: 0; --ty: -15vh; animation-delay: 0.35s; left: 50%; top: 80%;">U</div>
+    
+    <!-- Bottom-left section -->
+    <div class="particle-energy" style="--tx: 10vw; --ty: -10vh; animation-delay: 0.4s; left: 30%; top: 70%;">T</div>
+    
+    <!-- Left section -->
+    <div class="particle-energy" style="--tx: 15vw; --ty: -5vh; animation-delay: 0.45s; left: 20%; top: 60%;">E</div>
+    
+    <div class="particle-energy" style="--tx: 15vw; --ty: 5vh; animation-delay: 0.5s; left: 20%; top: 40%;">J</div>
+    
+    <!-- Top-left section -->
+    <div class="particle-energy" style="--tx: 10vw; --ty: 10vh; animation-delay: 0.55s; left: 30%; top: 30%;">A</div>
+    
+    <!-- Top section (left side) -->
+    <div class="particle-energy" style="--tx: 5vw; --ty: 15vh; animation-delay: 0.65s; left: 40%; top: 20%;">3</div>
+    
+    <!-- Top section (right side) -->
+    <div class="particle-energy" style="--tx: -5vw; --ty: 15vh; animation-delay: 0.6s; left: 60%; top: 20%;">7</div>
+</div>
+
+  
+</div>
+
+<!-- Main Content (Router Outlet) -->
+<div *ngIf="showMainContent" class="fade-in">
+  <router-outlet></router-outlet>
+</div>

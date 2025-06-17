@@ -1,1 +1,38 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'animate.css';
+
+/* Base styles */
+:root {
+    --primary: #2a2a2a;
+    --secondary: #64ffda;
+    --text: #e6e6e6;
+    --background: #000000;
+    --overlay: rgba(10, 25, 47, 0.9);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--background);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+    user-select: none;
+}
+
+html { /* Target html, as it's the root scroll container for the page */
+  overflow-y: scroll; /* Allow scrolling */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE 10+ */
+}
+ 
+html::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
