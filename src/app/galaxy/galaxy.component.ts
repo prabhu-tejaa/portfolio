@@ -5,6 +5,7 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 
+
 @Component({
   selector: 'app-galaxy',
   templateUrl: './galaxy.component.html',
@@ -68,7 +69,7 @@ export class GalaxyComponent implements AfterViewInit, OnDestroy {
   }
 
   public setRotationSpeed(event: any): void {
-    this.rotationSpeed = parseFloat(event.target.value) / 10000;
+    this.rotationSpeed = parseFloat(event.target.value) / 100;
   }
 
   public setCoreColor(event: any): void {
@@ -158,27 +159,40 @@ export class GalaxyComponent implements AfterViewInit, OnDestroy {
     const geometry = new THREE.BufferGeometry();
     const vertices = [];
     const colors = [];
-
+  
     const coreColorTHREE = new THREE.Color(this.coreColor);
     const armColorTHREE = new THREE.Color(this.armColor);
-
+  
     const branches = 4, radius = 800, spin = 1.5, randomnessFactor = 0.8;
-
+  
+    // wave settings
+    const waveAmplitude = 50;
+    const waveFrequency = 0.02;
+  
     for (let i = 0; i < particleCount; i++) {
       const r = Math.random() * radius;
       const branchAngle = (i % branches) * (Math.PI * 2 / branches);
       const spinAngle = r * 0.01 * spin;
+  
       const randomX = Math.pow(Math.random(), 2) * (Math.random() < 0.5 ? 1 : -1) * randomnessFactor * (radius / r);
-      const randomY = Math.pow(Math.random(), 2) * (Math.random() < 0.5 ? 1 : -1) * randomnessFactor * (radius / r) * 0.3;
       const randomZ = Math.pow(Math.random(), 2) * (Math.random() < 0.5 ? 1 : -1) * randomnessFactor * (radius / r);
+  
+      // 👇 REPLACED original randomY with a sine-based wave + minor randomness
+      const yWave = Math.sin(branchAngle + spinAngle) * waveAmplitude + 
+                    Math.sin(r * waveFrequency) * waveAmplitude * 0.3;
+      const randomY = (Math.random() - 0.5) * randomnessFactor * (radius / r) * 0.3;
+      const y = yWave + randomY;
+  
       const x = Math.cos(branchAngle + spinAngle) * r + randomX;
-      const y = randomY;
       const z = Math.sin(branchAngle + spinAngle) * r + randomZ;
+  
       vertices.push(x, y, z);
+  
       const mixedColor = coreColorTHREE.clone();
       mixedColor.lerp(armColorTHREE, r / radius);
       colors.push(mixedColor.r, mixedColor.g, mixedColor.b);
     }
+  
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
     geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
     const material = new THREE.PointsMaterial({
@@ -193,6 +207,7 @@ export class GalaxyComponent implements AfterViewInit, OnDestroy {
     const particles = new THREE.Points(geometry, material);
     this.galaxyGroup.add(particles);
   }
+  
 
   private createBackgroundStars(): void {
     const starCount = 5000;
