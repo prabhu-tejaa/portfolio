@@ -1,0 +1,82 @@
+<!-- </section class="compact-editorial" [@pageAnimations]> -->
+<section class="compact-editorial" [@pageAnimations]>
+  
+  <div class="ambient-glow"></div>
+  <div class="noise-film"></div>
+
+  <div class="layout-grid">
+
+    <div class="anchor-pane">
+      <div class="timeline-label">CONTRACT TIMELINE</div>
+      <div class="pane-inner">        
+        <div class="vertical-title">
+          <h1>SIEMENS</h1>
+        </div>
+
+        <div class="pane-footer">
+          <span class="label">CLIENT LOCATION</span>
+          <span class="mono">June 2022 — June 2024</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-pane">
+      
+      <div class="glass-card" (click)="openDialog('adapt')">
+        <div class="card-content">
+          
+          <div class="card-top">
+            <span class="tag">CONTRACT 01 //</span>
+            <span class="role">Software Engineer</span>
+          </div>
+          
+          <div class="card-body">
+            <h2>ADAPT CHIPS</h2>
+            <p>Developed desktop & mobile apps for IoT devices.</p>
+          </div>
+
+          <div class="card-bot">
+            <span class="date">June 2022 — December 2023</span>
+            <span class="icon">→</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card" (click)="openDialog('teamlease')">
+        <div class="card-content">
+          
+          <div class="card-top">
+            <span class="tag">CONTRACT 02 //</span>
+            <span class="role">Software Development Engineer</span>
+          </div>
+          
+          <div class="card-body">
+            <h2>TEAMLEASE</h2>
+            <p>Built comprehensive driver onboarding app on Mendix.</p>
+          </div>
+
+          <div class="card-bot">
+            <span class="date">January 2024 — June 2024</span>
+            <span class="icon">→</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="dialog-veil" *ngIf="activeDialog" (click)="closeDialog()">
+    <div class="dialog-box" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h3>PROJECT DETAILS</h3>
+        <button (click)="closeDialog()">✕</button>
+      </div>
+      <div class="dialog-body">
+        <h2>{{ activeDialog | uppercase }}</h2>
+        <p>Full breakdown of contributions and technical impact.</p>
+      </div>
+    </div>
+  </div>
+
+</section>

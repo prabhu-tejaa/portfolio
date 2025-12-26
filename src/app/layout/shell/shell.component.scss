@@ -1,0 +1,150 @@
+/* ---------- HEADER LAYOUT ---------- */
+.shell-header {
+    position: fixed; /* Stays at top while scrolling */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    box-sizing: border-box;
+
+    /* The Magic 3-Column Layout */
+    display: grid;
+    grid-template-columns: 1fr auto 1fr; /* Left space, Auto Center, Right space */
+    align-items: center;
+
+    padding: 32px 48px;
+    
+    color: white;
+    font-family: system-ui, -apple-system, sans-serif;
+    
+    opacity: 0; /* Hidden initially for fade-in */
+    transition: opacity 1.2s ease;
+}
+
+.shell-header.visible {
+    opacity: 1;
+}
+
+/* ---------- 1. LEFT (Name) ---------- */
+.header-left .name {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    text-decoration: none; /* Removes underline since it's a link now */
+    cursor: pointer;
+
+    /* Highlight Logic */
+    color: rgba(255, 255, 255, 0.6); /* Default: Grey/Dim */
+    transition: color 0.3s ease;
+}
+
+.header-left .name:hover,
+.header-left .name.active {
+    color: white; /* Active/Hover: Bright White */
+}
+
+/* ---------- 2. CENTER (Nav) ---------- */
+.header-center {
+    display: flex;
+    gap: 40px; /* Space between links */
+}
+
+.header-center a {
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    
+    /* Highlight Logic */
+    color: rgba(255, 255, 255, 0.6); /* Default: Grey/Dim */
+    transition: color 0.3s ease;
+}
+
+.header-center a:hover,
+.header-center a.active {
+    color: white; /* Active/Hover: Bright White */
+}
+
+/* ---------- 3. RIGHT (Social) ---------- */
+.header-right {
+    justify-self: end; /* Pushes content to the far right */
+}
+
+.social-link {
+    text-decoration: none;
+    font-size: 14px;
+    
+    /* Highlight Logic */
+    color: rgba(255, 255, 255, 0.6); /* Default: Grey/Dim */
+    transition: color 0.3s ease;
+}
+
+.social-link:hover,
+.social-link.active {
+    color: white; /* Active/Hover: Bright White */
+}
+
+/* ---------- LOADER (Original Style) ---------- */
+.loader {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+
+    /* Vital for 3D Performance behind loader */
+    background-color: rgba(0, 0, 0, 0.99); 
+    
+    opacity: 1;
+    transition: opacity 1.2s ease;
+    pointer-events: all;
+}
+
+.loader.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* This allows the spans to sit in a row and animate */
+.loader-text {
+    display: flex !important; /* Forces the letters to stay in a line */
+    gap: 0px; 
+}
+
+.loading-char {
+    display: inline-block;
+    opacity: 0.1; /* Almost invisible start */
+    animation: luxuryPulse 3s infinite ease-in-out;
+}
+
+@keyframes luxuryPulse {
+    0%, 100% {
+        opacity: 0.2;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05); /* Very subtle growth */
+    }
+}
+
+
+
+
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 768px) {
+    .shell-header {
+        padding: 20px 24px;
+        display: flex; /* Switch to Flex on mobile for simple spacing */
+        justify-content: space-between;
+    }
+
+    /* Hide the centered nav on mobile */
+}
+
+
+/* src/app/layout/shell/shell.component.scss */

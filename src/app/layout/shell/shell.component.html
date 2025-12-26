@@ -1,0 +1,34 @@
+<div class="loader" [class.hidden]="isLoaded">
+  <div class="loader-text">
+    <span *ngFor="let char of 'PRABHU TEJA PAMULA'.split(''); let i = index" 
+          [style.animation-delay]="(i * 0.1) + 's'" 
+          class="loading-char">
+      {{ char === ' ' ? '&nbsp;' : char }}
+    </span>
+  </div>
+</div>
+
+<header class="shell-header" *ngIf="isLoaded" [class.visible]="isLoaded">
+  <div class="header-left">
+    <a routerLink="/" class="name" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      PRABHU TEJA
+    </a>
+  </div>
+
+  <nav class="header-center">
+    <a routerLink="/work" routerLinkActive="active">Work</a>
+    <a routerLink="/about" routerLinkActive="active">About</a>
+  </nav>
+
+  <div class="header-right">
+    <a routerLink="/social" class="social-link" routerLinkActive="active">Social</a>
+  </div>
+</header>
+
+<app-globe (ready)="onGlobeReady()"></app-globe>
+
+<div class="router-container" 
+     [class.hidden]="!isLoaded" 
+     [@routeAnimations]="getRouteAnimationData()">
+  <router-outlet></router-outlet>
+</div>

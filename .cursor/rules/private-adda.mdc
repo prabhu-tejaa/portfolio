@@ -1,0 +1,17 @@
+---
+alwaysApply: true
+---
+
+private addAtmosphere() {
+    this.atmosphere = new THREE.Mesh(
+      new THREE.SphereGeometry(1.06, 64, 64),
+      new THREE.MeshBasicMaterial({
+        color: 0x6fa8ff,
+        transparent: true,
+        opacity: 0.08,
+        side: THREE.BackSide,
+      })
+    );
+
+    this.scene.add(this.atmosphere);
+  }
