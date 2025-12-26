@@ -11,16 +11,19 @@ $border: rgba(255, 255, 255, 0.15);
 // 2. THE ONE-SCREEN CONTAINER
 // =========================================
 .compact-editorial {
-  height: 100vh;      // FORCE 100% Screen Height
+  height: 100vh; // FORCE 100% Screen Height
   width: 100%;
   // background: $black;
   color: $white;
   font-family: 'Inter', sans-serif;
-  overflow: hidden;   // NO SCROLLING
+  overflow: hidden; // NO SCROLLING
   position: relative;
-  
+  z-index: 10;
+  pointer-events: none; // Allow clicks to pass through empty spaces
+
+
   // The padding you requested: 10px breathing room on all sides
-  padding: 80px 20px 20px 20px; 
+  padding: 80px 20px 20px 20px;
   box-sizing: border-box;
 
   display: flex;
@@ -28,28 +31,29 @@ $border: rgba(255, 255, 255, 0.15);
   align-items: center;
 }
 
-// Background FX
-.ambient-glow {
-  position: absolute; top: -50%; right: -20%; width: 80%; height: 200%;
-  background: radial-gradient(circle, rgba($accent, 0.08), transparent 60%);
-  pointer-events: none; z-index: 0;
-}
+// REMOVED FOR PERFORMANCE: .ambient-glow, .noise-film
+.ambient-glow,
 .noise-film {
-  position: absolute; inset: 0; opacity: 0.05; pointer-events: none; z-index: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
+  display: none !important;
 }
 
 // =========================================
 // 3. THE SPLIT GRID layout
 // =========================================
 .layout-grid {
-  position: relative; z-index: 10;
-  width: 100%; max-width: 1400px;
+  position: relative;
+  z-index: 10;
+  pointer-events: none; // Wrapper shouldn't block
+  width: 100%;
+  max-width: 1400px;
   height: 100%; // Fill the container
   display: flex;
   gap: 20px;
-  
-  @media (max-width: 1024px) { flex-direction: column; gap: 10px; }
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 
 // =========================================
@@ -59,12 +63,17 @@ $border: rgba(255, 255, 255, 0.15);
   flex: 0 0 25%; // Takes 25% width
   height: 100%;
   border-right: 1px solid $border;
-  display: flex; flex-direction: column;
+  display: flex;
+  flex-direction: column;
   position: relative; // Needed for the label positioning
-  
-  @media (max-width: 1024px) { 
-    flex: 0 0 15%; width: 100%; border-right: none; border-bottom: 1px solid $border; 
-    flex-direction: row; align-items: center;
+
+  @media (max-width: 1024px) {
+    flex: 0 0 15%;
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid $border;
+    flex-direction: row;
+    align-items: center;
   }
 }
 
@@ -74,13 +83,13 @@ $border: rgba(255, 255, 255, 0.15);
   right: -9px; // Centers text exactly on the 1px border line
   top: 50%;
   transform: translateY(-50%) rotate(180deg); // Vertically centered & rotated
-  
-  writing-mode: vertical-rl; 
+
+  writing-mode: vertical-rl;
   text-orientation: mixed;
-  
+
   background: $black; // Mask the line behind text
-  padding: 15px 0;    // Breathing room
-  
+  padding: 15px 0; // Breathing room
+
   font-family: monospace;
   font-size: 0.6rem;
   letter-spacing: 3px;
@@ -90,8 +99,11 @@ $border: rgba(255, 255, 255, 0.15);
   z-index: 5;
 
   // Mobile: Horizontal label at bottom
-  @media (max-width: 1024px) { 
-    right: auto; top: auto; bottom: -10px; left: 50%;
+  @media (max-width: 1024px) {
+    right: auto;
+    top: auto;
+    bottom: -10px;
+    left: 50%;
     transform: translateX(-50%);
     writing-mode: horizontal-tb;
     padding: 0 15px;
@@ -99,114 +111,181 @@ $border: rgba(255, 255, 255, 0.15);
 }
 
 .pane-inner {
-  height: 100%; width: 100%;
-  display: flex; flex-direction: column; justify-content: space-between;
-  padding: 20px; box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-.logo-area img { width: 50px; height: auto; opacity: 0.9; }
+.logo-area img {
+  width: 50px;
+  height: auto;
+  opacity: 0.9;
+}
 
 // --- VERTICAL "SIEMENS" TEXT ---
 .vertical-title {
-  flex: 1; display: flex; align-items: center; justify-content: center;
-  writing-mode: vertical-rl; transform: rotate(180deg);
-  
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+
   h1 {
-    font-size: 8vh; 
-    margin: 0; font-weight: 900; letter-spacing: 1vh;
-    
+    font-size: 8vh;
+    margin: 0;
+    font-weight: 900;
+    letter-spacing: 1vh;
+
     // Default state: Outline text
-    color: transparent; 
-    -webkit-text-stroke: 1px rgba(255,255,255,0.4);
-    
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.4);
+
     transition: 0.5s ease;
-    
+
     // HOVER STATE
-    &:hover { 
+    &:hover {
       color: $accent; // Text turns solid white
       -webkit-text-stroke: 0px;
-      
+
       // THIS IS THE GLOW - Changing 'white' to '$accent'
-      text-shadow: 0 0 4px $white, 0 0 1px $white; 
+      text-shadow: 0 0 4px $white, 0 0 1px $white;
     }
   }
 
-  @media (max-width: 1024px) { 
-    writing-mode: horizontal-tb; transform: none; 
-    h1 { font-size: 2rem; letter-spacing: 5px; }
+  @media (max-width: 1024px) {
+    writing-mode: horizontal-tb;
+    transform: none;
+
+    h1 {
+      font-size: 2rem;
+      letter-spacing: 5px;
+    }
   }
 }
 
 .pane-footer {
-  display: flex; flex-direction: column; gap: 5px;
-  .label { font-size: 0.7rem; color: $accent; font-weight: bold; letter-spacing: 1px; }
-  .mono { font-family: monospace; font-size: 0.7rem; color: rgba(255,255,255,0.5); }
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  .label {
+    font-size: 0.7rem;
+    color: $accent;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+
+  .mono {
+    font-family: monospace;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
 }
 
 // =========================================
 // 5. RIGHT PANE: CONTENT CARDS (Text Version)
 // =========================================
 .content-pane {
-  flex: 1; height: 100%;
-  display: flex; flex-direction: column; 
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   gap: 3vh;
   padding-left: 40px;
-  @media (max-width: 1024px) { padding-left: 0; padding-top: 20px; }
+
+  @media (max-width: 1024px) {
+    padding-left: 0;
+    padding-top: 20px;
+  }
 }
 
 .glass-card {
-  width: 100%; max-width: 700px;
+  width: 100%;
+  max-width: 700px;
   height: 28vh; // Comfortable height for text
   min-height: 160px;
-  
-  background: $glass;
+
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid $border;
-  backdrop-filter: blur(10px);
   position: relative;
   cursor: pointer;
-  transition: all 0.3s ease;
+  pointer-events: auto;
+  transition: transform 0.3s ease, background 0.3s ease; // Only transition specific props
   overflow: hidden;
 
   // Stagger effect
-  &:first-child { transform: translateX(0); }
-  &:last-child { left: 40px }
-  @media (max-width: 1024px) { left: 0; }
+  &:first-child {
+    transform: translateX(0);
+  }
+
+  &:last-child {
+    left: 40px
+  }
+
+  @media (max-width: 1024px) {
+    left: 0;
+  }
 
   &:hover {
-    background: rgba(255,255,255,0.08);
-    border-color: rgba(255,255,255,0.4);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.4);
     transform: scale(1.02);
-    .icon { color: $accent; transform: translateX(5px); }
+
+    .icon {
+      color: $accent;
+      transform: translateX(5px);
+    }
   }
 }
 
 .card-content {
-  height: 100%; width: 100%;
-  box-sizing: border-box; 
-  padding: 3vh 4vh; 
-  
-  display: flex; 
-  flex-direction: column; 
-  justify-content: space-between; 
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 3vh 4vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 // --- TOP ROW ---
 .card-top {
-  display: flex; justify-content: space-between; align-items: center;
-  .tag { font-family: monospace; font-size: 0.7rem; color: rgba(255,255,255,0.4); letter-spacing: 1px; }
-  .role { 
-    background: rgba(255,255,255,0.1); padding: 4px 8px; 
-    font-size: 0.65rem; font-weight: bold; letter-spacing: 1px; color: $accent; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .tag {
+    font-family: monospace;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 1px;
+  }
+
+  .role {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 8px;
+    font-size: 0.65rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: $accent;
     border-radius: 2px;
   }
 }
 
 // --- MIDDLE ROW (The Big Text) ---
 .card-body {
-  display: flex; flex-direction: column; justify-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   flex: 1; // Takes up the middle space
-  
+
   h2 {
     font-size: 2.2rem; // Big Headline Size
     font-weight: 700;
@@ -215,7 +294,7 @@ $border: rgba(255, 255, 255, 0.15);
     letter-spacing: 1px;
     text-transform: uppercase;
   }
-  
+
   p {
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.7);
@@ -228,22 +307,61 @@ $border: rgba(255, 255, 255, 0.15);
 
 // --- BOTTOM ROW ---
 .card-bot {
-  display: flex; justify-content: space-between; align-items: center; 
-  border-top: 1px solid rgba(255,255,255,0.1); 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding-top: 1.5vh;
-  
-  .date { font-family: monospace; font-size: 0.75rem; color: rgba(255,255,255,0.5); }
-  .icon { font-size: 1.2rem; color: rgba(255,255,255,0.3); transition: 0.3s; }
+
+  .date {
+    font-family: monospace;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .icon {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.3);
+    transition: 0.3s;
+  }
 }
 
 // =========================================
 // 6. DIALOG
 // =========================================
 .dialog-veil {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100;
-  display: flex; justify-content: center; align-items: center;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
 .dialog-box {
-  width: 90%; max-width: 500px; background: #111; border: 1px solid $white; padding: 30px;
-  .dialog-header { display: flex; justify-content: space-between; margin-bottom: 20px; h3 { font-size: 0.8rem; color: $accent; margin: 0; } button { background: none; border: none; color: white; cursor: pointer; } }
+  width: 90%;
+  max-width: 500px;
+  background: #111;
+  border: 1px solid $white;
+  padding: 30px;
+
+  .dialog-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    h3 {
+      font-size: 0.8rem;
+      color: $accent;
+      margin: 0;
+    }
+
+    button {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+  }
 }

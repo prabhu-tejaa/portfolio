@@ -16,9 +16,9 @@ import { trigger, transition, style, animate, query, stagger, group } from '@ang
       // ENTER (UNCHANGED)
       // ========================
       transition(':enter', [
-        query('.anchor-pane', [
-          style({ opacity: 0, transform: 'translateX(-50px)' })
-        ], { optional: true }),
+        // query('.anchor-pane', [
+        //   style({ opacity: 0, transform: 'translateX(-50px)' })
+        // ], { optional: true }),
   
         query('.timeline-label', [
           style({ opacity: 0, transform: 'translateY(-40%) rotate(180deg)' })
@@ -55,21 +55,21 @@ import { trigger, transition, style, animate, query, stagger, group } from '@ang
       // ========================
       // EXIT (NEW – SAFE)
       // ========================
-      transition(':leave', [
-        query('.glass-card', [
-          animate(
-            '0.25s ease-in',
-            style({ opacity: 0, transform: 'translateY(-10px)' })
-          )
-        ], { optional: true }),
+      // transition(':leave', [
+      //   query('.glass-card', [
+      //     animate(
+      //       '0.25s ease-in',
+      //       style({ opacity: 0, transform: 'translateY(-10px)' })
+      //     )
+      //   ], { optional: true }),
   
-        query('.anchor-pane, .timeline-label', [
-          animate(
-            '0.25s ease-in',
-            style({ opacity: 0 })
-          )
-        ], { optional: true })
-      ])
+      //   query('.anchor-pane, .timeline-label', [
+      //     animate(
+      //       '0.25s ease-in',
+      //       style({ opacity: 0 })
+      //     )
+      //   ], { optional: true })
+      // ])
   
     ])
   ]

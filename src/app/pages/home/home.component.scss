@@ -1,11 +1,12 @@
 :host {
-    position: relative;
-    z-index: 5;
-  }
-  
-  .home-content {
-    min-height: 100vh;
-    padding-top: 120px; /* pushes content below header */
-    color: white;
-  }
-  
+  position: relative;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.home-content {
+  min-height: 100vh;
+  padding-top: 120px;
+  /* pushes content below header */
+  color: white;
+}

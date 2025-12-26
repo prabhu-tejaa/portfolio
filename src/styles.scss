@@ -19,3 +19,15 @@ app-root {
 canvas {
   display: block;
 }
+
+/* Optimize performance when dragging the globe */
+body.globe-dragging {
+
+  /* Kill ALL transitions and animations to free up the engine */
+  * {
+    pointer-events: none !important;
+    user-select: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}

@@ -50,6 +50,7 @@ animations: [
 })
 export class ShellComponent implements OnInit {
   isLoaded = false;
+  loaderName = 'PRABHU TEJA PAMULA';
 
   constructor(
     private router: Router,
