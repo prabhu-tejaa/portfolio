@@ -274,10 +274,6 @@ export class GlobeEngineService {
         this.targetRotation.y += deltaX * sensitivity;
         this.targetRotation.x += deltaY * sensitivity;
 
-        // Clamp X rotation
-        const maxPolarAngle = Math.PI / 2.5;
-        this.targetRotation.x = Math.max(-maxPolarAngle, Math.min(maxPolarAngle, this.targetRotation.x));
-
         this.previousMouse = { x: event.clientX, y: event.clientY };
     };
 
@@ -307,9 +303,6 @@ export class GlobeEngineService {
         const sensitivity = 0.005;
         this.targetRotation.y += deltaX * sensitivity;
         this.targetRotation.x += deltaY * sensitivity;
-
-        const maxPolarAngle = Math.PI / 2.5;
-        this.targetRotation.x = Math.max(-maxPolarAngle, Math.min(maxPolarAngle, this.targetRotation.x));
     }
 
     /**
