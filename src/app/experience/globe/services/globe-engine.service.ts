@@ -446,8 +446,8 @@ export class GlobeEngineService {
             this.interactionGroup.rotation.y = this.currentRotation.y;
         }
 
-        this.stars.rotation.y += 0.0009 * delta;
-        this.stars.rotation.x += 0.0003 * delta;
+        this.stars.rotation.y += 0.009 * delta;
+        this.stars.rotation.x += 0.009 * delta;
 
         // Removed static earthGroup.rotation.z update from here (moved to init)
         this.renderer.render(this.scene, this.camera);
