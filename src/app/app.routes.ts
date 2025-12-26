@@ -1,35 +1,30 @@
 import { Routes } from '@angular/router';
 import { ShellComponent } from './layout/shell/shell.component';
-import { HomeComponent } from './pages/home/home.component';
-import { AboutComponent } from './pages/about/about.component';
-import { WorkComponent } from './pages/work/work.component';
-import { SocialComponent } from './pages/social/social.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: ShellComponent,
     children: [
-      // 👇 Add "data: { animation: 'Name' }" to each child
-      { 
-        path: '', 
-        component: HomeComponent, 
-        data: { animation: 'HomePage' } 
+      {
+        path: '',
+        loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent),
+        data: { animation: 'HomePage' }
       },
-      { 
-        path: 'about', 
-        component: AboutComponent, 
-        data: { animation: 'AboutPage' } // 👈 Vital for the exit animation
+      {
+        path: 'about',
+        loadComponent: () => import('./pages/about/about.component').then(m => m.AboutComponent),
+        data: { animation: 'AboutPage' }
       },
-      { 
-        path: 'work', 
-        component: WorkComponent, 
-        data: { animation: 'WorkPage' } 
+      {
+        path: 'work',
+        loadComponent: () => import('./pages/work/work.component').then(m => m.WorkComponent),
+        data: { animation: 'WorkPage' }
       },
-      { 
-        path: 'social', 
-        component: SocialComponent, 
-        data: { animation: 'SocialPage' } 
+      {
+        path: 'social',
+        loadComponent: () => import('./pages/social/social.component').then(m => m.SocialComponent),
+        data: { animation: 'SocialPage' }
       }
     ]
   }

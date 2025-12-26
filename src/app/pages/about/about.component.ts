@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   trigger,
@@ -14,24 +14,25 @@ import {
   imports: [CommonModule],
   templateUrl: './about.component.html',
   styleUrls: ['./about.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
-      trigger('pageAnimations', [
+    trigger('pageAnimations', [
 
 
       // =====================
       // EXIT — SOFT RELEASE
       // =====================
-transition(':leave', [
-  query('.event-row', [
-    animate(
-      '320ms cubic-bezier(0.4, 0.0, 0.2, 1)',
-      style({
-        transform: 'translateY(16px)', // 👇 moves DOWN
-        opacity: 0                    // 👻 soft fade
-      })
-    )
-  ], { optional: true })
-])
+      transition(':leave', [
+        query('.event-row', [
+          animate(
+            '320ms cubic-bezier(0.4, 0.0, 0.2, 1)',
+            style({
+              transform: 'translateY(16px)', // 👇 moves DOWN
+              opacity: 0                    // 👻 soft fade
+            })
+          )
+        ], { optional: true })
+      ])
     ])
   ]
 })
