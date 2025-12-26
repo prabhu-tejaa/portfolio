@@ -319,8 +319,8 @@ export class SocialWorldService implements OnDestroy {
         if (this.hoveredObject && this.onInteraction) {
             const data = this.hoveredObject.userData;
             this.onInteraction({
-                type: data.type,
-                url: data.url,
+                type: data['type'],
+                url: data['url'],
                 data: data
             });
         }

@@ -135,6 +135,8 @@ export class GlobeEngineService {
                 side: THREE.DoubleSide
             })
         );
+        this.clouds.rotation.y = Math.random() * Math.PI * 2;
+        this.clouds.rotation.x = Math.random() * Math.PI * 2;
 
         // 3. ATMOSPHERE
         const atmosphereMaterial = new THREE.ShaderMaterial({
@@ -425,11 +427,11 @@ export class GlobeEngineService {
         const delta = this.clock.getDelta();
 
         if (this.autoSpin) {
-            this.earth.rotation.y += 0.05 * delta;
-            this.clouds.rotation.y += 0.07 * delta;
+            this.earth.rotation.y += 0.04 * delta;
+            this.clouds.rotation.y += 0.03 * delta;
         } else {
             // No custom spin, just regular rotation
-            this.clouds.rotation.y += 0.02 * delta;
+            this.clouds.rotation.y += 0.01 * delta;
         }
 
         // --- Interaction Smoothing (Time-Independent LERP) ---
