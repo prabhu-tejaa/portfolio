@@ -1,14 +1,11 @@
-<!-- </section class="compact-editorial" [@pageAnimations]> -->
 <section class="compact-editorial" [@pageAnimations]>
-  
   <div class="ambient-glow"></div>
   <div class="noise-film"></div>
 
   <div class="layout-grid">
-
     <div class="anchor-pane">
       <div class="timeline-label">CONTRACT TIMELINE</div>
-      <div class="pane-inner">        
+      <div class="pane-inner">
         <div class="vertical-title">
           <h1>SIEMENS</h1>
         </div>
@@ -21,15 +18,13 @@
     </div>
 
     <div class="content-pane">
-      
       <div class="glass-card" (click)="openDialog('adapt')">
         <div class="card-content">
-          
           <div class="card-top">
             <span class="tag">CONTRACT 01 //</span>
             <span class="role">Software Engineer</span>
           </div>
-          
+
           <div class="card-body">
             <h2>ADAPT CHIPS</h2>
             <p>Developed desktop & mobile apps for IoT devices.</p>
@@ -44,12 +39,11 @@
 
       <div class="glass-card" (click)="openDialog('teamlease')">
         <div class="card-content">
-          
           <div class="card-top">
             <span class="tag">CONTRACT 02 //</span>
             <span class="role">Software Development Engineer</span>
           </div>
-          
+
           <div class="card-body">
             <h2>TEAMLEASE</h2>
             <p>Built comprehensive driver onboarding app on Mendix.</p>
@@ -61,9 +55,7 @@
           </div>
         </div>
       </div>
-
     </div>
-
   </div>
 
   <div class="dialog-veil" *ngIf="activeDialog" (click)="closeDialog()">
@@ -78,5 +70,4 @@
       </div>
     </div>
   </div>
-
 </section>

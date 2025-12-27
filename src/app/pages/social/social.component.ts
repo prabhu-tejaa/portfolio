@@ -30,7 +30,6 @@ export class SocialComponent implements AfterViewInit, OnDestroy {
     ngAfterViewInit(): void {
         this.worldService.init(this.rendererContainer.nativeElement);
 
-        // Listen for 3D interactions
         this.worldService.onInteraction = (event: InteractionEvent) => {
             this.handleInteraction(event);
         };
@@ -46,7 +45,7 @@ export class SocialComponent implements AfterViewInit, OnDestroy {
         } else if (event.type === 'contact') {
             this.zone.run(() => {
                 this.isModalOpen = true;
-                this.cdRef.markForCheck(); // Explicitly update UI
+                this.cdRef.markForCheck();
             });
         }
     }
@@ -90,7 +89,6 @@ export class SocialComponent implements AfterViewInit, OnDestroy {
                 this.isLoading = false;
                 this.worldService.setTransitionState(false);
                 this.submissionStatus = 'Error. Please try again.';
-                console.error(error);
                 this.cdRef.markForCheck();
             });
     }

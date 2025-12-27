@@ -3,12 +3,8 @@
   <div class="timeline">
     <div class="center-line"></div>
 
-    <div
-      class="event-row"
-      *ngFor="let item of timeline; let i = index"
-      [class.left]="i % 2 === 0"
-      [class.right]="i % 2 !== 0"
-    >
+    <div class="event-row" *ngFor="let item of timeline; let i = index" [class.left]="i % 2 === 0"
+      [class.right]="i % 2 !== 0">
       <div class="dot">
         <span>{{ item.icon }}</span>
       </div>

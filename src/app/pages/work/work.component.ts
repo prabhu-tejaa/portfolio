@@ -9,18 +9,9 @@ import { trigger, transition, style, animate, query, stagger, group } from '@ang
   templateUrl: './work.component.html',
   styleUrls: ['./work.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  // --- ANIMATIONS ---
   animations: [
     trigger('pageAnimations', [
-
-      // ========================
-      // ENTER (UNCHANGED)
-      // ========================
       transition(':enter', [
-        // query('.anchor-pane', [
-        //   style({ opacity: 0, transform: 'translateX(-50px)' })
-        // ], { optional: true }),
-
         query('.timeline-label', [
           style({ opacity: 0, transform: 'translateY(-40%) rotate(180deg)' })
         ], { optional: true }),
@@ -51,30 +42,9 @@ import { trigger, transition, style, animate, query, stagger, group } from '@ang
             )
           ]), { optional: true })
         ])
-      ]),
-
-      // ========================
-      // EXIT (NEW – SAFE)
-      // ========================
-      // transition(':leave', [
-      //   query('.glass-card', [
-      //     animate(
-      //       '0.25s ease-in',
-      //       style({ opacity: 0, transform: 'translateY(-10px)' })
-      //     )
-      //   ], { optional: true }),
-
-      //   query('.anchor-pane, .timeline-label', [
-      //     animate(
-      //       '0.25s ease-in',
-      //       style({ opacity: 0 })
-      //     )
-      //   ], { optional: true })
-      // ])
-
+      ])
     ])
   ]
-
 })
 export class WorkComponent {
   activeDialog: 'adapt' | 'teamlease' | null = null;

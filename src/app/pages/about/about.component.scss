@@ -1,33 +1,36 @@
-/* src/app/pages/about/about.component.scss */
-
 $neon-blue: #00f3ff;
-/* RESTORED: The simple clean glass you liked */
 $glass-bg: rgba(255, 255, 255, 0.05);
 $glass-border: rgba(255, 255, 255, 0.1);
 
 .about-container {
-  /* Layout Fix for Router Animation */
   min-height: 100vh;
   width: 100%;
   padding-top: 120px;
   padding-bottom: 100px;
   box-sizing: border-box;
   color: white;
-  position: relative; 
+  position: relative;
   z-index: 10;
-  
-  /* Scroll handling */
+
   scroll-behavior: smooth;
 
-  &::-webkit-scrollbar { width: 6px; }
-  &::-webkit-scrollbar-track { background: transparent; }
-  &::-webkit-scrollbar-thumb { background: rgba(0, 243, 255, 0.2); border-radius: 3px; }
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 243, 255, 0.2);
+    border-radius: 3px;
+  }
 }
 
 .header {
   text-align: center;
   margin-bottom: 80px;
-  /* KEEP CSS ANIMATION */
   animation: fadeInDown 1s ease-out;
 
   h1 {
@@ -73,28 +76,56 @@ $glass-border: rgba(255, 255, 255, 0.1);
   align-items: center;
   margin-bottom: 60px;
   position: relative;
-  
-  /* KEEP CSS ANIMATION - This creates the stagger effect you liked */
+
   opacity: 0;
   animation: floatIn 0.8s ease-out forwards;
-  
-  /* Manual Stagger Delays */
-  &:nth-child(1) { animation-delay: 0s; }
-  &:nth-child(2) { animation-delay: 0.2s; }
-  &:nth-child(3) { animation-delay: 0.4s; }
-  &:nth-child(4) { animation-delay: 0.6s; }
-  &:nth-child(5) { animation-delay: 0.8s; }
-  &:nth-child(6) { animation-delay: 1.0s; }
-  &:nth-child(7) { animation-delay: 1.2s; }
+
+  &:nth-child(1) {
+    animation-delay: 0s;
+  }
+
+  &:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  &:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  &:nth-child(4) {
+    animation-delay: 0.6s;
+  }
+
+  &:nth-child(5) {
+    animation-delay: 0.8s;
+  }
+
+  &:nth-child(6) {
+    animation-delay: 1.0s;
+  }
+
+  &:nth-child(7) {
+    animation-delay: 1.2s;
+  }
 
   &.left {
     flex-direction: row-reverse;
-    .content-card { text-align: right; margin-right: 50px; }
-    .year { justify-content: flex-end; }
+
+    .content-card {
+      text-align: right;
+      margin-right: 50px;
+    }
+
+    .year {
+      justify-content: flex-end;
+    }
   }
 
   &.right {
-    .content-card { text-align: left; margin-left: 50px; }
+    .content-card {
+      text-align: left;
+      margin-left: 50px;
+    }
   }
 }
 
@@ -124,12 +155,10 @@ $glass-border: rgba(255, 255, 255, 0.1);
 
 .content-card {
   width: 40%;
-  /* RESTORED: Simple Glass Background */
-  background: $glass-bg; 
+  background: $glass-bg;
   border: 1px solid $glass-border;
   padding: 25px;
   border-radius: 15px;
-  // backdrop-filter: blur(10px);
   transition: all 0.3s ease;
 
   &:hover {
@@ -163,27 +192,47 @@ $glass-border: rgba(255, 255, 255, 0.1);
 }
 
 @media (max-width: 768px) {
-  .center-line { left: 20px; }
+  .center-line {
+    left: 20px;
+  }
+
   .event-row {
     flex-direction: row !important;
     justify-content: flex-start;
-    &.left .content-card, 
+
+    &.left .content-card,
     &.right .content-card {
       text-align: left;
       margin: 0 0 0 60px;
       width: 100%;
     }
   }
-  .dot { left: 20px; }
+
+  .dot {
+    left: 20px;
+  }
 }
 
-/* KEYFRAMES RESTORED */
 @keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-30px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes floatIn {
-  from { opacity: 0; transform: translateY(50px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

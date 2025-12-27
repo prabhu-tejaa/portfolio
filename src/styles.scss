@@ -15,19 +15,76 @@ app-root {
   overflow: hidden;
 }
 
-/* Fix canvas inline spacing */
 canvas {
   display: block;
 }
 
-/* Optimize performance when dragging the globe */
 body.globe-dragging {
-
-  /* Kill ALL transitions and animations to free up the engine */
   * {
     pointer-events: none !important;
     user-select: none !important;
     transition: none !important;
     animation: none !important;
+  }
+}
+
+// --- GLOBAL WIP INDICATOR ---
+.wip-badge {
+  position: fixed;
+  top: 100px;
+  right: 30px;
+  background: rgba(255, 0, 0, 0.15);
+  border: 1px solid rgba(255, 0, 0, 0.4);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+  padding: 8px 16px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 999;
+  backdrop-filter: blur(5px);
+  pointer-events: none; // Let clicks pass through
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    background-color: #ff3333;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #ff0000;
+    animation: blink 1.5s infinite ease-in-out;
+  }
+
+  span {
+    color: #ffcccc;
+    font-family: monospace;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    font-weight: bold;
+  }
+}
+
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+}
+
+@media (max-width: 768px) {
+  .wip-badge {
+    top: 80px;
+    right: 20px;
+    padding: 6px 12px;
+
+    span {
+      font-size: 0.65rem;
+    }
   }
 }

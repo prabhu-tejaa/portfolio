@@ -20,21 +20,18 @@ export class SocialWorldService implements OnDestroy {
     private animationId: number = 0;
     private container!: HTMLElement;
 
-    // --- CONFIGURATION ---
     private readonly BASE_ICON_SIZE = 2.2;
     private readonly ORBIT_RADIUS = 9.5;
     private readonly AVATAR_SIZE = 5.5;
     private readonly NORMAL_SPEED = 0.003;
     private readonly CRAZY_SPEED = 0.15;
     private readonly BASE_CAMERA_Z = 18;
-    // ---------------------
 
     private speedUpInterval: any = null;
     private isTransitioning = false;
     private hoveredObject: THREE.Object3D | null = null;
     private currentOrbitSpeed = 0.003;
 
-    // Callback for when user clicks an item
     public onInteraction?: (event: InteractionEvent) => void;
 
     constructor(private zone: NgZone) { }
@@ -44,7 +41,6 @@ export class SocialWorldService implements OnDestroy {
         this.initThree();
         this.createSceneContent();
 
-        // Loop outside Angular to avoid CD thrashing
         this.zone.runOutsideAngular(() => {
             this.animate();
         });
@@ -99,7 +95,6 @@ export class SocialWorldService implements OnDestroy {
         }
 
         if (this.renderer) {
-            // Remove listeners
             this.renderer.domElement.removeEventListener('click', this.boundOnCanvasClick);
             this.renderer.domElement.removeEventListener('mousemove', this.boundOnMouseMove);
             this.renderer.domElement.removeEventListener('touchstart', this.boundOnTouchStart);
@@ -111,11 +106,9 @@ export class SocialWorldService implements OnDestroy {
             }
         }
 
-        // Clear references
         this.onInteraction = undefined;
     }
 
-    // Bind methods to keep 'this' context
     private boundOnCanvasClick = this.onCanvasClick.bind(this);
     private boundOnMouseMove = this.onMouseMove.bind(this);
     private boundOnTouchStart = this.onTouchStart.bind(this);
@@ -146,7 +139,6 @@ export class SocialWorldService implements OnDestroy {
         const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
         this.scene.add(ambientLight);
 
-        // Event Listeners
         this.renderer.domElement.addEventListener('click', this.boundOnCanvasClick);
         this.renderer.domElement.addEventListener('mousemove', this.boundOnMouseMove);
         this.renderer.domElement.addEventListener('touchstart', this.boundOnTouchStart, { passive: false });
@@ -166,7 +158,6 @@ export class SocialWorldService implements OnDestroy {
     private createSceneContent(): void {
         const loader = new THREE.TextureLoader();
 
-        // --- 1. THE AVATAR ---
         loader.load('assets/me.jpeg', (texture) => {
             texture.colorSpace = THREE.SRGBColorSpace;
             const roundedTexture = this.getRoundedTexture(texture);
@@ -186,7 +177,6 @@ export class SocialWorldService implements OnDestroy {
             this.scene.add(avatar);
         });
 
-        // --- 2. ORBITING ICONS ---
         this.orbitGroup = new THREE.Group();
         this.scene.add(this.orbitGroup);
 
@@ -291,7 +281,6 @@ export class SocialWorldService implements OnDestroy {
             const touch = event.touches[0];
             const rect = this.renderer.domElement.getBoundingClientRect();
             this.updateRaycaster(touch.clientX, touch.clientY, rect);
-            // Simulate click for touch devices
             this.onCanvasClick({} as MouseEvent);
         }
     }

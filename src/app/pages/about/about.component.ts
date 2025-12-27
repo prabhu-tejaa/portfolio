@@ -17,18 +17,13 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('pageAnimations', [
-
-
-      // =====================
-      // EXIT — SOFT RELEASE
-      // =====================
       transition(':leave', [
         query('.event-row', [
           animate(
             '320ms cubic-bezier(0.4, 0.0, 0.2, 1)',
             style({
-              transform: 'translateY(16px)', // 👇 moves DOWN
-              opacity: 0                    // 👻 soft fade
+              transform: 'translateY(16px)',
+              opacity: 0
             })
           )
         ], { optional: true })
@@ -37,7 +32,6 @@ import {
   ]
 })
 export class AboutComponent {
-
   timeline = [
     { year: '1996', title: 'The Origin', desc: 'Born in India.', icon: '✨' },
     { year: 'Jun 2000 - March 2002', title: 'The Foundation', desc: 'St.John school, gannavaram', icon: '🎓' },

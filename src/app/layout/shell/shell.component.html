@@ -1,8 +1,7 @@
 <div class="loader" [class.hidden]="isLoaded">
   <div class="loader-text">
-    <span *ngFor="let char of 'PRABHU TEJA PAMULA'.split(''); let i = index" 
-          [style.animation-delay]="(i * 0.1) + 's'" 
-          class="loading-char">
+    <span *ngFor="let char of 'PRABHU TEJA PAMULA'.split(''); let i = index" [style.animation-delay]="(i * 0.1) + 's'"
+      class="loading-char">
       {{ char === ' ' ? '&nbsp;' : char }}
     </span>
   </div>
@@ -27,8 +26,11 @@
 
 <app-globe (ready)="onGlobeReady()"></app-globe>
 
-<div class="router-container" 
-     [class.hidden]="!isLoaded" 
-     [@routeAnimations]="getRouteAnimationData()">
+<div class="router-container" [class.hidden]="!isLoaded" [@routeAnimations]="getRouteAnimationData()">
   <router-outlet></router-outlet>
+</div>
+
+<div class="wip-badge" *ngIf="showWipBadge && isLoaded">
+  <div class="dot"></div>
+  <span>WORK IN PROGRESS</span>
 </div>

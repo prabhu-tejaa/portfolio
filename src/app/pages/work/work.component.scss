@@ -1,28 +1,18 @@
-// =========================================
-// 1. VARIABLES
-// =========================================
 $black: #050505;
 $white: #ffffff;
 $accent: #00f3ff;
 $glass: rgba(255, 255, 255, 0.03);
 $border: rgba(255, 255, 255, 0.15);
 
-// =========================================
-// 2. THE ONE-SCREEN CONTAINER
-// =========================================
 .compact-editorial {
-  height: 100vh; // FORCE 100% Screen Height
+  height: 100vh;
   width: 100%;
-  // background: $black;
   color: $white;
   font-family: 'Inter', sans-serif;
-  overflow: hidden; // NO SCROLLING
+  overflow: hidden;
   position: relative;
   z-index: 10;
-  pointer-events: none; // Allow clicks to pass through empty spaces
-
-
-  // The padding you requested: 10px breathing room on all sides
+  pointer-events: none;
   padding: 80px 20px 20px 20px;
   box-sizing: border-box;
 
@@ -31,22 +21,18 @@ $border: rgba(255, 255, 255, 0.15);
   align-items: center;
 }
 
-// REMOVED FOR PERFORMANCE: .ambient-glow, .noise-film
 .ambient-glow,
 .noise-film {
   display: none !important;
 }
 
-// =========================================
-// 3. THE SPLIT GRID layout
-// =========================================
 .layout-grid {
   position: relative;
   z-index: 10;
-  pointer-events: none; // Wrapper shouldn't block
+  pointer-events: none;
   width: 100%;
   max-width: 1400px;
-  height: 100%; // Fill the container
+  height: 100%;
   display: flex;
   gap: 20px;
 
@@ -56,16 +42,13 @@ $border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// =========================================
-// 4. LEFT PANE: SIEMENS ANCHOR
-// =========================================
 .anchor-pane {
-  flex: 0 0 25%; // Takes 25% width
+  flex: 0 0 25%;
   height: 100%;
   border-right: 1px solid $border;
   display: flex;
   flex-direction: column;
-  position: relative; // Needed for the label positioning
+  position: relative;
 
   @media (max-width: 1024px) {
     flex: 0 0 15%;
@@ -77,18 +60,17 @@ $border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// --- NEW: THE MIDDLE BREAKER LABEL ---
 .timeline-label {
   position: absolute;
-  right: -9px; // Centers text exactly on the 1px border line
+  right: -9px;
   top: 50%;
-  transform: translateY(-50%) rotate(180deg); // Vertically centered & rotated
+  transform: translateY(-50%) rotate(180deg);
 
   writing-mode: vertical-rl;
   text-orientation: mixed;
 
-  background: $black; // Mask the line behind text
-  padding: 15px 0; // Breathing room
+  background: $black;
+  padding: 15px 0;
 
   font-family: monospace;
   font-size: 0.6rem;
@@ -98,7 +80,6 @@ $border: rgba(255, 255, 255, 0.15);
   white-space: nowrap;
   z-index: 5;
 
-  // Mobile: Horizontal label at bottom
   @media (max-width: 1024px) {
     right: auto;
     top: auto;
@@ -126,7 +107,6 @@ $border: rgba(255, 255, 255, 0.15);
   opacity: 0.9;
 }
 
-// --- VERTICAL "SIEMENS" TEXT ---
 .vertical-title {
   flex: 1;
   display: flex;
@@ -141,18 +121,14 @@ $border: rgba(255, 255, 255, 0.15);
     font-weight: 900;
     letter-spacing: 1vh;
 
-    // Default state: Outline text
     color: transparent;
     -webkit-text-stroke: 1px rgba(255, 255, 255, 0.4);
 
     transition: 0.5s ease;
 
-    // HOVER STATE
     &:hover {
-      color: $accent; // Text turns solid white
+      color: $accent;
       -webkit-text-stroke: 0px;
-
-      // THIS IS THE GLOW - Changing 'white' to '$accent'
       text-shadow: 0 0 4px $white, 0 0 1px $white;
     }
   }
@@ -187,9 +163,6 @@ $border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// =========================================
-// 5. RIGHT PANE: CONTENT CARDS (Text Version)
-// =========================================
 .content-pane {
   flex: 1;
   height: 100%;
@@ -208,7 +181,7 @@ $border: rgba(255, 255, 255, 0.15);
 .glass-card {
   width: 100%;
   max-width: 700px;
-  height: 28vh; // Comfortable height for text
+  height: 28vh;
   min-height: 160px;
 
   background: rgba(255, 255, 255, 0.03);
@@ -216,10 +189,9 @@ $border: rgba(255, 255, 255, 0.15);
   position: relative;
   cursor: pointer;
   pointer-events: auto;
-  transition: transform 0.3s ease, background 0.3s ease; // Only transition specific props
+  transition: transform 0.3s ease, background 0.3s ease;
   overflow: hidden;
 
-  // Stagger effect
   &:first-child {
     transform: translateX(0);
   }
@@ -255,7 +227,6 @@ $border: rgba(255, 255, 255, 0.15);
   justify-content: space-between;
 }
 
-// --- TOP ROW ---
 .card-top {
   display: flex;
   justify-content: space-between;
@@ -279,15 +250,14 @@ $border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// --- MIDDLE ROW (The Big Text) ---
 .card-body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  flex: 1; // Takes up the middle space
+  flex: 1;
 
   h2 {
-    font-size: 2.2rem; // Big Headline Size
+    font-size: 2.2rem;
     font-weight: 700;
     color: white;
     margin: 0 0 5px 0;
@@ -305,7 +275,6 @@ $border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// --- BOTTOM ROW ---
 .card-bot {
   display: flex;
   justify-content: space-between;
@@ -326,9 +295,6 @@ $border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// =========================================
-// 6. DIALOG
-// =========================================
 .dialog-veil {
   position: fixed;
   inset: 0;
