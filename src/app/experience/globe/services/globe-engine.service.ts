@@ -400,8 +400,7 @@ export class GlobeEngineService {
         gsap.to(this.camera.position, {
             duration: fadeSpeed,
             x: targetX, y: targetY, z: targetZ,
-            ease: 'power2.inOut',
-            force3D: true
+            ease: 'power2.inOut'
         });
 
         if (earthMat.map !== targetMap) {

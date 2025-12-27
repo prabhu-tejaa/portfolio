@@ -1,10 +1,5 @@
 <div class="loader" [class.hidden]="isLoaded">
-  <div class="loader-text">
-    <span *ngFor="let char of 'PRABHU TEJA PAMULA'.split(''); let i = index" [style.animation-delay]="(i * 0.1) + 's'"
-      class="loading-char">
-      {{ char === ' ' ? '&nbsp;' : char }}
-    </span>
-  </div>
+  <app-breathing-blur-loader [text]="loaderName"></app-breathing-blur-loader>
 </div>
 
 <header class="shell-header" *ngIf="isLoaded" [class.visible]="isLoaded">

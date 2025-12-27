@@ -1,0 +1,11 @@
+<div class="blur-loader-container">
+    <span
+      *ngFor="let char of chars; trackBy: trackByIndex"
+      #charSpan
+      class="blur-char"
+      [class.space-char]="char === ' '"
+    >
+      {{ char === ' ' ? '\u00A0' : char }}
+    </span>
+  </div>
+  

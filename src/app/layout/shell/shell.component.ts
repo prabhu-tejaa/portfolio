@@ -1,6 +1,7 @@
 import { Component, ChangeDetectorRef, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, NavigationEnd, RouterModule, RouterOutlet, ChildrenOutletContexts, IsActiveMatchOptions } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { BreathingBlurLoaderComponent } from '../../shared/components/breathing-blur-loader/breathing-blur-loader.component';
 import { GlobeComponent } from '../../experience/globe/globe.component';
 import { GlobeEngineService } from '../../experience/globe/services/globe-engine.service';
 import { SocialWorldService } from '../../pages/social/services/social-world.service';
@@ -10,7 +11,13 @@ import { trigger, transition, style, query, animate, group } from '@angular/anim
 @Component({
   selector: 'app-shell',
   standalone: true,
-  imports: [CommonModule, RouterModule, GlobeComponent, RouterOutlet],
+  imports: [
+    CommonModule,
+    RouterModule,
+    GlobeComponent,
+    RouterOutlet,
+    BreathingBlurLoaderComponent
+  ],
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,7 +25,6 @@ import { trigger, transition, style, query, animate, group } from '@angular/anim
     trigger('routeAnimations', [
       transition('* => SocialPage', [
         style({ position: 'relative' }),
-
         query(':enter, :leave', [
           style({
             position: 'absolute',
@@ -28,15 +34,37 @@ import { trigger, transition, style, query, animate, group } from '@angular/anim
             height: '100%'
           })
         ], { optional: true }),
-
         group([
           query(':leave', [
             animate('0ms', style({ opacity: 0, display: 'none' }))
           ], { optional: true }),
-
           query(':enter', [
             style({ opacity: 0, zIndex: 2 }),
             animate('1200ms ease-in-out', style({ opacity: 1 }))
+          ], { optional: true })
+        ])
+      ]),
+      // Default transition for other pages
+      transition('* <=> *', [
+        style({ position: 'relative' }),
+        query(':enter, :leave', [
+          style({
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            zIndex: 2
+          })
+        ], { optional: true }),
+        query(':enter', [
+          style({ opacity: 0, transform: 'translateY(10px)' })
+        ], { optional: true }),
+        group([
+          query(':leave', [
+            animate('600ms cubic-bezier(0.4, 0, 0.2, 1)', style({ opacity: 0, transform: 'translateY(-10px)' }))
+          ], { optional: true }),
+          query(':enter', [
+            animate('800ms 200ms cubic-bezier(0.4, 0, 0.2, 1)', style({ opacity: 1, transform: 'translateY(0)' }))
           ], { optional: true })
         ])
       ])
@@ -90,9 +118,9 @@ export class ShellComponent implements OnInit {
     // Settling delay to ensure heavy GPU tasks are finished before UI animations start
     setTimeout(() => {
       this.isLoaded = true;
-      this.globeEngine.transitionTo(this.router.url);
       this.cdr.markForCheck();
-    }, 600);
+    }, 900);
+    
   }
 
   getRouteAnimationData() {

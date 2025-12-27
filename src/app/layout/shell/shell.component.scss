@@ -84,46 +84,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 20;
-
+    z-index: 200; // Make sure this is higher than the header
     background-color: rgba(0, 0, 0, 0.99);
-
-    opacity: 1;
-    transition: opacity 1.2s ease;
-    pointer-events: all;
+    
+    // No transitions or animations here - all animation is handled by breathing-blur-loader
+    // The loader visibility is controlled purely by the breathing-blur-loader component
 }
 
 .loader.hidden {
     opacity: 0;
     pointer-events: none;
+    // No transition - let breathing-blur-loader handle all animation timing
 }
 
-.loader-text {
-    display: flex !important;
-    gap: 0px;
-    color: #ffffff;
-}
 
-.loading-char {
-    display: inline-block;
-    opacity: 0;
-    animation: textLoaderVibe 2s infinite ease-in-out;
-    letter-spacing: 0.1em;
-}
-
-@keyframes textLoaderVibe {
-
-    0%,
-    100% {
-        opacity: 0.1;
-        filter: blur(2px);
-    }
-
-    50% {
-        opacity: 1;
-        filter: blur(0px);
-    }
-}
 
 @media (max-width: 768px) {
     .shell-header {
