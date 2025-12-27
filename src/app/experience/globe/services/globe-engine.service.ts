@@ -278,8 +278,10 @@ export class GlobeEngineService {
         this.isDragging = true;
         this.previousMouse = { x: event.clientX, y: event.clientY };
 
-        document.body.style.cursor = 'grabbing';
-        document.body.classList.add('globe-dragging');
+        if (this.canvasElement) {
+            this.canvasElement.style.cursor = 'grabbing';
+            this.canvasElement.classList.add('globe-dragging');
+        }
 
         if (event.cancelable) event.preventDefault();
 
@@ -288,6 +290,19 @@ export class GlobeEngineService {
 
     private onPointerMove = (event: PointerEvent) => {
         if (this.currentRoute.includes('work')) return;
+
+        // Hover handling for cursor
+        if (!this.isDragging && this.renderer && this.camera && this.earth) {
+            this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            this.raycaster.setFromCamera(this.mouse, this.camera);
+            const intersects = this.raycaster.intersectObject(this.earth);
+
+            if (this.canvasElement) {
+                this.canvasElement.style.cursor = intersects.length > 0 ? 'grab' : 'default';
+            }
+        }
+
         if (!this.isDragging) return;
         if (event.cancelable) event.preventDefault();
 
@@ -305,8 +320,10 @@ export class GlobeEngineService {
         if (!this.isDragging) return;
         this.isDragging = false;
 
-        document.body.style.cursor = '';
-        document.body.classList.remove('globe-dragging');
+        if (this.canvasElement) {
+            this.canvasElement.style.cursor = 'grab';
+            this.canvasElement.classList.remove('globe-dragging');
+        }
 
         gsap.to(this.targetRotation, {
             x: 0,
@@ -388,7 +405,6 @@ export class GlobeEngineService {
 
         if (this.canvasElement) {
             this.canvasElement.style.pointerEvents = isWork ? 'none' : 'auto';
-            this.canvasElement.style.cursor = isWork ? 'default' : 'grab';
         }
     }
 
