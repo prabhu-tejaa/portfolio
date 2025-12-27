@@ -210,10 +210,10 @@ export class GlobeEngineService {
 
         // 2. Pulse (The "Buzz" Effect)
         const pulseGeo = new THREE.SphereGeometry(0.013, 16, 16);
-        const pulseMat = new THREE.MeshBasicMaterial({ 
-            color: 0x00ff00, 
-            transparent: true, 
-            opacity: 0.7 
+        const pulseMat = new THREE.MeshBasicMaterial({
+            color: 0x00ff00,
+            transparent: true,
+            opacity: 0.7
         });
         this.pulseMesh = new THREE.Mesh(pulseGeo, pulseMat);
 
@@ -325,8 +325,12 @@ export class GlobeEngineService {
 
     transitionTo(route: string) {
         if (!this.camera || !this.earthGroup) return;
-        if (this.currentRoute === route) return;
-        this.currentRoute = route;
+
+        // Strip query parameters for cleaner route matching
+        const cleanRoute = route.split('?')[0];
+
+        if (this.currentRoute === cleanRoute) return;
+        this.currentRoute = cleanRoute;
 
         gsap.killTweensOf(this.camera.position);
         gsap.killTweensOf((this.earth.material as THREE.Material));
@@ -345,10 +349,10 @@ export class GlobeEngineService {
         let spin = true;
         let targetMap = this.dayMap;
 
-        const isWork = route.includes('work');
-        const fadeSpeed = route.includes('about') ? 1.2 : 1.5;
+        const isWork = cleanRoute.includes('work');
+        const fadeSpeed = cleanRoute.includes('about') ? 1.2 : 1.5;
 
-        if (route.includes('about')) {
+        if (cleanRoute.includes('about')) {
             targetZ = 0.8;
             targetFade = 0;
             spin = false;
@@ -358,7 +362,7 @@ export class GlobeEngineService {
             targetX = 0; targetY = 0.2; targetZ = 3.5;
             targetFade = 1.0; spin = true; targetMap = this.nightMap;
         }
-        else if (route.includes('social')) {
+        else if (cleanRoute.includes('social')) {
             targetX = 0; targetY = 1.4; targetZ = 3.5;
             targetFade = 1; spin = true; targetMap = this.dayMap;
         }
