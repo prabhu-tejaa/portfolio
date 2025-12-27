@@ -40,41 +40,53 @@ export class BreathingBlurLoaderComponent implements AfterViewInit, OnDestroy {
 
   /* -------- Lifecycle -------- */
   ngAfterViewInit() {
+    // We rely on the initial input or manually starting it here.
+    // If the input was set before ViewInit, startAnimation would have failed due to missing elements.
     this.startAnimation();
   }
 
   ngOnDestroy() {
     this.destroyed = true;
-
-    if (this.animation) {
-      this.animation.stop();
-    }
-
-    if (this.timeoutId) {
-      clearTimeout(this.timeoutId);
-    }
+    this.stopAnimation();
   }
 
   /* -------- Animation Control -------- */
   private scheduleAnimation() {
+    if (this.destroyed) return;
     if (this.timeoutId) clearTimeout(this.timeoutId);
-    this.timeoutId = setTimeout(() => this.startAnimation(), 50);
+    this.timeoutId = setTimeout(() => this.startAnimation(), 100);
   }
 
-  private async startAnimation() {
-    this.destroyed = false;
+  private stopAnimation() {
+    if (this.animation) {
+      try {
+        this.animation.stop();
+      } catch (e) {
+        // Ignore errors during stop
+      }
+      this.animation = undefined;
+    }
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+      this.timeoutId = undefined;
+    }
+  }
 
-    if (!this.charElements || this.charElements.length === 0) return;
+  private startAnimation() {
+    if (this.destroyed) return;
+
+    // Always stop previous before starting new one
+    this.stopAnimation();
+
+    if (!this.charElements || this.charElements.length === 0) {
+      // If elements aren't ready yet, they will be soon via AfterViewInit or next Change Detection
+      return;
+    }
 
     const elements = this.charElements.map(el => el.nativeElement);
 
-    // Stop any existing animation
-    if (this.animation) {
-      this.animation.stop();
-    }
-
     // Create a continuous breathing effect (pulses from 0.3 to 1.0)
-    // This removes any "hidden" (0 opacity) state for a smoother feel.
+    // Using Framer Motion's native repeat and stagger for high performance
     this.animation = animate(
       elements,
       {
