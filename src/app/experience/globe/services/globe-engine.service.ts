@@ -195,6 +195,15 @@ export class GlobeEngineService {
 
         this.ngZone.runOutsideAngular(() => this.animate());
 
+        // --- NEW: Texture Pre-warming ---
+        // Briefly assign night map and render to ensure GPU has it cached
+        if (this.nightMap) {
+            const tempMap = this.earth.material as THREE.MeshPhongMaterial;
+            tempMap.map = this.nightMap;
+            this.renderer.render(this.scene, this.camera);
+            tempMap.map = this.dayMap;
+        }
+
         this.isReady = true;
         if (this.onReadyCallback) this.onReadyCallback();
     }
@@ -389,7 +398,8 @@ export class GlobeEngineService {
         gsap.to(this.camera.position, {
             duration: fadeSpeed,
             x: targetX, y: targetY, z: targetZ,
-            ease: 'power2.inOut'
+            ease: 'power2.inOut',
+            force3D: true
         });
 
         if (earthMat.map !== targetMap) {

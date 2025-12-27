@@ -49,6 +49,7 @@ $border: rgba(255, 255, 255, 0.15);
   display: flex;
   flex-direction: column;
   position: relative;
+  will-change: transform, opacity;
 
   @media (max-width: 1024px) {
     flex: 0 0 15%;
@@ -187,6 +188,7 @@ $border: rgba(255, 255, 255, 0.15);
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid $border;
   position: relative;
+  will-change: transform, opacity;
   cursor: pointer;
   pointer-events: auto;
   transition: transform 0.3s ease, background 0.3s ease;

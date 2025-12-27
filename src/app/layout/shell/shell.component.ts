@@ -77,8 +77,13 @@ export class ShellComponent implements OnInit {
 
   onGlobeReady() {
     if (this.isLoaded) return;
-    this.isLoaded = true;
-    this.globeEngine.transitionTo(this.router.url);
+
+    // Settling delay to ensure heavy GPU tasks are finished before UI animations start
+    setTimeout(() => {
+      this.isLoaded = true;
+      this.globeEngine.transitionTo(this.router.url);
+      this.cdr.markForCheck();
+    }, 600);
   }
 
   getRouteAnimationData() {
