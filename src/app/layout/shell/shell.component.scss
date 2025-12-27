@@ -163,4 +163,10 @@
         display: flex;
         justify-content: space-between;
     }
+    .loader-text {
+    font-size: 0.85rem;        // reduce size
+    letter-spacing: 0.18rem;   // reduce spacing
+    padding: 0 16px;           // less horizontal padding
+    white-space: nowrap;       // force single line
+  }
 }
