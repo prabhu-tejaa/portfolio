@@ -16,6 +16,10 @@ export class GlobeEngineService {
     private atmosphere!: THREE.Mesh;
     private stars!: THREE.Mesh;
 
+    // --- NEW: Marker Properties ---
+    private hyderabadMarker!: THREE.Group;
+    private pulseMesh!: THREE.Mesh;
+
     private dayMap!: THREE.Texture;
     private nightMap!: THREE.Texture;
 
@@ -165,8 +169,10 @@ export class GlobeEngineService {
         this.earthGroup.add(this.earth, this.clouds);
         this.scene.add(this.stars, this.interactionGroup, this.atmosphere);
 
-        this.earthGroup.rotation.z = 23.5 * (Math.PI / 180);
+        // --- NEW: Add the Buzzing Marker ---
+        this.addHyderabadMarker();
 
+        this.earthGroup.rotation.z = 23.5 * (Math.PI / 180);
         this.earthGroup.rotation.y = 3.0;
 
         canvas.style.willChange = 'transform, opacity';
@@ -191,6 +197,58 @@ export class GlobeEngineService {
 
         this.isReady = true;
         if (this.onReadyCallback) this.onReadyCallback();
+    }
+
+    // --- NEW FEATURE METHOD ---
+    private addHyderabadMarker() {
+        this.hyderabadMarker = new THREE.Group();
+
+        // 1. Static Core Dot
+        const coreGeo = new THREE.SphereGeometry(0.012, 16, 16);
+        const coreMat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const core = new THREE.Mesh(coreGeo, coreMat);
+
+        // 2. Pulse (The "Buzz" Effect)
+        const pulseGeo = new THREE.SphereGeometry(0.013, 16, 16);
+        const pulseMat = new THREE.MeshBasicMaterial({ 
+            color: 0x00ff00, 
+            transparent: true, 
+            opacity: 0.7 
+        });
+        this.pulseMesh = new THREE.Mesh(pulseGeo, pulseMat);
+
+        this.hyderabadMarker.add(core, this.pulseMesh);
+
+        // Position Logic for Hyderabad (17.3850 N, 78.4867 E)
+        const lat = 17.3850;
+        const lon = 78.4867;
+        const radius = 1;
+
+        const phi = (90 - lat) * (Math.PI / 180);
+        const theta = (lon + 180) * (Math.PI / 180);
+
+        this.hyderabadMarker.position.set(
+            -(radius * Math.sin(phi) * Math.cos(theta)),
+            radius * Math.cos(phi),
+            radius * Math.sin(phi) * Math.sin(theta)
+        );
+
+        // Child of earthMesh means it rotates with Earth
+        this.earth.add(this.hyderabadMarker);
+
+        // GSAP "Buzzing" Animation
+        gsap.to(this.pulseMesh.scale, {
+            x: 5, y: 5, z: 5,
+            duration: 2,
+            repeat: -1,
+            ease: "power2.out"
+        });
+        gsap.to(this.pulseMesh.material, {
+            opacity: 0,
+            duration: 2,
+            repeat: -1,
+            ease: "power2.out"
+        });
     }
 
     private onVisibilityChange = () => {
@@ -230,9 +288,7 @@ export class GlobeEngineService {
 
     private onPointerMove = (event: PointerEvent) => {
         if (this.currentRoute.includes('work')) return;
-
         if (!this.isDragging) return;
-
         if (event.cancelable) event.preventDefault();
 
         const deltaX = event.movementX !== undefined ? event.movementX : (event.clientX - this.previousMouse.x);
@@ -262,7 +318,6 @@ export class GlobeEngineService {
 
     public rotateGlobally(deltaX: number, deltaY: number) {
         gsap.killTweensOf(this.targetRotation);
-
         const sensitivity = 0.005;
         this.targetRotation.y += deltaX * sensitivity;
         this.targetRotation.x += deltaY * sensitivity;
@@ -290,7 +345,6 @@ export class GlobeEngineService {
         let spin = true;
         let targetMap = this.dayMap;
 
-        const isMobile = window.innerWidth <= 768;
         const isWork = route.includes('work');
         const fadeSpeed = route.includes('about') ? 1.2 : 1.5;
 
@@ -300,32 +354,20 @@ export class GlobeEngineService {
             spin = false;
             targetMap = this.dayMap;
         }
-
         else if (isWork) {
-            targetX = 0;
-            targetY = 0.2;
-            targetZ = 3.5;
-            targetFade = 1.0;
-            spin = true;
-            targetMap = this.nightMap;
+            targetX = 0; targetY = 0.2; targetZ = 3.5;
+            targetFade = 1.0; spin = true; targetMap = this.nightMap;
         }
-
         else if (route.includes('social')) {
-            targetX = 0;
-            targetY = 1.4;
-            targetZ = 3.5;
-            targetFade = 1;
-            spin = true;
-            targetMap = this.dayMap;
+            targetX = 0; targetY = 1.4; targetZ = 3.5;
+            targetFade = 1; spin = true; targetMap = this.dayMap;
         }
 
         const finalCloudOpacity = targetFade === 0 ? 0 : 0.8;
 
         gsap.to(this.camera.position, {
             duration: fadeSpeed,
-            x: targetX,
-            y: targetY,
-            z: targetZ,
+            x: targetX, y: targetY, z: targetZ,
             ease: 'power2.inOut'
         });
 
@@ -334,23 +376,9 @@ export class GlobeEngineService {
             earthMat.needsUpdate = true;
         }
 
-        gsap.to(earthMat, {
-            duration: fadeSpeed,
-            opacity: targetFade,
-            ease: 'power2.inOut'
-        });
-
-        gsap.to(cloudMat, {
-            duration: fadeSpeed,
-            opacity: finalCloudOpacity,
-            ease: 'power2.inOut'
-        });
-
-        gsap.to(atmoMat.uniforms['opacity'], {
-            duration: fadeSpeed,
-            value: 0.06,
-            ease: 'power2.inOut'
-        });
+        gsap.to(earthMat, { duration: fadeSpeed, opacity: targetFade, ease: 'power2.inOut' });
+        gsap.to(cloudMat, { duration: fadeSpeed, opacity: finalCloudOpacity, ease: 'power2.inOut' });
+        gsap.to(atmoMat.uniforms['opacity'], { duration: fadeSpeed, value: 0.06, ease: 'power2.inOut' });
 
         this.autoSpin = spin;
 
@@ -372,7 +400,6 @@ export class GlobeEngineService {
         }
 
         const lerpSpeed = 1.0 - Math.pow(0.0001, delta);
-
         this.currentRotation.x += (this.targetRotation.x - this.currentRotation.x) * lerpSpeed;
         this.currentRotation.y += (this.targetRotation.y - this.currentRotation.y) * lerpSpeed;
 
@@ -398,11 +425,9 @@ export class GlobeEngineService {
         if (this.animationId) cancelAnimationFrame(this.animationId);
         window.removeEventListener('resize', this.onResize);
         document.removeEventListener('visibilitychange', this.onVisibilityChange);
-
         window.removeEventListener('pointerdown', this.onPointerDown);
         window.removeEventListener('pointermove', this.onPointerMove);
         window.removeEventListener('pointerup', this.onPointerUp);
-
         this.renderer.dispose();
     }
 }
