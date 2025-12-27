@@ -67,10 +67,10 @@ export class GlobeEngineService {
         this.renderer.outputColorSpace = THREE.SRGBColorSpace;
         this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
 
-        const sun = new THREE.DirectionalLight(0xffffff, 2.0);
+        const sun = new THREE.DirectionalLight(0xffffff, 1.0);
         sun.position.set(5, 3, 5);
-        const ambient = new THREE.AmbientLight(0x404060, 0.5);
-        const rimLight = new THREE.SpotLight(0x00aaff, 5);
+        const ambient = new THREE.AmbientLight(0x404060, 0.7);
+        const rimLight = new THREE.SpotLight(0x00aaff, 1.5);
         rimLight.position.set(-5, 5, -5);
         rimLight.lookAt(0, 0, 0);
         this.scene.add(sun, ambient, rimLight);

@@ -46,7 +46,7 @@ import { trigger, transition, style, query, animate, group } from '@angular/anim
 export class ShellComponent implements OnInit {
   isLoaded = false;
   showWipBadge = false;
-  isHomeActive = true;
+  isHomeActive = false;
   loaderName = 'PRABHU TEJA PAMULA';
 
   private router = inject(Router);
@@ -60,23 +60,28 @@ export class ShellComponent implements OnInit {
 
   ngOnInit() {
     this.socialWorld.preloadTextures();
+    this.updateActiveState();
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
-        const url = this.router.url;
-        this.showWipBadge = url.includes('/work') || url.includes('/about');
-
-        const matchOptions: IsActiveMatchOptions = {
-          paths: 'exact',
-          queryParams: 'ignored',
-          fragment: 'ignored',
-          matrixParams: 'ignored'
-        };
-        this.isHomeActive = this.router.isActive('/', matchOptions);
-
-        this.globeEngine.transitionTo(url);
-        this.cdr.markForCheck();
+        this.updateActiveState();
       });
+  }
+
+  private updateActiveState() {
+    const url = this.router.url;
+    this.showWipBadge = url.includes('/work') || url.includes('/about');
+
+    const matchOptions: IsActiveMatchOptions = {
+      paths: 'exact',
+      queryParams: 'ignored',
+      fragment: 'ignored',
+      matrixParams: 'ignored'
+    };
+    this.isHomeActive = this.router.isActive('/', matchOptions);
+
+    this.globeEngine.transitionTo(url);
+    this.cdr.markForCheck();
   }
 
   onGlobeReady() {
