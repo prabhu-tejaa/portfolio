@@ -1,7 +1,6 @@
 import { Component, ChangeDetectorRef, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, NavigationEnd, RouterModule, RouterOutlet, ChildrenOutletContexts, IsActiveMatchOptions } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { PreloaderComponent } from './components/preloader/preloader.component';
 import { GlobeComponent } from '../../experience/globe/globe.component';
 import { GlobeEngineService } from '../../experience/globe/services/globe-engine.service';
 import { SocialWorldService } from '../../pages/social/services/social-world.service';
@@ -15,8 +14,7 @@ import { trigger, transition, style, query, animate, group } from '@angular/anim
     CommonModule,
     RouterModule,
     GlobeComponent,
-    RouterOutlet,
-    PreloaderComponent
+    RouterOutlet
   ],
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss'],
@@ -75,7 +73,7 @@ export class ShellComponent implements OnInit {
   isLoaded = false;
   showWipBadge = false;
   isHomeActive = false;
-  loaderName = 'PRABHU TEJA PAMULA';
+  progress = 0;
 
   private router = inject(Router);
   private globeEngine = inject(GlobeEngineService);
@@ -115,12 +113,25 @@ export class ShellComponent implements OnInit {
   onGlobeReady() {
     if (this.isLoaded) return;
 
-    // Settling delay to ensure heavy GPU tasks are finished before UI animations start
-    setTimeout(() => {
-      this.isLoaded = true;
-      this.cdr.markForCheck();
-    }, 900);
+    const duration = 1500; // 1.5 seconds
+    const intervalTime = 15; // update every 15ms
+    const totalSteps = duration / intervalTime;
+    const increment = 100 / totalSteps;
 
+    const timer = setInterval(() => {
+      this.progress += increment;
+      if (this.progress >= 100) {
+        this.progress = 100;
+        clearInterval(timer);
+
+        setTimeout(() => {
+          this.isLoaded = true;
+          this.cdr.markForCheck();
+        }, 200);
+      }
+      this.progress = Math.round(this.progress);
+      this.cdr.markForCheck();
+    }, intervalTime);
   }
 
   getRouteAnimationData() {

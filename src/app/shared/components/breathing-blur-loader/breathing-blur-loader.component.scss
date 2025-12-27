@@ -8,7 +8,7 @@
 
 .blur-char {
   opacity: 0.3;
-  filter: none;
+  filter: blur(4px);
 
   display: inline-block;
   font-size: 14px;
@@ -16,12 +16,7 @@
   letter-spacing: 0.12em;
   color: rgba(255, 255, 255, 0.75);
   white-space: pre;
-  will-change: opacity;
-
-  @media (max-width: 768px) {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-  }
+  will-change: opacity, filter;
 }
 
 

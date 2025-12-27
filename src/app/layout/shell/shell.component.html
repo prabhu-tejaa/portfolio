@@ -1,15 +1,23 @@
-<app-preloader [isLoaded]="isLoaded" [text]="loaderName"></app-preloader>
+<div class="loader" [class.hidden]="isLoaded">
+  <div class="loader-content">
+    <div class="loader-text">PRABHU TEJA PAMULA</div>
+    <div class="progress-container">
+      <div class="progress-bar" [style.width.%]="progress"></div>
+    </div>
+    <div class="loader-progress">{{ progress }}%</div>
+  </div>
+</div>
 
-<header class="app-header" *ngIf="isLoaded" [class.visible]="isLoaded">
+<header class="shell-header" *ngIf="isLoaded" [class.visible]="isLoaded">
   <div class="header-left">
-    <a routerLink="/" class="app-logo" [class.active]="isHomeActive" aria-label="Home">
+    <a routerLink="/" class="name" [class.active]="isHomeActive">
       PRABHU TEJA
     </a>
   </div>
 
-  <nav class="app-nav" aria-label="Main Navigation">
-    <a routerLink="/work" routerLinkActive="active" class="nav-link">Work</a>
-    <a routerLink="/about" routerLinkActive="active" class="nav-link">About</a>
+  <nav class="header-center">
+    <a routerLink="/work" routerLinkActive="active">Work</a>
+    <a routerLink="/about" routerLinkActive="active">About</a>
   </nav>
 
   <div class="header-right">
@@ -19,9 +27,9 @@
 
 <app-globe (ready)="onGlobeReady()"></app-globe>
 
-<main class="app-main" [class.content-hidden]="!isLoaded" [@routeAnimations]="getRouteAnimationData()">
+<div class="router-container" [class.hidden]="!isLoaded" [@routeAnimations]="getRouteAnimationData()">
   <router-outlet></router-outlet>
-</main>
+</div>
 
 <div class="wip-badge" *ngIf="showWipBadge && isLoaded">
   <div class="dot"></div>
