@@ -1,7 +1,7 @@
 import { Component, ChangeDetectorRef, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, NavigationEnd, RouterModule, RouterOutlet, ChildrenOutletContexts, IsActiveMatchOptions } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { BreathingBlurLoaderComponent } from '../../shared/components/breathing-blur-loader/breathing-blur-loader.component';
+import { PreloaderComponent } from './components/preloader/preloader.component';
 import { GlobeComponent } from '../../experience/globe/globe.component';
 import { GlobeEngineService } from '../../experience/globe/services/globe-engine.service';
 import { SocialWorldService } from '../../pages/social/services/social-world.service';
@@ -16,7 +16,7 @@ import { trigger, transition, style, query, animate, group } from '@angular/anim
     RouterModule,
     GlobeComponent,
     RouterOutlet,
-    BreathingBlurLoaderComponent
+    PreloaderComponent
   ],
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss'],
@@ -120,7 +120,7 @@ export class ShellComponent implements OnInit {
       this.isLoaded = true;
       this.cdr.markForCheck();
     }, 900);
-    
+
   }
 
   getRouteAnimationData() {

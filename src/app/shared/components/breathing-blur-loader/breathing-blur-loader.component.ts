@@ -90,8 +90,7 @@ export class BreathingBlurLoaderComponent implements AfterViewInit, OnDestroy {
     this.animation = animate(
       elements,
       {
-        opacity: [0.3, 1, 0.3],
-        filter: ['blur(4px)', 'blur(0px)', 'blur(4px)']
+        opacity: [0.3, 1, 0.3]
       },
       {
         duration: 2.5,

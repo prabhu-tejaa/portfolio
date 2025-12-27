@@ -1,17 +1,15 @@
-<div class="loader" [class.hidden]="isLoaded">
-  <app-breathing-blur-loader [text]="loaderName"></app-breathing-blur-loader>
-</div>
+<app-preloader [isLoaded]="isLoaded" [text]="loaderName"></app-preloader>
 
-<header class="shell-header" *ngIf="isLoaded" [class.visible]="isLoaded">
+<header class="app-header" *ngIf="isLoaded" [class.visible]="isLoaded">
   <div class="header-left">
-    <a routerLink="/" class="name" [class.active]="isHomeActive">
+    <a routerLink="/" class="app-logo" [class.active]="isHomeActive" aria-label="Home">
       PRABHU TEJA
     </a>
   </div>
 
-  <nav class="header-center">
-    <a routerLink="/work" routerLinkActive="active">Work</a>
-    <a routerLink="/about" routerLinkActive="active">About</a>
+  <nav class="app-nav" aria-label="Main Navigation">
+    <a routerLink="/work" routerLinkActive="active" class="nav-link">Work</a>
+    <a routerLink="/about" routerLinkActive="active" class="nav-link">About</a>
   </nav>
 
   <div class="header-right">
@@ -21,9 +19,9 @@
 
 <app-globe (ready)="onGlobeReady()"></app-globe>
 
-<div class="router-container" [class.hidden]="!isLoaded" [@routeAnimations]="getRouteAnimationData()">
+<main class="app-main" [class.content-hidden]="!isLoaded" [@routeAnimations]="getRouteAnimationData()">
   <router-outlet></router-outlet>
-</div>
+</main>
 
 <div class="wip-badge" *ngIf="showWipBadge && isLoaded">
   <div class="dot"></div>
