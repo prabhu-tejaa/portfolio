@@ -1,8 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, NavigationEnd, RouterModule, RouterOutlet, ChildrenOutletContexts, IsActiveMatchOptions } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { GlobeComponent } from '../../experience/globe/globe.component';
 import { GlobeEngineService } from '../../experience/globe/services/globe-engine.service';
+import { SocialWorldService } from '../../pages/social/services/social-world.service';
 import { filter } from 'rxjs/operators';
 import { trigger, transition, style, query, animate, group } from '@angular/animations';
 
@@ -48,14 +49,17 @@ export class ShellComponent implements OnInit {
   isHomeActive = true;
   loaderName = 'PRABHU TEJA PAMULA';
 
+  private router = inject(Router);
+  private globeEngine = inject(GlobeEngineService);
+  private socialWorld = inject(SocialWorldService);
+  private cdr = inject(ChangeDetectorRef);
+
   constructor(
-    private router: Router,
-    private globeEngine: GlobeEngineService,
     private contexts: ChildrenOutletContexts,
-    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
+    this.socialWorld.preloadTextures();
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {

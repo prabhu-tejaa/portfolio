@@ -30,6 +30,7 @@ export class GlobeEngineService {
 
     private autoSpin = true;
     private currentTween: any;
+    private previousRoute = '';
 
     private isDragging = false;
     private previousMouse = { x: 0, y: 0 };
@@ -356,6 +357,7 @@ export class GlobeEngineService {
         const cleanRoute = route.split('?')[0];
 
         if (this.currentRoute === cleanRoute) return;
+        const previousRoute = this.currentRoute;
         this.currentRoute = cleanRoute;
 
         gsap.killTweensOf(this.camera.position);
@@ -408,7 +410,16 @@ export class GlobeEngineService {
         }
 
         gsap.to(earthMat, { duration: fadeSpeed, opacity: targetFade, ease: 'power2.inOut' });
-        gsap.to(cloudMat, { duration: fadeSpeed, opacity: finalCloudOpacity, ease: 'power2.inOut' });
+
+        if (isWork) {
+            cloudMat.opacity = 0;
+            gsap.killTweensOf(cloudMat);
+        } else if (previousRoute.includes('work')) {
+            cloudMat.opacity = finalCloudOpacity;
+            gsap.killTweensOf(cloudMat);
+        } else {
+            gsap.to(cloudMat, { duration: fadeSpeed, opacity: finalCloudOpacity, ease: 'power2.inOut' });
+        }
         gsap.to(atmoMat.uniforms['opacity'], { duration: fadeSpeed, value: 0.06, ease: 'power2.inOut' });
 
         this.autoSpin = spin;

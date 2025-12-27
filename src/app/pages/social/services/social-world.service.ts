@@ -19,6 +19,8 @@ export class SocialWorldService implements OnDestroy {
     private mouseVector = new THREE.Vector2();
     private animationId: number = 0;
     private container!: HTMLElement;
+    private textureCache: Map<string, THREE.Texture> = new Map();
+    private avatarTexture: THREE.Texture | null = null;
 
     private readonly BASE_ICON_SIZE = 2.2;
     private readonly ORBIT_RADIUS = 9.5;
@@ -43,6 +45,31 @@ export class SocialWorldService implements OnDestroy {
 
         this.zone.runOutsideAngular(() => {
             this.animate();
+        });
+    }
+
+    public preloadTextures(): void {
+        const loader = new THREE.TextureLoader();
+        const assets = [
+            'assets/me.jpeg',
+            'assets/instagram.png',
+            'assets/photography.png',
+            'assets/discord.png',
+            'assets/youtube.png',
+            'assets/email.png'
+        ];
+
+        assets.forEach(path => {
+            if (this.textureCache.has(path)) return;
+
+            loader.load(path, (texture) => {
+                texture.colorSpace = THREE.SRGBColorSpace;
+                if (path === 'assets/me.jpeg') {
+                    this.avatarTexture = this.getRoundedTexture(texture);
+                } else {
+                    this.textureCache.set(path, texture);
+                }
+            });
         });
     }
 
@@ -158,24 +185,28 @@ export class SocialWorldService implements OnDestroy {
     private createSceneContent(): void {
         const loader = new THREE.TextureLoader();
 
-        loader.load('assets/me.jpeg', (texture) => {
-            texture.colorSpace = THREE.SRGBColorSpace;
-            const roundedTexture = this.getRoundedTexture(texture);
-            roundedTexture.colorSpace = THREE.SRGBColorSpace;
-
+        const setupAvatar = (tex: THREE.Texture) => {
+            tex.colorSpace = THREE.SRGBColorSpace;
             const avatarMat = new THREE.MeshBasicMaterial({
-                map: roundedTexture,
+                map: tex,
                 transparent: false,
                 side: THREE.DoubleSide
             });
-
             const avatarGeo = new THREE.CircleGeometry(this.AVATAR_SIZE / 2, 64);
             const avatar = new THREE.Mesh(avatarGeo, avatarMat);
-
             avatar.name = "meAvatar";
             avatar.position.set(0, 0, 0);
             this.scene.add(avatar);
-        });
+        };
+
+        if (this.avatarTexture) {
+            setupAvatar(this.avatarTexture);
+        } else {
+            loader.load('assets/me.jpeg', (texture) => {
+                this.avatarTexture = this.getRoundedTexture(texture);
+                setupAvatar(this.avatarTexture);
+            });
+        }
 
         this.orbitGroup = new THREE.Group();
         this.scene.add(this.orbitGroup);
@@ -189,17 +220,26 @@ export class SocialWorldService implements OnDestroy {
         ];
 
         objectsData.forEach((data, index) => {
-            loader.load(data.icon, (texture) => {
-                texture.colorSpace = THREE.SRGBColorSpace;
-                const material = new THREE.SpriteMaterial({ map: texture, transparent: true, opacity: 1.0 });
+            const setupSprite = (tex: THREE.Texture) => {
+                tex.colorSpace = THREE.SRGBColorSpace;
+                const material = new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 1.0 });
                 const sprite = new THREE.Sprite(material);
-
                 const angle = (index / objectsData.length) * Math.PI * 2;
                 sprite.position.set(Math.cos(angle) * this.ORBIT_RADIUS, 0, Math.sin(angle) * this.ORBIT_RADIUS);
                 sprite.scale.set(this.BASE_ICON_SIZE, this.BASE_ICON_SIZE, 1);
                 sprite.userData = { ...data };
                 this.orbitGroup.add(sprite);
-            });
+            };
+
+            const cached = this.textureCache.get(data.icon);
+            if (cached) {
+                setupSprite(cached);
+            } else {
+                loader.load(data.icon, (texture) => {
+                    this.textureCache.set(data.icon, texture);
+                    setupSprite(texture);
+                });
+            }
         });
     }
 

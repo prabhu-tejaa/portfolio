@@ -8,6 +8,7 @@
     pointer-events: auto;
     overflow: hidden;
     touch-action: none;
+    will-change: transform, opacity;
 }
 
 .modal-overlay {
