@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Router, NavigationEnd, RouterModule, RouterOutlet, ChildrenOutletContexts } from '@angular/router';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Router, NavigationEnd, RouterModule, RouterOutlet, ChildrenOutletContexts, IsActiveMatchOptions } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { GlobeComponent } from '../../experience/globe/globe.component';
 import { GlobeEngineService } from '../../experience/globe/services/globe-engine.service';
@@ -45,12 +45,14 @@ import { trigger, transition, style, query, animate, group } from '@angular/anim
 export class ShellComponent implements OnInit {
   isLoaded = false;
   showWipBadge = false;
+  isHomeActive = true;
   loaderName = 'PRABHU TEJA PAMULA';
 
   constructor(
     private router: Router,
     private globeEngine: GlobeEngineService,
-    private contexts: ChildrenOutletContexts
+    private contexts: ChildrenOutletContexts,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -59,7 +61,17 @@ export class ShellComponent implements OnInit {
       .subscribe(() => {
         const url = this.router.url;
         this.showWipBadge = url.includes('/work') || url.includes('/about');
+
+        const matchOptions: IsActiveMatchOptions = {
+          paths: 'exact',
+          queryParams: 'ignored',
+          fragment: 'ignored',
+          matrixParams: 'ignored'
+        };
+        this.isHomeActive = this.router.isActive('/', matchOptions);
+
         this.globeEngine.transitionTo(url);
+        this.cdr.markForCheck();
       });
   }
 
