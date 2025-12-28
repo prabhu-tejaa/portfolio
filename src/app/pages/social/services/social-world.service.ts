@@ -1,6 +1,8 @@
 import { Injectable, NgZone, OnDestroy, inject } from '@angular/core';
 import * as THREE from 'three';
 import { GlobeEngineService } from '../../../experience/globe/services/globe-engine.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 export interface InteractionEvent {
     type: 'link' | 'contact';
@@ -22,6 +24,7 @@ export class SocialWorldService implements OnDestroy {
     private container!: HTMLElement;
     private textureCache: Map<string, THREE.Texture> = new Map();
     private avatarTexture: THREE.Texture | null = null;
+    private destroy$ = new Subject<void>();
 
     // Particle Blast Props
     private particles!: THREE.BufferGeometry;
@@ -47,16 +50,11 @@ export class SocialWorldService implements OnDestroy {
 
     private globeEngine = inject(GlobeEngineService);
 
-    // Easter Egg Audio Props
-    private audioListener!: THREE.AudioListener;
-    private ambientSound!: THREE.Audio;
-    private audioAnalyser!: THREE.AudioAnalyser;
-    private hasTriggeredEasterEgg = false;
-    private isPlaying = false;
-    private isAvatarHovered = false;
-    private readonly AUDIO_PATH = 'assets/audio/cosmic-glow.mp3';
+    // Easter Egg Props
 
-    private playQueued = false;
+    private hasTriggeredEasterEgg = false;
+    private isAvatarHovered = false;
+
 
     constructor(private zone: NgZone) { }
 
@@ -96,39 +94,8 @@ export class SocialWorldService implements OnDestroy {
                 }
             });
         });
-
-        // Preload Audio
-        const audioLoader = new THREE.AudioLoader(this.globeEngine.getLoadingManager());
-        audioLoader.load(
-            this.AUDIO_PATH,
-            (buffer) => {
-                console.log('Audio loaded successfully');
-                this.ambientSound.setBuffer(buffer);
-                this.ambientSound.setLoop(true);
-                this.ambientSound.setVolume(0); // Start at 0 for fade in
-
-                // Smart Queue: If user tried to play while loading, start now.
-                if (this.playQueued) {
-                    console.log('Auto-playing queued audio...');
-                    this.isPlaying = true;
-                    this.playQueued = false; // Reset queue
-
-                    // Direct attempt to play
-                    if (this.audioListener.context.state === 'suspended') {
-                        this.audioListener.context.resume().then(() => {
-                            this.ambientSound.play();
-                        }).catch(e => console.warn('Audio context resume failed:', e));
-                    } else {
-                        this.ambientSound.play();
-                    }
-                }
-            },
-            undefined,
-            (error) => {
-                console.error('FAILED TO LOAD AUDIO:', error);
-            }
-        );
     }
+
 
     public setTransitionState(isTransitioning: boolean) {
         this.isTransitioning = isTransitioning;
@@ -157,6 +124,8 @@ export class SocialWorldService implements OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
         this.dispose();
     }
 
@@ -165,10 +134,8 @@ export class SocialWorldService implements OnDestroy {
         if (this.animationId) cancelAnimationFrame(this.animationId);
 
         // Stop Audio on Destroy
-        if (this.ambientSound) {
-            if (this.ambientSound.isPlaying) this.ambientSound.stop();
-            if (this.ambientSound.source) this.ambientSound.disconnect();
-        }
+        // Persistent Audio is now handled by GlobeEngineService
+
 
         if (this.scene) {
             this.scene.traverse((object: any) => {
@@ -213,12 +180,6 @@ export class SocialWorldService implements OnDestroy {
         this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
         this.updateCameraPosition(width, height);
 
-        // Init Audio
-        this.audioListener = new THREE.AudioListener();
-        this.camera.add(this.audioListener);
-        this.ambientSound = new THREE.Audio(this.audioListener);
-        this.audioAnalyser = new THREE.AudioAnalyser(this.ambientSound, 32);
-
         this.renderer = new THREE.WebGLRenderer({
             alpha: true,
             antialias: true,
@@ -245,17 +206,18 @@ export class SocialWorldService implements OnDestroy {
     }
 
     private initParticles(): void {
+        this.particleCount = 1200; // Increased for density
         this.particles = new THREE.BufferGeometry();
         const positions = new Float32Array(this.particleCount * 3);
         const colors = new Float32Array(this.particleCount * 3);
         const sizes = new Float32Array(this.particleCount);
 
         const colorOptions = [
-            new THREE.Color(0x00ffff), // Cyan
-            new THREE.Color(0xff00ff), // Magenta
-            new THREE.Color(0xffff00), // Yellow
-            new THREE.Color(0x00ff00), // Green
-            new THREE.Color(0xffffff)  // White
+            new THREE.Color(0xFFD700), // Gold
+            new THREE.Color(0x00FFFF), // Cyan
+            new THREE.Color(0xFFFFFF), // White
+            new THREE.Color(0x9932CC), // Deep Purple
+            new THREE.Color(0xFFA500)  // Orange Gold
         ];
 
         for (let i = 0; i < this.particleCount; i++) {
@@ -268,7 +230,7 @@ export class SocialWorldService implements OnDestroy {
             colors[i * 3 + 1] = color.g;
             colors[i * 3 + 2] = color.b;
 
-            sizes[i] = Math.random() * 0.5 + 0.1;
+            sizes[i] = Math.random() * 0.8 + 0.2; // Varied sizes
             this.particleVelocities.push(new THREE.Vector3());
             this.particleLifespan.push(0);
         }
@@ -278,16 +240,36 @@ export class SocialWorldService implements OnDestroy {
         this.particles.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
         const material = new THREE.PointsMaterial({
-            size: 0.4,
+            size: 0.5,
+            map: this.getGlowTexture(),
             vertexColors: true,
             transparent: true,
             opacity: 0,
             blending: THREE.AdditiveBlending,
-            depthWrite: false
+            depthWrite: false,
+            sizeAttenuation: true
         });
 
         this.particleSystem = new THREE.Points(this.particles, material);
         this.scene.add(this.particleSystem);
+        this.particleSystem.renderOrder = 999; // Ensure it renders on top
+    }
+
+    private getGlowTexture(): THREE.Texture {
+        const canvas = document.createElement('canvas');
+        canvas.width = 32;
+        canvas.height = 32;
+        const context = canvas.getContext('2d')!;
+        const gradient = context.createRadialGradient(16, 16, 0, 16, 16, 16);
+        gradient.addColorStop(0, 'rgba(255,255,255,1)');
+        gradient.addColorStop(0.2, 'rgba(255,255,255,0.8)');
+        gradient.addColorStop(0.5, 'rgba(255,255,255,0.2)');
+        gradient.addColorStop(1, 'rgba(0,0,0,0)');
+        context.fillStyle = gradient;
+        context.fillRect(0, 0, 32, 32);
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.colorSpace = THREE.SRGBColorSpace;
+        return texture;
     }
 
     private triggerBlast(): void {
@@ -301,17 +283,16 @@ export class SocialWorldService implements OnDestroy {
             positions[i * 3 + 1] = 0;
             positions[i * 3 + 2] = 0;
 
-            // Explode outwards in a sphere
             const theta = Math.random() * Math.PI * 2;
-            const phi = Math.random() * Math.PI;
-            const speed = Math.random() * 0.4 + 0.2;
+            const phi = Math.acos((Math.random() * 2) - 1);
+            const speed = Math.random() * 0.6 + 0.1; // Varied speed
 
             this.particleVelocities[i].set(
                 Math.sin(phi) * Math.cos(theta) * speed,
                 Math.sin(phi) * Math.sin(theta) * speed,
                 Math.cos(phi) * speed
             );
-            this.particleLifespan[i] = 1.0;
+            this.particleLifespan[i] = 1.0 + Math.random() * 0.5; // Varied life
         }
         this.particles.attributes['position'].needsUpdate = true;
     }
@@ -387,6 +368,8 @@ export class SocialWorldService implements OnDestroy {
                 });
             }
         });
+
+        // Audio is now handled globally by GlobeEngineService
     }
 
     private getRoundedTexture(texture: THREE.Texture): THREE.CanvasTexture {
@@ -431,11 +414,7 @@ export class SocialWorldService implements OnDestroy {
         }
 
         // Music reaction for orbit icons
-        let musicIntensity = 0;
-        if (this.isPlaying && this.audioAnalyser) {
-            const data = this.audioAnalyser.getAverageFrequency();
-            musicIntensity = data / 255;
-        }
+        const musicIntensity = this.globeEngine.getAudioAverageFrequency() / 255;
 
         if (this.orbitGroup && this.orbitGroup.children.length) {
             const children = this.orbitGroup.children;
@@ -458,27 +437,6 @@ export class SocialWorldService implements OnDestroy {
             }
         }
 
-        // Linear Audio Fade Logic (1s duration)
-        if (this.ambientSound && this.ambientSound.buffer) {
-            const currentVol = this.ambientSound.getVolume();
-            const fadeStep = 0.02; // Slightly faster fade for responsiveness
-
-            if (this.isPlaying) {
-                // Fade In
-                if (currentVol < 0.5) {
-                    this.ambientSound.setVolume(Math.min(0.5, currentVol + fadeStep));
-                }
-            } else {
-                // Fade Out
-                if (currentVol > 0) {
-                    const newVol = Math.max(0, currentVol - fadeStep);
-                    this.ambientSound.setVolume(newVol);
-                    if (newVol === 0 && this.ambientSound.isPlaying) {
-                        this.ambientSound.pause();
-                    }
-                }
-            }
-        }
 
         // Particle System Update
         if (this.isBlastActive) {
@@ -492,14 +450,19 @@ export class SocialWorldService implements OnDestroy {
                     positions[i * 3 + 1] += this.particleVelocities[i].y;
                     positions[i * 3 + 2] += this.particleVelocities[i].z;
 
-                    // Gravity/Friction
+                    // Improved Physics: Friction/Drag
                     this.particleVelocities[i].multiplyScalar(0.96);
-                    this.particleLifespan[i] -= 0.02;
+
+                    // Improved Physics: Slight Gravity
+                    // this.particleVelocities[i].y -= 0.005; 
+
+                    this.particleLifespan[i] -= 0.015;
                     stillActive = true;
                 }
             }
 
-            material.opacity = Math.max(0, material.opacity - 0.015);
+            // Smoother Opacity Fade
+            material.opacity = Math.max(0, material.opacity - 0.01);
             this.particles.attributes['position'].needsUpdate = true;
 
             if (!stillActive && material.opacity <= 0) {
@@ -566,32 +529,12 @@ export class SocialWorldService implements OnDestroy {
     }
 
     private onCanvasClick(event: MouseEvent): void {
-        // Resume context on EVERY interaction to ensure unlocking
-        if (this.audioListener.context.state === 'suspended') {
-            this.audioListener.context.resume().catch(e => console.warn('Context resume failed:', e));
-        }
-
         if (!this.hoveredObject) return;
 
         // Easter Egg Interaction
         if (this.hoveredObject.name === 'meAvatar') {
             this.triggerBlast();
-
-            if (this.ambientSound && this.ambientSound.buffer) {
-                this.isPlaying = !this.isPlaying;
-
-                // CRITICAL: Play MUST be called directly within the click/touch event for mobile
-                if (this.isPlaying) {
-                    if (!this.ambientSound.isPlaying) {
-                        this.ambientSound.play();
-                    }
-                }
-            } else {
-                // Audio Still Loading: Queue the intent
-                this.playQueued = !this.playQueued;
-                console.log(this.playQueued ? 'Audio queued for autoplay...' : 'Audio queue cancelled');
-            }
-
+            this.globeEngine.toggleAudio();
             this.hasTriggeredEasterEgg = true;
             return;
         }

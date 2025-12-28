@@ -23,9 +23,16 @@ export class GlobeEngineService {
 
     private dayMap!: THREE.Texture;
     private nightMap!: THREE.Texture;
+    public sharedAudioBuffer$ = new BehaviorSubject<AudioBuffer | null>(null);
 
     private loadingManager = new THREE.LoadingManager();
     public loadingProgress$ = new BehaviorSubject<number>(0);
+
+    // Global Audio Properties
+    public globalSound!: THREE.Audio;
+    public audioAnalyser!: THREE.AudioAnalyser;
+    public isPlaying = false;
+    private hasUserInteracted = false;
 
     private isReady = false;
     private onReadyCallback?: () => void;
@@ -109,13 +116,25 @@ export class GlobeEngineService {
                 })
             );
 
-        const [day, cloudsTex, starsTex, normal, specular, night] = await Promise.all([
+        const audioLoader = new THREE.AudioLoader(this.loadingManager);
+        const safeLoadAudio = (url: string) =>
+            new Promise<AudioBuffer>((resolve) =>
+                audioLoader.load(url, resolve, undefined, (err) => {
+                    console.error('SafeLoadAudio error:', err);
+                    // Return empty buffer or handle appropriately
+                    const ctx = new AudioContext(); // Create dummy context for empty buffer if needed, or just nullable
+                    resolve(ctx.createBuffer(1, 1, 22050));
+                })
+            );
+
+        const [day, cloudsTex, starsTex, normal, specular, night, audioBuffer] = await Promise.all([
             safeLoad('textures/earth/day.webp'),
             safeLoad('textures/earth/clouds.webp'),
             safeLoad('textures/earth/stars_milkyway.webp'),
             safeLoad('textures/earth/normal.png'),
             safeLoad('textures/earth/specular.png'),
             safeLoad('textures/earth/night.webp'),
+            safeLoadAudio('assets/audio/cosmic-glow.mp3')
         ]);
 
         day.colorSpace = THREE.SRGBColorSpace;
@@ -125,6 +144,23 @@ export class GlobeEngineService {
 
         this.dayMap = day;
         this.nightMap = night;
+        this.sharedAudioBuffer$.next(audioBuffer);
+
+        // --- NEW: Global Persistent Audio ---
+        const listener = new THREE.AudioListener();
+        this.camera.add(listener);
+
+        this.globalSound = new THREE.Audio(listener);
+        this.globalSound.setBuffer(audioBuffer);
+        this.globalSound.setLoop(false); // We handle loop/restart manually for control
+        this.globalSound.setVolume(0.5);
+
+        this.audioAnalyser = new THREE.AudioAnalyser(this.globalSound, 32);
+
+        // Reset state when audio ends
+        this.globalSound.onEnded = () => {
+            this.isPlaying = false;
+        };
 
         this.interactionGroup = new THREE.Group();
         this.earthGroup = new THREE.Group();
@@ -220,6 +256,10 @@ export class GlobeEngineService {
             window.addEventListener('pointerdown', this.onPointerDown, { passive: false });
             window.addEventListener('pointermove', this.onPointerMove, { passive: false });
             window.addEventListener('pointerup', this.onPointerUp, { passive: false });
+
+            // Global Interaction for Audio Resume
+            window.addEventListener('click', () => this.resumeAudioContext());
+            window.addEventListener('touchstart', () => this.resumeAudioContext());
         });
 
         this.ngZone.runOutsideAngular(() => this.animate());
@@ -376,6 +416,61 @@ export class GlobeEngineService {
         const sensitivity = 0.005;
         this.targetRotation.y += deltaX * sensitivity;
         this.targetRotation.x += deltaY * sensitivity;
+    }
+
+    // --- Global Audio Methods ---
+
+    public toggleAudio() {
+        if (!this.globalSound || !this.globalSound.buffer) return;
+
+        this.resumeAudioContext();
+
+        if (this.isPlaying) {
+            // Fade Out
+            this.isPlaying = false;
+            gsap.killTweensOf(this.globalSound.gain.gain);
+            gsap.to(this.globalSound.gain.gain, {
+                value: 0,
+                duration: 1.5,
+                ease: "power2.out",
+                onComplete: () => {
+                    if (!this.isPlaying) {
+                        this.globalSound.pause();
+                    }
+                }
+            });
+        } else {
+            console.log("Playing Global Audio");
+            this.isPlaying = true;
+
+            // Fade In
+            if (!this.globalSound.isPlaying) {
+                this.globalSound.setVolume(0); // Start from silence
+                this.globalSound.play();
+            }
+
+            gsap.killTweensOf(this.globalSound.gain.gain);
+            gsap.to(this.globalSound.gain.gain, {
+                value: 0.5,
+                duration: 1.5,
+                ease: "power2.in"
+            });
+        }
+    }
+
+    public resumeAudioContext() {
+        if (this.globalSound && this.globalSound.context.state === 'suspended') {
+            this.globalSound.context.resume().then(() => {
+                console.log("Audio Context Resumed");
+            }).catch(e => console.error("Audio Context Resume Failed:", e));
+        }
+    }
+
+    public getAudioAverageFrequency(): number {
+        if (this.audioAnalyser && this.isPlaying) {
+            return this.audioAnalyser.getAverageFrequency();
+        }
+        return 0;
     }
 
     transitionTo(route: string) {

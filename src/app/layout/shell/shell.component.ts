@@ -75,6 +75,11 @@ export class ShellComponent implements OnInit, OnDestroy {
   showWipBadge = false;
   isHomeActive = false;
   progress = 0;
+
+  // Loader State Flags
+  private assetsLoaded = false;
+  private globeReady = false;
+
   private destroy$ = new Subject<void>();
 
   private router = inject(Router);
@@ -97,19 +102,34 @@ export class ShellComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
 
         if (val >= 100) {
-          setTimeout(() => {
-            this.isLoaded = true;
-            this.cdr.markForCheck();
-          }, 500);
+          this.assetsLoaded = true;
+          this.checkLoaderState();
         }
       });
 
     this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
+      .pipe(filter(event => event instanceof NavigationEnd), takeUntil(this.destroy$))
       .subscribe(() => {
         this.updateActiveState();
       });
   }
+
+  onGlobeReady() {
+    this.globeReady = true;
+    this.checkLoaderState();
+  }
+
+  private checkLoaderState() {
+    if (this.assetsLoaded && this.globeReady) {
+      setTimeout(() => {
+        this.isLoaded = true;
+        this.updateActiveState(); // Ensure state is correct once loaded
+        this.cdr.markForCheck();
+      }, 500);
+    }
+  }
+
+
 
   ngOnDestroy() {
     this.destroy$.next();
@@ -132,9 +152,8 @@ export class ShellComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
-  onGlobeReady() {
-    this.updateActiveState();
-  }
+  // Handled in subscription and checkLoaderState
+
 
   getRouteAnimationData() {
     return this.contexts.getContext('primary')?.route?.snapshot?.data?.['animation'];
