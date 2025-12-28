@@ -23,6 +23,14 @@ export class SocialWorldService implements OnDestroy {
     private textureCache: Map<string, THREE.Texture> = new Map();
     private avatarTexture: THREE.Texture | null = null;
 
+    // Particle Blast Props
+    private particles!: THREE.BufferGeometry;
+    private particleSystem!: THREE.Points;
+    private particleCount = 200;
+    private particleVelocities: THREE.Vector3[] = [];
+    private particleLifespan: number[] = [];
+    private isBlastActive = false;
+
     private readonly BASE_ICON_SIZE = 2.2;
     private readonly ORBIT_RADIUS = 9.5;
     private readonly AVATAR_SIZE = 5.5;
@@ -100,10 +108,16 @@ export class SocialWorldService implements OnDestroy {
                 if (this.playQueued) {
                     console.log('Auto-playing queued audio...');
                     this.isPlaying = true;
+                    this.playQueued = false; // Reset queue
+
+                    // Direct attempt to play
                     if (this.audioListener.context.state === 'suspended') {
-                        this.audioListener.context.resume();
+                        this.audioListener.context.resume().then(() => {
+                            this.ambientSound.play();
+                        }).catch(e => console.warn('Audio context resume failed:', e));
+                    } else {
+                        this.ambientSound.play();
                     }
-                    this.ambientSound.play();
                 }
             },
             undefined,
@@ -218,11 +232,85 @@ export class SocialWorldService implements OnDestroy {
         const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
         this.scene.add(ambientLight);
 
+        this.initParticles();
+
         this.renderer.domElement.addEventListener('click', this.boundOnCanvasClick);
         this.renderer.domElement.addEventListener('mousemove', this.boundOnMouseMove);
         this.renderer.domElement.addEventListener('touchstart', this.boundOnTouchStart, { passive: false });
 
         window.addEventListener('resize', () => this.onWindowResize());
+    }
+
+    private initParticles(): void {
+        this.particles = new THREE.BufferGeometry();
+        const positions = new Float32Array(this.particleCount * 3);
+        const colors = new Float32Array(this.particleCount * 3);
+        const sizes = new Float32Array(this.particleCount);
+
+        const colorOptions = [
+            new THREE.Color(0x00ffff), // Cyan
+            new THREE.Color(0xff00ff), // Magenta
+            new THREE.Color(0xffff00), // Yellow
+            new THREE.Color(0x00ff00), // Green
+            new THREE.Color(0xffffff)  // White
+        ];
+
+        for (let i = 0; i < this.particleCount; i++) {
+            positions[i * 3] = 0;
+            positions[i * 3 + 1] = 0;
+            positions[i * 3 + 2] = 0;
+
+            const color = colorOptions[Math.floor(Math.random() * colorOptions.length)];
+            colors[i * 3] = color.r;
+            colors[i * 3 + 1] = color.g;
+            colors[i * 3 + 2] = color.b;
+
+            sizes[i] = Math.random() * 0.5 + 0.1;
+            this.particleVelocities.push(new THREE.Vector3());
+            this.particleLifespan.push(0);
+        }
+
+        this.particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        this.particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        this.particles.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+        const material = new THREE.PointsMaterial({
+            size: 0.4,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+
+        this.particleSystem = new THREE.Points(this.particles, material);
+        this.scene.add(this.particleSystem);
+    }
+
+    private triggerBlast(): void {
+        this.isBlastActive = true;
+        const positions = this.particles.attributes['position'].array as Float32Array;
+        const material = this.particleSystem.material as THREE.PointsMaterial;
+        material.opacity = 1.0;
+
+        for (let i = 0; i < this.particleCount; i++) {
+            positions[i * 3] = 0;
+            positions[i * 3 + 1] = 0;
+            positions[i * 3 + 2] = 0;
+
+            // Explode outwards in a sphere
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.random() * Math.PI;
+            const speed = Math.random() * 0.4 + 0.2;
+
+            this.particleVelocities[i].set(
+                Math.sin(phi) * Math.cos(theta) * speed,
+                Math.sin(phi) * Math.sin(theta) * speed,
+                Math.cos(phi) * speed
+            );
+            this.particleLifespan[i] = 1.0;
+        }
+        this.particles.attributes['position'].needsUpdate = true;
     }
 
     private updateCameraPosition(width: number, height: number): void {
@@ -390,6 +478,33 @@ export class SocialWorldService implements OnDestroy {
             }
         }
 
+        // Particle System Update
+        if (this.isBlastActive) {
+            const positions = this.particles.attributes['position'].array as Float32Array;
+            const material = this.particleSystem.material as THREE.PointsMaterial;
+            let stillActive = false;
+
+            for (let i = 0; i < this.particleCount; i++) {
+                if (this.particleLifespan[i] > 0) {
+                    positions[i * 3] += this.particleVelocities[i].x;
+                    positions[i * 3 + 1] += this.particleVelocities[i].y;
+                    positions[i * 3 + 2] += this.particleVelocities[i].z;
+
+                    // Gravity/Friction
+                    this.particleVelocities[i].multiplyScalar(0.96);
+                    this.particleLifespan[i] -= 0.02;
+                    stillActive = true;
+                }
+            }
+
+            material.opacity = Math.max(0, material.opacity - 0.015);
+            this.particles.attributes['position'].needsUpdate = true;
+
+            if (!stillActive && material.opacity <= 0) {
+                this.isBlastActive = false;
+            }
+        }
+
         this.renderer.render(this.scene, this.camera);
     }
 
@@ -449,14 +564,16 @@ export class SocialWorldService implements OnDestroy {
     }
 
     private onCanvasClick(event: MouseEvent): void {
+        // Resume context on EVERY interaction to ensure unlocking
+        if (this.audioListener.context.state === 'suspended') {
+            this.audioListener.context.resume().catch(e => console.warn('Context resume failed:', e));
+        }
+
         if (!this.hoveredObject) return;
 
         // Easter Egg Interaction
         if (this.hoveredObject.name === 'meAvatar') {
-            // Browser Autoplay Policy: Resume context on user interaction
-            if (this.audioListener.context.state === 'suspended') {
-                this.audioListener.context.resume();
-            }
+            this.triggerBlast();
 
             if (this.ambientSound && this.ambientSound.buffer) {
                 this.isPlaying = !this.isPlaying;
