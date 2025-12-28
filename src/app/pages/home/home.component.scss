@@ -6,6 +6,67 @@
 
 .home-content {
   min-height: 100vh;
-  padding-top: 120px;
+  padding: 120px 20px 20px 20px;
   color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  /* Push to bottom area on mobile */
+  box-sizing: border-box;
+}
+
+.mobile-quote-container {
+  display: none;
+  /* Hidden on desktop */
+
+  @media (max-width: 768px) {
+    display: flex;
+    width: 100%;
+    max-width: 320px;
+    margin-bottom: 80px;
+    /* Positioned under the globe gap */
+    animation: fadeIn 1s ease-out;
+  }
+}
+
+.quote-box {
+  width: 100%;
+  text-align: center;
+  transition: opacity 0.5s ease;
+
+  &.loading {
+    opacity: 0.3;
+  }
+
+  .quote-text {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0 0 10px 0;
+    line-height: 1.4;
+    letter-spacing: 0.5px;
+  }
+
+  .quote-author {
+    font-size: 0.7rem;
+    color: #00f3ff;
+    /* Matching your accent color */
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0;
+    font-weight: 500;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

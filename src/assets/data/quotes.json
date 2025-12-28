@@ -1,0 +1,422 @@
+[
+    {
+        "q": "The only way to do great work is to love what you do.",
+        "a": "Steve Jobs"
+    },
+    {
+        "q": "Innovation distinguishes between a leader and a follower.",
+        "a": "Steve Jobs"
+    },
+    {
+        "q": "Your time is limited, so don't waste it living someone else's life.",
+        "a": "Steve Jobs"
+    },
+    {
+        "q": "Stay hungry, stay foolish.",
+        "a": "Steve Jobs"
+    },
+    {
+        "q": "The future belongs to those who believe in the beauty of their dreams.",
+        "a": "Eleanor Roosevelt"
+    },
+    {
+        "q": "It always seems impossible until it's done.",
+        "a": "Nelson Mandela"
+    },
+    {
+        "q": "Everything you've ever wanted is on the other side of fear.",
+        "a": "George Addair"
+    },
+    {
+        "q": "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+        "a": "Winston Churchill"
+    },
+    {
+        "q": "Don't watch the clock; do what it does. Keep going.",
+        "a": "Sam Levenson"
+    },
+    {
+        "q": "The best way to predict the future is to invent it.",
+        "a": "Alan Kay"
+    },
+    {
+        "q": "Simplicity is the ultimate sophistication.",
+        "a": "Leonardo da Vinci"
+    },
+    {
+        "q": "Code is like humor. When you have to explain it, it’s bad.",
+        "a": "Cory House"
+    },
+    {
+        "q": "First, solve the problem. Then, write the code.",
+        "a": "John Johnson"
+    },
+    {
+        "q": "Experience is the name everyone gives to their mistakes.",
+        "a": "Oscar Wilde"
+    },
+    {
+        "q": "In order to be irreplaceable one must always be different.",
+        "a": "Coco Chanel"
+    },
+    {
+        "q": "We are all in the gutter, but some of us are looking at the stars.",
+        "a": "Oscar Wilde"
+    },
+    {
+        "q": "The universe is under no obligation to make sense to you.",
+        "a": "Neil deGrasse Tyson"
+    },
+    {
+        "q": "Look up at the stars and not down at your feet.",
+        "a": "Stephen Hawking"
+    },
+    {
+        "q": "Beauty is truth, truth beauty.",
+        "a": "John Keats"
+    },
+    {
+        "q": "Be the change that you wish to see in the world.",
+        "a": "Mahatma Gandhi"
+    },
+    {
+        "q": "The cosmos is within us. We are made of star-stuff.",
+        "a": "Carl Sagan"
+    },
+    {
+        "q": "Life is really simple, but we insist on making it complicated.",
+        "a": "Confucius"
+    },
+    {
+        "q": "Beauty begins the moment you decide to be yourself.",
+        "a": "Coco Chanel"
+    },
+    {
+        "q": "I believe in the sun and the stars.",
+        "a": "Virginia Woolf"
+    },
+    {
+        "q": "The universe is not outside of you. Look inside yourself.",
+        "a": "Rumi"
+    },
+    {
+        "q": "Look deep into nature, and then you will understand everything better.",
+        "a": "Albert Einstein"
+    },
+    {
+        "q": "Astronomy compels the soul to look upwards.",
+        "a": "Plato"
+    },
+    {
+        "q": "I know nothing with any certainty, but the sight of the stars makes me dream.",
+        "a": "Vincent Van Gogh"
+    },
+    {
+        "q": "One touch of nature makes the whole world kin.",
+        "a": "William Shakespeare"
+    },
+    {
+        "q": "Everything has beauty, but not everyone sees it.",
+        "a": "Confucius"
+    },
+    {
+        "q": "Life is either a daring adventure or nothing.",
+        "a": "Helen Keller"
+    },
+    {
+        "q": "Nature does not hurry, yet everything is accomplished.",
+        "a": "Lao Tzu"
+    },
+    {
+        "q": "The mind is everything. What you think you become.",
+        "a": "Buddha"
+    },
+    {
+        "q": "The earth laughs in flowers.",
+        "a": "Ralph Waldo Emerson"
+    },
+    {
+        "q": "It's not what you look at that matters, it's what you see.",
+        "a": "Henry David Thoreau"
+    },
+    {
+        "q": "He who has a why to live can bear almost any how.",
+        "a": "Friedrich Nietzsche"
+    },
+    {
+        "q": "The unexamined life is not worth living.",
+        "a": "Socrates"
+    },
+    {
+        "q": "Knowing yourself is the beginning of all wisdom.",
+        "a": "Aristotle"
+    },
+    {
+        "q": "I think, therefore I am.",
+        "a": "René Descartes"
+    },
+    {
+        "q": "The heart has its reasons of which reason knows nothing.",
+        "a": "Blaise Pascal"
+    },
+    {
+        "q": "Two things awe me most: the starry sky above and the moral law within.",
+        "a": "Immanuel Kant"
+    },
+    {
+        "q": "Two possibilities exist: either we are alone in the Universe or we are not.",
+        "a": "Arthur C. Clarke"
+    },
+    {
+        "q": "The clearest way into the Universe is through a forest wilderness.",
+        "a": "John Muir"
+    },
+    {
+        "q": "Be kind whenever possible. It is always possible.",
+        "a": "Dalai Lama"
+    },
+    {
+        "q": "Spread love everywhere you go.",
+        "a": "Mother Teresa"
+    },
+    {
+        "q": "No one has ever become poor by giving.",
+        "a": "Anne Frank"
+    },
+    {
+        "q": "Try to be a rainbow in someone's cloud.",
+        "a": "Maya Angelou"
+    },
+    {
+        "q": "Keep your face always toward the sunshine.",
+        "a": "Walt Whitman"
+    },
+    {
+        "q": "Youth is happy because it has the capacity to see beauty.",
+        "a": "Franz Kafka"
+    },
+    {
+        "q": "Freedom is what you do with what's been done to you.",
+        "a": "Jean-Paul Sartre"
+    },
+    {
+        "q": "In the depth of winter, I finally learned that within me there lay an invincible summer.",
+        "a": "Albert Camus"
+    },
+    {
+        "q": "The happiness of your life depends upon the quality of your thoughts.",
+        "a": "Marcus Aurelius"
+    },
+    {
+        "q": "It is not that we have a little time, but that we lose a lot.",
+        "a": "Seneca"
+    },
+    {
+        "q": "It's not what happens to you, but how you react to it that matters.",
+        "a": "Epictetus"
+    },
+    {
+        "q": "A room without books is like a body without a soul.",
+        "a": "Marcus Tullius Cicero"
+    },
+    {
+        "q": "To love another person is to see the face of God.",
+        "a": "Victor Hugo"
+    },
+    {
+        "q": "The two most powerful warriors are patience and time.",
+        "a": "Leo Tolstoy"
+    },
+    {
+        "q": "Beauty will save the world.",
+        "a": "Fyodor Dostoevsky"
+    },
+    {
+        "q": "Reality exists in the human mind, and nowhere else.",
+        "a": "George Orwell"
+    },
+    {
+        "q": "Experience is not what happens to you; it's what you do with what happens to you.",
+        "a": "Aldous Huxley"
+    },
+    {
+        "q": "Jump, and you will find out how to unfold your wings as you fall.",
+        "a": "Ray Bradbury"
+    },
+    {
+        "q": "We are what we pretend to be.",
+        "a": "Kurt Vonnegut"
+    },
+    {
+        "q": "There is nothing to writing. All you do is sit down at a typewriter and bleed.",
+        "a": "Ernest Hemingway"
+    },
+    {
+        "q": "The secret of getting ahead is getting started.",
+        "a": "Mark Twain"
+    },
+    {
+        "q": "In three words I can sum up everything I've learned about life: it goes on.",
+        "a": "Robert Frost"
+    },
+    {
+        "q": "Forever is composed of nows.",
+        "a": "Emily Dickinson"
+    },
+    {
+        "q": "All that we see or seem is but a dream within a dream.",
+        "a": "Edgar Allan Poe"
+    },
+    {
+        "q": "Beauty is eternity gazing at itself in a mirror.",
+        "a": "Kahlil Gibran"
+    },
+    {
+        "q": "The sun never says to the earth, 'You owe me.'",
+        "a": "Hafiz"
+    },
+    {
+        "q": "Clouds come floating into my life, no longer to carry rain...",
+        "a": "Rabindranath Tagore"
+    },
+    {
+        "q": "Pain is inevitable. Suffering is optional.",
+        "a": "Haruki Murakami"
+    },
+    {
+        "q": "When you want something, all the universe conspires in helping you to achieve it.",
+        "a": "Paulo Coelho"
+    },
+    {
+        "q": "A man who dares to waste one hour of time has not discovered the value of life.",
+        "a": "Charles Darwin"
+    },
+    {
+        "q": "Nothing in life is to be feared, it is only to be understood.",
+        "a": "Marie Curie"
+    },
+    {
+        "q": "I can calculate the motion of heavenly bodies, but not the madness of people.",
+        "a": "Isaac Newton"
+    },
+    {
+        "q": "The first principle is that you must not fool yourself.",
+        "a": "Richard Feynman"
+    },
+    {
+        "q": "If you want to find the secrets of the universe, think in terms of energy.",
+        "a": "Nikola Tesla"
+    },
+    {
+        "q": "I have not failed. I've just found 10,000 ways that won't work.",
+        "a": "Thomas A. Edison"
+    },
+    {
+        "q": "Whether you think you can, or you think you can't – you're right.",
+        "a": "Henry Ford"
+    },
+    {
+        "q": "It is possible to fly without motors, but not without knowledge and skill.",
+        "a": "Wilbur Wright"
+    },
+    {
+        "q": "That's one small step for man, one giant leap for mankind.",
+        "a": "Neil Armstrong"
+    },
+    {
+        "q": "I see Earth! It is so beautiful.",
+        "a": "Yuri Gagarin"
+    },
+    {
+        "q": "Be thankful for problems. If they were less difficult, someone with less ability might have your job.",
+        "a": "Jim Lovell"
+    },
+    {
+        "q": "Decide in your heart of hearts what really excites and challenges you.",
+        "a": "Chris Hadfield"
+    },
+    {
+        "q": "Never be limited by other people's limited imaginations.",
+        "a": "Mae Jemison"
+    },
+    {
+        "q": "What you do makes a difference.",
+        "a": "Jane Goodall"
+    },
+    {
+        "q": "It seems to me that the natural world is the greatest source of excitement.",
+        "a": "David Attenborough"
+    },
+    {
+        "q": "Those who contemplate the beauty of the earth find reserves of strength.",
+        "a": "Rachel Carson"
+    },
+    {
+        "q": "Never doubt that a small group of thoughtful, committed citizens can change the world.",
+        "a": "Margaret Mead"
+    },
+    {
+        "q": "The best and most beautiful things in the world cannot be seen.",
+        "a": "Helen Keller"
+    },
+    {
+        "q": "When we are no longer able to change a situation, we are challenged to change ourselves.",
+        "a": "Viktor E. Frankl"
+    },
+    {
+        "q": "Who looks outside, dreams; who looks inside, awakes.",
+        "a": "Carl Jung"
+    },
+    {
+        "q": "Out of your vulnerabilities will come your strength.",
+        "a": "Sigmund Freud"
+    },
+    {
+        "q": "What a man can be, he must be.",
+        "a": "Abraham Maslow"
+    },
+    {
+        "q": "The curious paradox is that when I accept myself just as I am, then I can change.",
+        "a": "Carl Rogers"
+    },
+    {
+        "q": "This is the real secret of life -- to be completely engaged with what you are doing.",
+        "a": "Alan Watts"
+    },
+    {
+        "q": "We're all just walking each other home.",
+        "a": "Ram Dass"
+    },
+    {
+        "q": "There is no way to happiness - happiness is the way.",
+        "a": "Thich Nhat Hanh"
+    },
+    {
+        "q": "It is no measure of health to be well adjusted to a profoundly sick society.",
+        "a": "Jiddu Krishnamurti"
+    },
+    {
+        "q": "Change is the only constant in life.",
+        "a": "Heraclitus"
+    },
+    {
+        "q": "Dwell on the beauty of life. Watch the stars, and see yourself running with them.",
+        "a": "Marcus Aurelius"
+    },
+    {
+        "q": "The love that moves the sun and the other stars.",
+        "a": "Dante Alighieri"
+    },
+    {
+        "q": "The mind is its own place, and in itself can make a heaven of hell, a hell of heaven.",
+        "a": "John Milton"
+    },
+    {
+        "q": "I have striven not to laugh at human actions... but to understand them.",
+        "a": "Baruch Spinoza"
+    },
+    {
+        "q": "I much prefer the sharpest criticism of a single intelligent man to the thoughtless approval of the masses.",
+        "a": "Johannes Kepler"
+    }
+]
