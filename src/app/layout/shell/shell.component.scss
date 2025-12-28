@@ -100,6 +100,10 @@
     z-index: 200;
     overflow: hidden;
     transition: opacity 1s ease-in-out;
+
+    /* Force browser to respect our colors in Force Dark Mode */
+    forced-color-adjust: none;
+    color-scheme: dark;
 }
 
 .loader.hidden {
@@ -300,7 +304,8 @@
     font-size: 0.65rem;
     letter-spacing: 0.5rem;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.25);
+    color: rgba(255, 255, 255, 0.5);
+    /* Increased from 0.25 for better visibility */
     animation: status-pulse 3.5s ease-in-out infinite;
     margin-top: -20px;
 }
