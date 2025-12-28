@@ -30,17 +30,41 @@
       <button class="close-btn" (click)="closeModal()">&times;</button>
 
       <div class="modal-header">
+        <!-- Back Button for Nested View -->
+        <button class="back-btn" *ngIf="selectedSubItem" (click)="closeSubItem()">
+          ← Back
+        </button>
+
         <div class="header-icon-container">
-          <span class="modal-icon">{{ selectedItem?.icon }}</span>
+          <span class="modal-icon">{{ selectedSubItem ? selectedSubItem.icon : selectedItem?.icon }}</span>
         </div>
         <div class="header-text">
-          <span class="modal-year">{{ selectedItem?.year }}</span>
-          <h2>{{ selectedItem?.title }}</h2>
+          <span class="modal-year" *ngIf="!selectedSubItem">{{ selectedItem?.year }}</span>
+          <span class="modal-category" *ngIf="selectedSubItem">{{ selectedItem?.title }}</span>
+          <h2>{{ selectedSubItem ? selectedSubItem.title : selectedItem?.title }}</h2>
         </div>
       </div>
 
       <div class="modal-body" data-lenis-prevent>
-        <p class="main-text">{{ selectedItem?.fullDesc }}</p>
+        <!-- 1. Standard View (No Sub-items) -->
+        <p class="main-text" *ngIf="!selectedItem?.subItems">{{ selectedItem?.fullDesc }}</p>
+
+        <!-- 2. Menu View (Sub-items List) -->
+        <div class="sub-item-grid" *ngIf="selectedItem?.subItems && !selectedSubItem">
+          <div class="glass-card" *ngFor="let sub of selectedItem.subItems" (click)="openSubItem(sub)">
+            <div class="card-icon">{{ sub.icon }}</div>
+            <div class="card-content">
+              <h3>{{ sub.title }}</h3>
+              <p>{{ sub.desc }}</p>
+            </div>
+            <div class="enter-symbol">→</div>
+          </div>
+        </div>
+
+        <!-- 3. Detail View (Selected Sub-item) -->
+        <div class="detail-view" *ngIf="selectedSubItem">
+          <p class="main-text">{{ selectedSubItem.fullDesc }}</p>
+        </div>
       </div>
 
       <div class="modal-footer">

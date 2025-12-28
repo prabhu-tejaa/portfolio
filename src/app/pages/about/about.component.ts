@@ -39,6 +39,7 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
 
   isModalOpen = false;
   selectedItem: any = null;
+  selectedSubItem: any = null; // Track nested navigation state
 
   timeline = [
     {
@@ -52,7 +53,7 @@ I celebrated my 1st birthday at my grandfather’s house (my father’s childhoo
 While both sets of grandparents lived in Tenali, my childhood was spent between their home and Bapatla, where my father worked. My sister was also born in the same Uma Hospital in 1999.`,
       icon: '✨'
     },
-{
+    {
       year: '2000 - 2026',
       title: 'Academic Foundation',
       desc: 'A comprehensive timeline of foundational schooling and higher education.',
@@ -70,7 +71,7 @@ Higher Secondary & Professional Studies:
 • 2024 - 2026: Master of Computer Applications (MCA) | Vellore Institute of Technology (VIT)`,
       icon: '🎓'
     },
-{
+    {
       year: '2020 - Present',
       title: 'Professional Orbit',
       desc: 'A timeline of corporate operations, specialized training, and long-term consulting.',
@@ -90,16 +91,56 @@ Strategic Professional Tenure:
     {
       year: 'Beyond the Code',
       title: 'Personal Horizon',
-      desc: 'Passionate about gaming, space exploration, and interactive digital art.',
-      fullDesc: 'Life outside the IDE is just as important. I am an avid gamer, a follower of space exploration milestones, and a fan of digital art. These hobbies provide a constant source of inspiration for my technical work, helping me see connections between gaming mechanics and UI design.',
-      icon: '🌌'
+      desc: 'Passionate about gaming, space exploration, and continuous learning.',
+      icon: '✨',
+      // Sub-items for the nested modal navigation
+      subItems: [
+        {
+          title: 'The Virtual Tactician',
+          icon: '🎮',
+          desc: 'A strategic mind honed through immersive gaming worlds.',
+          fullDesc: `Gaming is more than a pastime; it’s a canvas for strategy and reflexes. 
+
+I’ve spent countless hours mastering the mechanics of Valorant, Counter-Strike 2, and GTA V. These aren't just games—they are environments where teamwork, split-second decision-making, and tactical planning are paramount.
+
+Whether holding a site in CS2 or executing a perfect execute in Valorant, I bring the same focus and analytical mindset to gaming as I do to software development.`
+        },
+        {
+          title: 'The Cosmic Observer',
+          icon: '🚀',
+          desc: 'Fascinated by the mechanics of the universe and space tech.',
+          fullDesc: `Space has always captivated me. From the engineering marvels of SpaceX's reusable rockets to the physics of black holes, I am an avid follower of cosmic exploration.
+
+I closely follow mission launches, astronomical discoveries, and the evolving narrative of humanity's journey to the stars. This curiosity drives me to understand complex systems, whether they are orbiting in space or running in a cloud server.`
+        },
+        {
+          title: 'The Digital Architect',
+          icon: '💻',
+          desc: 'Building, breaking, and refining code for the love of creation.',
+          fullDesc: `Coding isn't just a job; it's a craft. I love the process of turning abstract logic into tangible, interactive experiences.
+
+My "Personal Horizon" in tech involves constantly exploring new frameworks, optimizing performance, and creating interfaces that feel alive. This portfolio itself is a testament to that passion—a playground where 3D graphics, physics, and rigorous logic collide.`
+        },
+        {
+          title: 'The Earthly Explorer',
+          icon: '🌍',
+          desc: 'Finding balance through travel and new perspectives.',
+          fullDesc: `When I step away from the screen, I seek the grounding nature of the real world. Traveling allows me to reset, gain new perspectives, and appreciate the analog beauty of life.
+
+Every trip is a reminder that while the digital world is limitless, the physical world offers a depth of experience that fuels creativity and resilience.`
+        }
+      ]
     }
   ];
 
   @HostListener('document:keydown.escape')
   onEscapeKeydown() {
     if (this.isModalOpen) {
-      this.closeModal();
+      if (this.selectedSubItem) {
+        this.closeSubItem();
+      } else {
+        this.closeModal();
+      }
     }
   }
 
@@ -107,6 +148,7 @@ Strategic Professional Tenure:
 
   openModal(item: any) {
     this.selectedItem = item;
+    this.selectedSubItem = null; // Reset sub-item
     this.isModalOpen = true;
     this.lenis?.stop(); // Pause smooth scroll
   }
@@ -116,7 +158,18 @@ Strategic Professional Tenure:
     this.lenis?.start(); // Resume smooth scroll
     setTimeout(() => {
       this.selectedItem = null;
+      this.selectedSubItem = null;
     }, 300);
+  }
+
+  // --- Nested Navigation Methods ---
+
+  openSubItem(subItem: any) {
+    this.selectedSubItem = subItem;
+  }
+
+  closeSubItem() {
+    this.selectedSubItem = null;
   }
 
   ngAfterViewInit() {

@@ -33,6 +33,7 @@ export class GlobeEngineService {
     public audioAnalyser!: THREE.AudioAnalyser;
     public isPlaying = false;
     private hasUserInteracted = false;
+    private hasAudioEnded = false; // New flag to track natural completion
 
     private isReady = false;
     private onReadyCallback?: () => void;
@@ -160,6 +161,7 @@ export class GlobeEngineService {
         // Reset state when audio ends
         this.globalSound.onEnded = () => {
             this.isPlaying = false;
+            this.hasAudioEnded = true; // Mark as finished naturally
         };
 
         this.interactionGroup = new THREE.Group();
@@ -445,6 +447,13 @@ export class GlobeEngineService {
 
             // Fade In
             if (!this.globalSound.isPlaying) {
+                // If the audio finished naturally, reset it.
+                // Otherwise (just paused), RESUME from where we left off.
+                if (this.hasAudioEnded) {
+                    this.globalSound.stop();
+                    this.hasAudioEnded = false;
+                }
+
                 this.globalSound.setVolume(0); // Start from silence
                 this.globalSound.play();
             }
@@ -500,13 +509,40 @@ export class GlobeEngineService {
         let spin = true;
         let targetMap = this.dayMap;
 
-        // --- NEW: Toggle marker visibility based on route ---
-        if (this.hyderabadMarker) {
-            this.hyderabadMarker.visible = !cleanRoute.includes('about');
-        }
-
         const isWork = cleanRoute.includes('work');
         const fadeSpeed = cleanRoute.includes('about') ? 1.2 : 1.5;
+
+        // --- NEW: Animate marker scale based on route ---
+        if (this.hyderabadMarker) {
+            const isAbout = cleanRoute.includes('about');
+
+            // If entering 'about', scale to 0 (hide)
+            // If leaving 'about' (or just not in 'about'), scale to 1 (show)
+            const targetScale = isAbout ? 0 : 1;
+
+            // Tuning for "X-ray" prevention:
+            // 1. Entering About (Hide): Scale down quickly (0.4s) BEFORE Earth becomes transparent.
+            // 2. Leaving About (Show): Delay start (0.8s) until Earth is mostly opaque, then scale up.
+            const animDuration = isAbout ? 0.4 : 1.2;
+            const animDelay = isAbout ? 0 : 0.8;
+
+            gsap.to(this.hyderabadMarker.scale, {
+                x: targetScale,
+                y: targetScale,
+                z: targetScale,
+                duration: animDuration,
+                delay: animDelay,
+                ease: 'power2.inOut',
+                onStart: () => {
+                    // Start visible only if scaling up
+                    if (targetScale > 0) this.hyderabadMarker.visible = true;
+                },
+                onComplete: () => {
+                    // Optimization: hide it fully if scale is 0
+                    if (targetScale === 0) this.hyderabadMarker.visible = false;
+                }
+            });
+        }
 
         if (cleanRoute.includes('about')) {
             targetZ = 0.8;
