@@ -75,10 +75,13 @@ export class SocialWorldService implements OnDestroy {
         const assets = [
             'assets/me.jpeg',
             'assets/instagram.png',
-            'assets/photography.png',
-            'assets/discord.png',
             'assets/youtube.png',
-            'assets/email.png'
+            'assets/email.png',
+            'assets/leetcode.png',
+            'assets/linkedin.png',
+            'assets/github.png',
+            'assets/discord.png',
+            'assets/photography.png'
         ];
 
         assets.forEach(path => {
@@ -359,7 +362,6 @@ export class SocialWorldService implements OnDestroy {
             { type: 'link', url: 'https://www.linkedin.com/', icon: 'assets/linkedin.png' },
             { type: 'link', url: 'https://github.com/prabhu-tejaa', icon: 'assets/github.png' },
             { type: 'link', url: 'https://discord.com/users/1065107790525378570', icon: 'assets/discord.png' },
-            { type: 'link', url: 'https://music.youtube.com/@pratej.p', icon: 'assets/youtubeMusic.png' },
             { type: 'link', url: 'https://instagram.com/monke_with_a_camera', icon: 'assets/photography.png' },
         ];
 
