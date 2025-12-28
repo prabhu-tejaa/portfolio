@@ -133,7 +133,7 @@ export class ShellComponent implements OnInit, OnDestroy {
   }
 
   onGlobeReady() {
-    // Progress is now handled via loadingProgress$ subscription in ngOnInit
+    this.updateActiveState();
   }
 
   getRouteAnimationData() {
