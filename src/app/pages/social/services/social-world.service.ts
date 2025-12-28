@@ -39,6 +39,15 @@ export class SocialWorldService implements OnDestroy {
 
     private globeEngine = inject(GlobeEngineService);
 
+    // Easter Egg Audio Props
+    private audioListener!: THREE.AudioListener;
+    private ambientSound!: THREE.Audio;
+    private audioAnalyser!: THREE.AudioAnalyser;
+    private hasTriggeredEasterEgg = false;
+    private isPlaying = false;
+    private isAvatarHovered = false;
+    private readonly AUDIO_PATH = 'assets/audio/cosmic-glow.mpeg';
+
     constructor(private zone: NgZone) { }
 
     public init(container: HTMLElement): void {
@@ -74,6 +83,22 @@ export class SocialWorldService implements OnDestroy {
                 }
             });
         });
+
+        // Preload Audio
+        const audioLoader = new THREE.AudioLoader(this.globeEngine.getLoadingManager());
+        audioLoader.load(
+            this.AUDIO_PATH,
+            (buffer) => {
+                console.log('Audio loaded successfully');
+                this.ambientSound.setBuffer(buffer);
+                this.ambientSound.setLoop(true);
+                this.ambientSound.setVolume(0); // Start at 0 for fade in
+            },
+            undefined,
+            (error) => {
+                console.error('FAILED TO LOAD AUDIO:', error);
+            }
+        );
     }
 
     public setTransitionState(isTransitioning: boolean) {
@@ -109,6 +134,12 @@ export class SocialWorldService implements OnDestroy {
     public dispose(): void {
         this.stopCrazyRotation();
         if (this.animationId) cancelAnimationFrame(this.animationId);
+
+        // Stop Audio on Destroy
+        if (this.ambientSound) {
+            if (this.ambientSound.isPlaying) this.ambientSound.stop();
+            if (this.ambientSound.source) this.ambientSound.disconnect();
+        }
 
         if (this.scene) {
             this.scene.traverse((object: any) => {
@@ -152,6 +183,12 @@ export class SocialWorldService implements OnDestroy {
 
         this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
         this.updateCameraPosition(width, height);
+
+        // Init Audio
+        this.audioListener = new THREE.AudioListener();
+        this.camera.add(this.audioListener);
+        this.ambientSound = new THREE.Audio(this.audioListener);
+        this.audioAnalyser = new THREE.AudioAnalyser(this.ambientSound, 32);
 
         this.renderer = new THREE.WebGLRenderer({
             alpha: true,
@@ -279,8 +316,19 @@ export class SocialWorldService implements OnDestroy {
         const avatar = this.scene.getObjectByName("meAvatar");
         if (avatar) {
             avatar.lookAt(this.camera.position);
+
+            // Simple breathe + hover scaling
             const breath = Math.sin(time * 2.5) * 0.15;
-            avatar.scale.set(1 + breath / 5, 1 + breath / 5, 1);
+            const targetScale = 1 + (this.isAvatarHovered ? 0.1 : 0) + (breath / 5);
+            avatar.scale.x += (targetScale - avatar.scale.x) * 0.1;
+            avatar.scale.y += (targetScale - avatar.scale.y) * 0.1;
+        }
+
+        // Music reaction for orbit icons
+        let musicIntensity = 0;
+        if (this.isPlaying && this.audioAnalyser) {
+            const data = this.audioAnalyser.getAverageFrequency();
+            musicIntensity = data / 255;
         }
 
         if (this.orbitGroup && this.orbitGroup.children.length) {
@@ -289,12 +337,43 @@ export class SocialWorldService implements OnDestroy {
                 const child = children[i] as THREE.Sprite;
 
                 if (!this.isTransitioning) {
-                    child.position.y = Math.sin(time + child.position.x) * 0.4;
+                    child.position.y = Math.sin(time + (i * 1.5)) * 0.4;
                 }
 
-                const targetScaleValue = (child === this.hoveredObject) ? 3.2 : this.BASE_ICON_SIZE;
-                child.scale.x += (targetScaleValue - child.scale.x) * 0.1;
-                child.scale.y += (targetScaleValue - child.scale.y) * 0.1;
+                const isHovered = (child === this.hoveredObject);
+                const baseScale = isHovered ? 3.2 : this.BASE_ICON_SIZE;
+
+                // Simple, Clean Pulse Logic
+                const pulse = musicIntensity * 0.4;
+                const targetScaleValue = baseScale + pulse;
+
+                child.scale.x += (targetScaleValue - child.scale.x) * 0.15;
+                child.scale.y += (targetScaleValue - child.scale.y) * 0.15;
+            }
+        }
+
+        // Linear Audio Fade Logic (1s duration)
+        if (this.ambientSound && this.ambientSound.buffer) {
+            const currentVol = this.ambientSound.getVolume();
+            const fadeStep = 0.01; // ~1 second fade
+
+            if (this.isPlaying) {
+                // Fade In
+                if (!this.ambientSound.isPlaying) {
+                    this.ambientSound.play();
+                }
+                if (currentVol < 0.5) {
+                    this.ambientSound.setVolume(Math.min(0.5, currentVol + fadeStep));
+                }
+            } else {
+                // Fade Out
+                if (currentVol > 0) {
+                    const newVol = Math.max(0, currentVol - fadeStep);
+                    this.ambientSound.setVolume(newVol);
+                    if (newVol === 0 && this.ambientSound.isPlaying) {
+                        this.ambientSound.pause();
+                    }
+                }
             }
         }
 
@@ -334,21 +413,45 @@ export class SocialWorldService implements OnDestroy {
 
         this.raycaster.setFromCamera(this.mouseVector, this.camera);
 
-        if (!this.orbitGroup || this.orbitGroup.children.length === 0) return;
+        if (!this.scene) return;
 
-        const intersects = this.raycaster.intersectObjects(this.orbitGroup.children);
+        const avatar = this.scene.getObjectByName("meAvatar");
+        const interactables = [...(this.orbitGroup?.children || [])];
+        if (avatar) interactables.push(avatar);
+
+        const intersects = this.raycaster.intersectObjects(interactables);
 
         if (intersects.length > 0) {
             this.hoveredObject = intersects[0].object;
             this.renderer.domElement.style.cursor = 'pointer';
+
+            // Check if avatar is hovered
+            this.isAvatarHovered = (this.hoveredObject.name === "meAvatar");
         } else {
             this.hoveredObject = null;
+            this.isAvatarHovered = false;
             this.renderer.domElement.style.cursor = 'default';
         }
     }
 
     private onCanvasClick(event: MouseEvent): void {
-        if (this.hoveredObject && this.onInteraction) {
+        if (!this.hoveredObject) return;
+
+        // Easter Egg Interaction
+        if (this.hoveredObject.name === 'meAvatar') {
+            if (this.ambientSound && this.ambientSound.buffer) {
+                // Browser Autoplay Policy: Resume context on user interaction
+                if (this.audioListener.context.state === 'suspended') {
+                    this.audioListener.context.resume();
+                }
+
+                this.isPlaying = !this.isPlaying;
+                this.hasTriggeredEasterEgg = true;
+            }
+            return;
+        }
+
+        if (this.onInteraction) {
             const data = this.hoveredObject.userData;
             this.onInteraction({
                 type: data['type'],

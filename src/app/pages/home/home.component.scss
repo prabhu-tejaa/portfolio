@@ -24,7 +24,7 @@
     display: flex;
     width: 100%;
     max-width: 320px;
-    margin-bottom: 80px;
+    margin-bottom: 140px;
     /* Positioned under the globe gap */
     animation: fadeIn 1s ease-out;
   }
@@ -50,7 +50,7 @@
 
   .quote-author {
     font-size: 0.7rem;
-    color: #00f3ff;
+    color: rgba(255, 255, 255, 0.55);
     /* Matching your accent color */
     text-transform: uppercase;
     letter-spacing: 2px;
