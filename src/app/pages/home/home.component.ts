@@ -21,14 +21,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   isLoading = true;
 
   ngOnInit() {
-    // Initial fetch and 10s interval
-    timer(0, 10000)
+    // Initial fetch and 13s interval
+    timer(0, 13000)
       .pipe(
         takeUntil(this.destroy$),
         switchMap(() => {
           this.isLoading = true;
           this.cdr.markForCheck();
-          return this.quoteService.getRandomQuote();
+          // Ensure at least 1s for fade out animation
+          return timer(1000).pipe(
+            switchMap(() => this.quoteService.getRandomQuote())
+          );
         })
       )
       .subscribe(quote => {
