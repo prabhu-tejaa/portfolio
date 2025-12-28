@@ -46,7 +46,9 @@ export class SocialWorldService implements OnDestroy {
     private hasTriggeredEasterEgg = false;
     private isPlaying = false;
     private isAvatarHovered = false;
-    private readonly AUDIO_PATH = 'assets/audio/cosmic-glow.mpeg';
+    private readonly AUDIO_PATH = 'assets/audio/cosmic-glow.mp3';
+
+    private playQueued = false;
 
     constructor(private zone: NgZone) { }
 
@@ -93,6 +95,16 @@ export class SocialWorldService implements OnDestroy {
                 this.ambientSound.setBuffer(buffer);
                 this.ambientSound.setLoop(true);
                 this.ambientSound.setVolume(0); // Start at 0 for fade in
+
+                // Smart Queue: If user tried to play while loading, start now.
+                if (this.playQueued) {
+                    console.log('Auto-playing queued audio...');
+                    this.isPlaying = true;
+                    if (this.audioListener.context.state === 'suspended') {
+                        this.audioListener.context.resume();
+                    }
+                    this.ambientSound.play();
+                }
             },
             undefined,
             (error) => {
@@ -253,10 +265,14 @@ export class SocialWorldService implements OnDestroy {
 
         const objectsData = [
             { type: 'link', url: 'https://instagram.com/cosmic_monke', icon: 'assets/instagram.png' },
-            { type: 'link', url: 'https://instagram.com/monke_with_a_camera', icon: 'assets/photography.png' },
-            { type: 'link', url: 'https://discord.com/users/1065107790525378570', icon: 'assets/discord.png' },
             { type: 'link', url: 'https://www.youtube.com/@pratej.p', icon: 'assets/youtube.png' },
-            { type: 'contact', url: '', icon: 'assets/email.png' }
+            { type: 'contact', url: '', icon: 'assets/email.png' },
+            { type: 'link', url: 'https://leetcode.com/u/prabhu-tejaa/', icon: 'assets/leetcode.png' },
+            { type: 'link', url: 'https://www.linkedin.com/', icon: 'assets/linkedin.png' },
+            { type: 'link', url: 'https://github.com/prabhu-tejaa', icon: 'assets/github.png' },
+            { type: 'link', url: 'https://discord.com/users/1065107790525378570', icon: 'assets/discord.png' },
+            { type: 'link', url: 'https://music.youtube.com/@pratej.p', icon: 'assets/youtubeMusic.png' },
+            { type: 'link', url: 'https://instagram.com/monke_with_a_camera', icon: 'assets/photography.png' },
         ];
 
         objectsData.forEach((data, index) => {
@@ -399,6 +415,7 @@ export class SocialWorldService implements OnDestroy {
     }
 
     private onTouchStart(event: TouchEvent): void {
+        event.preventDefault(); // Prevents double-firing (touch + click)
         if (event.touches.length > 0) {
             const touch = event.touches[0];
             const rect = this.renderer.domElement.getBoundingClientRect();
@@ -439,15 +456,20 @@ export class SocialWorldService implements OnDestroy {
 
         // Easter Egg Interaction
         if (this.hoveredObject.name === 'meAvatar') {
-            if (this.ambientSound && this.ambientSound.buffer) {
-                // Browser Autoplay Policy: Resume context on user interaction
-                if (this.audioListener.context.state === 'suspended') {
-                    this.audioListener.context.resume();
-                }
-
-                this.isPlaying = !this.isPlaying;
-                this.hasTriggeredEasterEgg = true;
+            // Browser Autoplay Policy: Resume context on user interaction
+            if (this.audioListener.context.state === 'suspended') {
+                this.audioListener.context.resume();
             }
+
+            if (this.ambientSound && this.ambientSound.buffer) {
+                this.isPlaying = !this.isPlaying;
+            } else {
+                // Audio Still Loading: Queue the intent
+                this.playQueued = !this.playQueued;
+                console.log(this.playQueued ? 'Audio queued for autoplay...' : 'Audio queue cancelled');
+            }
+
+            this.hasTriggeredEasterEgg = true;
             return;
         }
 
