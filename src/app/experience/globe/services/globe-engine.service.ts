@@ -1,6 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import * as THREE from 'three';
 import gsap from 'gsap';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class GlobeEngineService {
@@ -23,6 +24,9 @@ export class GlobeEngineService {
     private dayMap!: THREE.Texture;
     private nightMap!: THREE.Texture;
 
+    private loadingManager = new THREE.LoadingManager();
+    public loadingProgress$ = new BehaviorSubject<number>(0);
+
     private isReady = false;
     private onReadyCallback?: () => void;
     private clock = new THREE.Clock();
@@ -42,7 +46,28 @@ export class GlobeEngineService {
     private raycaster = new THREE.Raycaster();
     private mouse = new THREE.Vector2();
 
-    constructor(private ngZone: NgZone) { }
+    constructor(private ngZone: NgZone) {
+        this.setupLoadingManager();
+    }
+
+    private setupLoadingManager() {
+        this.loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
+            const progress = Math.round((itemsLoaded / itemsTotal) * 100);
+            this.loadingProgress$.next(progress);
+        };
+
+        this.loadingManager.onLoad = () => {
+            this.loadingProgress$.next(100);
+        };
+
+        this.loadingManager.onError = (url) => {
+            console.error(`Error loading: ${url}`);
+        };
+    }
+
+    public getLoadingManager(): THREE.LoadingManager {
+        return this.loadingManager;
+    }
 
     async init(canvas: HTMLCanvasElement, onReady?: () => void) {
         this.canvasElement = canvas;
@@ -75,10 +100,13 @@ export class GlobeEngineService {
         rimLight.lookAt(0, 0, 0);
         this.scene.add(sun, ambient, rimLight);
 
-        const texLoader = new THREE.TextureLoader();
+        const texLoader = new THREE.TextureLoader(this.loadingManager);
         const safeLoad = (url: string) =>
             new Promise<THREE.Texture>((resolve) =>
-                texLoader.load(url, resolve, undefined, () => resolve(new THREE.Texture()))
+                texLoader.load(url, resolve, undefined, (err) => {
+                    console.error('SafeLoad error:', err);
+                    resolve(new THREE.Texture());
+                })
             );
 
         const [day, cloudsTex, starsTex, normal, specular, night] = await Promise.all([

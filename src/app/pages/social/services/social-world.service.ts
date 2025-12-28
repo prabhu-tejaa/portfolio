@@ -1,5 +1,6 @@
-import { Injectable, NgZone, OnDestroy } from '@angular/core';
+import { Injectable, NgZone, OnDestroy, inject } from '@angular/core';
 import * as THREE from 'three';
+import { GlobeEngineService } from '../../../experience/globe/services/globe-engine.service';
 
 export interface InteractionEvent {
     type: 'link' | 'contact';
@@ -36,6 +37,8 @@ export class SocialWorldService implements OnDestroy {
 
     public onInteraction?: (event: InteractionEvent) => void;
 
+    private globeEngine = inject(GlobeEngineService);
+
     constructor(private zone: NgZone) { }
 
     public init(container: HTMLElement): void {
@@ -49,7 +52,7 @@ export class SocialWorldService implements OnDestroy {
     }
 
     public preloadTextures(): void {
-        const loader = new THREE.TextureLoader();
+        const loader = new THREE.TextureLoader(this.globeEngine.getLoadingManager());
         const assets = [
             'assets/me.jpeg',
             'assets/instagram.png',
@@ -183,7 +186,7 @@ export class SocialWorldService implements OnDestroy {
     }
 
     private createSceneContent(): void {
-        const loader = new THREE.TextureLoader();
+        const loader = new THREE.TextureLoader(this.globeEngine.getLoadingManager());
 
         const setupAvatar = (tex: THREE.Texture) => {
             tex.colorSpace = THREE.SRGBColorSpace;

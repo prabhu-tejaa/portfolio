@@ -78,95 +78,274 @@
     color: white;
 }
 
-.loader {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 200; // Make sure this is higher than the header
-    background-color: rgba(0, 0, 0, 0.99);
-
-    // No transitions or animations here - all animation is handled by breathing-blur-loader
-    // The loader visibility is controlled purely by the breathing-blur-loader component
-}
-
-.loader-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    animation: loader-fade-in 0.8s ease-out forwards;
-}
-
-@keyframes loader-fade-in {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.loader-text {
-    color: white;
-    font-family: 'Inter', system-ui, sans-serif;
-    font-weight: 700;
-    font-size: 1.1rem;
-    letter-spacing: 0.3rem;
-    text-transform: uppercase;
-    text-align: center;
-    opacity: 0.9;
-    padding: 0 40px;
-    box-sizing: border-box;
-    width: 100%;
-}
-
-.progress-container {
-    width: 250px; // Slightly wider
-    height: 4px; // Thicker
-    background: rgba(255, 255, 255, 0.2); // Brighter track
-    border-radius: 4px;
-    overflow: hidden;
-    margin: 10px 0;
-}
-
-.progress-bar {
-    height: 100%;
-    width: 0%; // Default start
-    background: white;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8); // stronger glow
-    transition: width 0.1s linear;
-}
-
-.loader-progress {
-    color: rgba(255, 255, 255, 0.4);
-    font-family: monospace;
-    font-size: 0.7rem;
-    letter-spacing: 2px;
-}
-
-.loader.hidden {
-    opacity: 0;
-    pointer-events: none;
-    // No transition - let breathing-blur-loader handle all animation timing
-}
-
-
-
 @media (max-width: 768px) {
     .shell-header {
         padding: 20px 24px;
         display: flex;
         justify-content: space-between;
     }
+}
+
+/* ===============================
+   LOADER ROOT
+================================ */
+
+.loader {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    overflow: hidden;
+    transition: opacity 1s ease-in-out;
+}
+
+.loader.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ===============================
+   STARFIELD (SUBTLE)
+================================ */
+
+.loader-stars {
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+        radial-gradient(1px 1px at 80px 120px, #fff, transparent),
+        radial-gradient(1px 1px at 160px 60px, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 200px 200px, #fff, transparent);
+    background-size: 260px 260px;
+    opacity: 0.45;
+    animation: stars-drift 120s linear infinite;
+}
+
+@keyframes stars-drift {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: 400px 400px;
+    }
+}
+
+/* ===============================
+   LOADER CONTENT
+================================ */
+
+.loader-content {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+}
+
+/* ===============================
+   NAME + HORIZON WRAPPER
+   (CRITICAL)
+================================ */
+
+.name-horizon {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: fit-content;
+}
+
+
+/* ===============================
+   NAME TEXT
+================================ */
+
+.loader-text {
+    font-size: 1.6rem;
+    font-weight: 500;
+    letter-spacing: 0.45rem;
+    text-transform: uppercase;
+    color: white;
+    text-align: center;
+    text-shadow: 0 0 18px rgba(255, 255, 255, 0.35);
+    position: relative;
+    z-index: 2;
+    padding-bottom: 0.6em; // gives breathing room
+    pointer-events: none;
+
+    background: linear-gradient(to bottom,
+            rgba(255, 255, 255, 1) 0%,
+            rgba(255, 255, 255, 1) 60%,
+            rgba(255, 255, 255, 0.85) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+}
+
+/* ===============================
+   PROGRESS LINE (HORIZON)
+================================ */
+
+/* 1. Constrain the "Track" so it doesn't bleed past the text */
+.progress-container {
+    position: absolute;
+    bottom: 0.35em;
+    left: 8%;
+    /* Pulls the start in from the left */
+    right: 8%;
+    /* Pulls the end in from the right */
+    height: 1px;
+    pointer-events: none;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.08);
+    /* This is the faint track line */
+}
+
+/* 2. Let the bar fill the container dynamically */
+.progress-bar {
+    position: absolute;
+    left: 0;
+    /* Starts at the beginning of the container */
+    top: 0;
+    height: 100%;
+    width: 0%;
+    /* Controlled by [style.width.%]="progress" */
+    border-radius: 1px;
+    background: linear-gradient(to right,
+            rgba(255, 255, 255, 0.7),
+            rgba(255, 255, 255, 0.95),
+            rgba(255, 255, 255, 0.7));
+}
+
+/* ===============================
+   FLARE / SUN CREST
+================================ */
+
+.progress-flare {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 4px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow:
+        0 0 10px 3px rgba(255, 255, 255, 0.85),
+        0 0 18px 5px rgba(255, 255, 255, 0.55);
+    animation: flare-pulse 4s ease-in-out infinite;
+}
+
+/* Horizon beam */
+.progress-flare::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 110%;
+    max-width: 100%;
+    height: 1px;
+    background: radial-gradient(ellipse at center,
+            rgba(255, 255, 255, 1) 0%,
+            rgba(255, 255, 255, 0.55) 18%,
+            rgba(255, 255, 255, 0.12) 45%,
+            transparent 80%);
+    filter: blur(0.4px);
+}
+
+/* Atmospheric bloom */
+.progress-flare::before {
+    content: '';
+    position: absolute;
+    /* Shrink the horizontal spread from -70px to -30px */
+    inset: -22px -30px;
+    background: radial-gradient(ellipse at center,
+            rgba(255, 255, 255, 0.35) 0%,
+            rgba(255, 255, 255, 0.12) 40%,
+            transparent 70%);
+    filter: blur(14px);
+    opacity: 0.85;
+}
+
+/* ===============================
+   FLARE MOTION
+================================ */
+
+@keyframes flare-pulse {
+
+    0%,
+    100% {
+        opacity: 0.9;
+        transform: translateY(-50%) scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateY(-50%) scale(1.05);
+    }
+}
+
+/* ===============================
+   STATUS TEXT
+================================ */
+
+.loader-status {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.5rem;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.25);
+    animation: status-pulse 3.5s ease-in-out infinite;
+    margin-top: -20px;
+}
+
+@keyframes status-pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+}
+
+/* ===============================
+   END STATE (OPTIONAL CLASS)
+================================ */
+
+.loader.done .loader-text {
+    letter-spacing: 0.6rem;
+    transition: letter-spacing 1s ease;
+}
+
+.loader.done .progress-bar {
+    opacity: 0.85;
+}
+
+.loader.done .progress-flare {
+    opacity: 0.55;
+}
+
+.loader.done .loader-status {
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+/* ===============================
+   MOBILE
+================================ */
+
+@media (max-width: 768px) {
     .loader-text {
-    font-size: 0.85rem;        // reduce size
-    letter-spacing: 0.18rem;   // reduce spacing
-    padding: 0 16px;           // less horizontal padding
-    white-space: nowrap;       // force single line
-  }
+        font-size: 0.85rem;
+        letter-spacing: 0.18rem;
+    }
 }

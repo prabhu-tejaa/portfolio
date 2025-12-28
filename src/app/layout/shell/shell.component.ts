@@ -1,11 +1,12 @@
-import { Component, ChangeDetectorRef, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectorRef, inject, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd, RouterModule, RouterOutlet, ChildrenOutletContexts, IsActiveMatchOptions } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { GlobeComponent } from '../../experience/globe/globe.component';
 import { GlobeEngineService } from '../../experience/globe/services/globe-engine.service';
 import { SocialWorldService } from '../../pages/social/services/social-world.service';
-import { filter } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
 import { trigger, transition, style, query, animate, group } from '@angular/animations';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-shell',
@@ -69,11 +70,12 @@ import { trigger, transition, style, query, animate, group } from '@angular/anim
     ])
   ]
 })
-export class ShellComponent implements OnInit {
+export class ShellComponent implements OnInit, OnDestroy {
   isLoaded = false;
   showWipBadge = false;
   isHomeActive = false;
   progress = 0;
+  private destroy$ = new Subject<void>();
 
   private router = inject(Router);
   private globeEngine = inject(GlobeEngineService);
@@ -87,11 +89,31 @@ export class ShellComponent implements OnInit {
   ngOnInit() {
     this.socialWorld.preloadTextures();
     this.updateActiveState();
+
+    this.globeEngine.loadingProgress$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(val => {
+        this.progress = val;
+        this.cdr.markForCheck();
+
+        if (val >= 100) {
+          setTimeout(() => {
+            this.isLoaded = true;
+            this.cdr.markForCheck();
+          }, 500);
+        }
+      });
+
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
         this.updateActiveState();
       });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private updateActiveState() {
@@ -111,27 +133,7 @@ export class ShellComponent implements OnInit {
   }
 
   onGlobeReady() {
-    if (this.isLoaded) return;
-
-    const duration = 1500; // 1.5 seconds
-    const intervalTime = 15; // update every 15ms
-    const totalSteps = duration / intervalTime;
-    const increment = 100 / totalSteps;
-
-    const timer = setInterval(() => {
-      this.progress += increment;
-      if (this.progress >= 100) {
-        this.progress = 100;
-        clearInterval(timer);
-
-        setTimeout(() => {
-          this.isLoaded = true;
-          this.cdr.markForCheck();
-        }, 200);
-      }
-      this.progress = Math.round(this.progress);
-      this.cdr.markForCheck();
-    }, intervalTime);
+    // Progress is now handled via loadingProgress$ subscription in ngOnInit
   }
 
   getRouteAnimationData() {

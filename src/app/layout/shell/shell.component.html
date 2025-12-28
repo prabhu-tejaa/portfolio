@@ -1,10 +1,18 @@
 <div class="loader" [class.hidden]="isLoaded">
+  <div class="loader-stars"></div>
+
   <div class="loader-content">
-    <div class="loader-text">PRABHU TEJA PAMULA</div>
-    <div class="progress-container">
-      <div class="progress-bar" [style.width.%]="progress"></div>
+    <div class="name-horizon">
+      <div class="loader-text">PRABHU TEJA PAMULA</div>
+
+      <div class="progress-container">
+        <div class="progress-bar" [style.width.%]="progress">
+          <div class="progress-flare"></div>
+        </div>
+      </div>
     </div>
-    <div class="loader-progress">{{ progress }}%</div>
+
+    <div class="loader-status">INITIALIZING</div>
   </div>
 </div>
 
