@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   trigger,
@@ -7,6 +7,7 @@ import {
   animate,
   query
 } from '@angular/animations';
+import Lenis from 'lenis';
 
 @Component({
   selector: 'app-about',
@@ -31,13 +32,119 @@ import {
     ])
   ]
 })
-export class AboutComponent {
+export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('container') containerRef!: ElementRef;
+  private lenis: Lenis | null = null;
+  private rafId: number | null = null;
+
+  isModalOpen = false;
+  selectedItem: any = null;
+
   timeline = [
-    { year: '1996', title: 'The Origin', desc: 'Born in India.', icon: '✨' },
-    { year: 'Jun 2000 - March 2002', title: 'The Foundation', desc: 'St.John school, gannavaram', icon: '🎓' },
-    { year: '2002 - 2006', title: 'Mastering the Code', desc: 'Loyola', icon: '💻' },
-    { year: '2006 - 2008', title: 'The Awakening', desc: 'Narayana Concept School', icon: '👁️' },
-    { year: '2008 - 2010', title: 'System Upgrade: v2.0', desc: 'David Memorial High School', icon: '💪' },
-    { year: '2010 - 2012', title: 'Creative Engineer', desc: 'Bhashyam', icon: '🚀' }
+    {
+      year: '1996 - 2000',
+      title: 'The Origin',
+      desc: 'Born in Tenali, raised between my grandparents’ home and Bapatla.',
+      fullDesc: `I was born on a rainy Saturday, September 21, 1996, between 12:30 PM and 1:00 PM at Uma Hospital in Tenali. My birth was critical; doctors feared for my survival as I had consumed the amniotic fluid in the womb. I was also born with my right foot turned outward to the right, which naturally corrected itself within one month.
+
+I celebrated my 1st birthday at my grandfather’s house (my father’s childhood home). 
+
+While both sets of grandparents lived in Tenali, my childhood was spent between their home and Bapatla, where my father worked. My sister was also born in the same Uma Hospital in 1999.`,
+      icon: '✨'
+    },
+{
+      year: '2000 - 2026',
+      title: 'Academic Foundation',
+      desc: 'A comprehensive timeline of foundational schooling and higher education.',
+      fullDesc: `Foundational & Secondary Education:
+• 2000 - 2002: St. John's High School, Gannavaram (Primary Education)
+• 2002 - 2006: Loyola Public School, Nallapadu (Elementary Studies)
+• 2006 - 2008: Narayana Concept School, Tarnaka (Middle School)
+• 2008 - 2010: David Memorial High School, Tarnaka (Middle School)
+• 2010 - 2012: Bhashyam Public School, Habsiguda (Secondary Education)
+
+Higher Secondary & Professional Studies:
+• 2012 - 2015: Intermediate Studies | Sri Chaitanya Junior College, Habsiguda
+• 2015 - 2017: Undergraduate Coursework in Civil Engineering | St. Ann's Engineering College, Chirala
+• 2018: Bachelor of Science (B.Sc.) in Computer Science | Calorx Teachers' University, Gujarat
+• 2024 - 2026: Master of Computer Applications (MCA) | Vellore Institute of Technology (VIT)`,
+      icon: '🎓'
+    },
+{
+      year: '2020 - Present',
+      title: 'Professional Orbit',
+      desc: 'A timeline of corporate operations, specialized training, and long-term consulting.',
+      fullDesc: `Career Milestones & Corporate Training:
+• Feb 2020 - March 2020: Medical Sales Representative | Nouveau Medicament
+- Initiated career with a 15-day intensive corporate training program at the Chennai headquarters.
+- Executed field operations and medical sales strategies within the Visakhapatnam (Vizag) sector.
+
+Strategic Professional Tenure:
+• June 17, 2022 - June 30, 2024: External Consultant | Siemens
+- Dedicated a 24-month tenure as a full-time external resource, maintaining consistent daily office operations.
+- Navigated corporate payroll and contract transitions seamlessly:
+  - First 1.5 Years: Payroll and contract managed through Adept Chips.
+  - Final 6 Months: Successfully transitioned to TeamLease for payroll management.`,
+      icon: '💼'
+    },
+    {
+      year: 'Beyond the Code',
+      title: 'Personal Horizon',
+      desc: 'Passionate about gaming, space exploration, and interactive digital art.',
+      fullDesc: 'Life outside the IDE is just as important. I am an avid gamer, a follower of space exploration milestones, and a fan of digital art. These hobbies provide a constant source of inspiration for my technical work, helping me see connections between gaming mechanics and UI design.',
+      icon: '🌌'
+    }
   ];
+
+  @HostListener('document:keydown.escape')
+  onEscapeKeydown() {
+    if (this.isModalOpen) {
+      this.closeModal();
+    }
+  }
+
+  ngOnInit() { }
+
+  openModal(item: any) {
+    this.selectedItem = item;
+    this.isModalOpen = true;
+    this.lenis?.stop(); // Pause smooth scroll
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+    this.lenis?.start(); // Resume smooth scroll
+    setTimeout(() => {
+      this.selectedItem = null;
+    }, 300);
+  }
+
+  ngAfterViewInit() {
+    this.lenis = new Lenis({
+      wrapper: this.containerRef.nativeElement,
+      content: this.containerRef.nativeElement.querySelector('.timeline'),
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
+      infinite: false,
+    });
+
+    const raf = (time: number) => {
+      this.lenis?.raf(time);
+      this.rafId = requestAnimationFrame(raf);
+    };
+
+    this.rafId = requestAnimationFrame(raf);
+  }
+
+  ngOnDestroy() {
+    if (this.rafId) {
+      cancelAnimationFrame(this.rafId);
+    }
+    this.lenis?.destroy();
+  }
 }

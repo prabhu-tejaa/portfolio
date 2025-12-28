@@ -138,7 +138,7 @@ export class ShellComponent implements OnInit, OnDestroy {
 
   private updateActiveState() {
     const url = this.router.url;
-    this.showWipBadge = url.includes('/work') || url.includes('/about');
+    this.showWipBadge = url.includes('/work');
 
     const matchOptions: IsActiveMatchOptions = {
       paths: 'exact',

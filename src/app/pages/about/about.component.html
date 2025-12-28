@@ -1,18 +1,51 @@
-<section class="about-container">
+<section class="about-container" #container [class.modal-open]="isModalOpen">
 
   <div class="timeline">
     <div class="center-line"></div>
 
     <div class="event-row" *ngFor="let item of timeline; let i = index" [class.left]="i % 2 === 0"
       [class.right]="i % 2 !== 0">
-      <div class="dot">
-        <span>{{ item.icon }}</span>
+      <div class="dot-column">
+        <div class="dot">
+          <span>{{ item.icon }}</span>
+        </div>
       </div>
 
-      <div class="content-card">
+      <div class="content-card" (click)="openModal(item)">
         <span class="year">{{ item.year }}</span>
         <h3>{{ item.title }}</h3>
-        <p>{{ item.desc }}</p>
+        <div class="description-wrapper">
+          <p class="truncate-text">{{ item.desc }}</p>
+          <span class="discovery-hint">
+            <span class="hint-symbol">→</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Perspective Modal Overlay -->
+  <div class="modal-overlay" *ngIf="isModalOpen" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closeModal()">&times;</button>
+
+      <div class="modal-header">
+        <div class="header-icon-container">
+          <span class="modal-icon">{{ selectedItem?.icon }}</span>
+        </div>
+        <div class="header-text">
+          <span class="modal-year">{{ selectedItem?.year }}</span>
+          <h2>{{ selectedItem?.title }}</h2>
+        </div>
+      </div>
+
+      <div class="modal-body" data-lenis-prevent>
+        <p class="main-text">{{ selectedItem?.fullDesc }}</p>
+      </div>
+
+      <div class="modal-footer">
+        <div class="galactic-line"></div>
+        <!-- <span class="footer-note">End of transmission</span> -->
       </div>
     </div>
   </div>

@@ -500,6 +500,11 @@ export class GlobeEngineService {
         let spin = true;
         let targetMap = this.dayMap;
 
+        // --- NEW: Toggle marker visibility based on route ---
+        if (this.hyderabadMarker) {
+            this.hyderabadMarker.visible = !cleanRoute.includes('about');
+        }
+
         const isWork = cleanRoute.includes('work');
         const fadeSpeed = cleanRoute.includes('about') ? 1.2 : 1.5;
 
