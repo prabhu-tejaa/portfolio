@@ -371,13 +371,10 @@ export class SocialWorldService implements OnDestroy {
         // Linear Audio Fade Logic (1s duration)
         if (this.ambientSound && this.ambientSound.buffer) {
             const currentVol = this.ambientSound.getVolume();
-            const fadeStep = 0.01; // ~1 second fade
+            const fadeStep = 0.02; // Slightly faster fade for responsiveness
 
             if (this.isPlaying) {
                 // Fade In
-                if (!this.ambientSound.isPlaying) {
-                    this.ambientSound.play();
-                }
                 if (currentVol < 0.5) {
                     this.ambientSound.setVolume(Math.min(0.5, currentVol + fadeStep));
                 }
@@ -463,6 +460,13 @@ export class SocialWorldService implements OnDestroy {
 
             if (this.ambientSound && this.ambientSound.buffer) {
                 this.isPlaying = !this.isPlaying;
+
+                // CRITICAL: Play MUST be called directly within the click/touch event for mobile
+                if (this.isPlaying) {
+                    if (!this.ambientSound.isPlaying) {
+                        this.ambientSound.play();
+                    }
+                }
             } else {
                 // Audio Still Loading: Queue the intent
                 this.playQueued = !this.playQueued;
