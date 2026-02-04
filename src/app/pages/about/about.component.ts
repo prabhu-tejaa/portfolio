@@ -43,14 +43,20 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
 
   timeline = [
     {
-      year: '1996 - 2000',
+      year: '1996',
       title: 'The Origin',
       desc: 'Born in Tenali, raised between my grandparents’ home and Bapatla.',
-      fullDesc: `I was born on a rainy Saturday, September 21, 1996, between 12:30 PM and 1:00 PM at Uma Hospital in Tenali. My birth was critical; doctors feared for my survival as I had consumed the amniotic fluid in the womb. I was also born with my right foot turned outward to the right, which naturally corrected itself within one month.
+      fullDesc: `My story didn't actually start in 1996; it began long before my first breath.
 
-I celebrated my 1st birthday at my grandfather’s house (my father’s childhood home). 
+In June 1995, the specific cells that would become me were already in motion, spending months maturing and preparing. By the final week of December, just as the year was coming to an end, the spark of my life finally took hold.
 
-While both sets of grandparents lived in Tenali, my childhood was spent between their home and Bapatla, where my father worked. My sister was also born in the same Uma Hospital in 1999.`,
+Nine months later, on a rainy Saturday September 21, 1996 I arrived at Uma Hospital in Tenali. The half-hour between 12:30 and 1:00 PM was a fragile time. I had swallowed amniotic fluid in the womb, and my right foot was turned completely outward.
+
+It was a complicated entrance, but nature has its own way of healing. Within a month, my foot corrected itself and the initial fears of the doctors began to fade.
+
+My early years were a mix of two worlds: the warmth of my grandparents' homes in Tenali and the time we spent in Bapatla for my father’s work. I celebrated my first birthday at my grandfather’s house—the same home where my father grew up.
+
+In 1999, my sister was born at that same hospital in Tenali, rooting our family even deeper into the history of that place.`,
       icon: '✨'
     },
     {
@@ -89,21 +95,25 @@ Strategic Professional Tenure:
       icon: '💼'
     },
     {
-      year: 'Beyond the Code',
+      year: '∞',
       title: 'Personal Horizon',
       desc: 'Passionate about gaming, space exploration, and continuous learning.',
-      icon: '✨',
+      icon: '🌠',
       // Sub-items for the nested modal navigation
       subItems: [
         {
           title: 'The Virtual Tactician',
           icon: '🎮',
           desc: 'A strategic mind honed through immersive gaming worlds.',
-          fullDesc: `Gaming is more than a pastime; it’s a canvas for strategy and reflexes. 
+          fullDesc: `"It all started with this massive Windows setup my dad brought home—huge monitor, heavy CPU, the works. I was only four, but I was already hooked.
 
-I’ve spent countless hours mastering the mechanics of Valorant, Counter-Strike 2, and GTA V. These aren't just games—they are environments where teamwork, split-second decision-making, and tactical planning are paramount.
+My dad used to put passwords on it to keep me away, but that backfired. Being locked out didn't stop me; it just made me obsessed. I’d sit there staring at the screen, wondering what was happening behind that lock and how I could get inside. That curiosity was the first spark.
 
-Whether holding a site in CS2 or executing a perfect execute in Valorant, I bring the same focus and analytical mindset to gaming as I do to software development.`
+When I finally got in, it was a total immersion. I started with the old-school 2D GTA and Vice City, eventually moving through everything from the emotional weight of The Last of Us Part II and Life is Strange to the pure chaos of High on Life.
+
+Whether I was on a PS4, Xbox, or PC, I realized playing a game is like living a character’s story—it actually changes how your brain evolves. I saw how PUBG Mobile united the world when we were all stuck inside during COVID, and it hit me: this space is powerful.
+
+Those were the stepping stones. That childhood wonder of wanting to 'create something in this space' never left me. It’s what drove me into software engineering. In life, you have to find your lane; I found mine in the logic and the stories that make the virtual world feel real.".`
         },
         {
           title: 'The Cosmic Observer',
@@ -114,7 +124,7 @@ Whether holding a site in CS2 or executing a perfect execute in Valorant, I brin
 I closely follow mission launches, astronomical discoveries, and the evolving narrative of humanity's journey to the stars. This curiosity drives me to understand complex systems, whether they are orbiting in space or running in a cloud server.`
         },
         {
-          title: 'The Digital Architect',
+          title: 'Major events in life',
           icon: '💻',
           desc: 'Building, breaking, and refining code for the love of creation.',
           fullDesc: `Coding isn't just a job; it's a craft. I love the process of turning abstract logic into tangible, interactive experiences.

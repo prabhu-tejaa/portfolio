@@ -340,7 +340,7 @@ export class SocialWorldService implements OnDestroy {
             { type: 'link', url: 'https://www.youtube.com/@pratej.p', icon: 'assets/youtube.png' },
             { type: 'contact', url: '', icon: 'assets/email.png' },
             { type: 'link', url: 'https://leetcode.com/u/prabhu-tejaa/', icon: 'assets/leetcode.png' },
-            { type: 'link', url: 'https://www.linkedin.com/', icon: 'assets/linkedin.png' },
+            { type: 'link', url: 'https://www.linkedin.com/in/prabhu-tejaa/', icon: 'assets/linkedin.png' },
             { type: 'link', url: 'https://github.com/prabhu-tejaa', icon: 'assets/github.png' },
             { type: 'link', url: 'https://discord.com/users/1065107790525378570', icon: 'assets/discord.png' },
             { type: 'link', url: 'https://instagram.com/monke_with_a_camera', icon: 'assets/photography.png' },
