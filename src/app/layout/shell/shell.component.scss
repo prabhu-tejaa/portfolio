@@ -187,6 +187,7 @@
             rgba(255, 255, 255, 1) 60%,
             rgba(255, 255, 255, 0.85) 100%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 
 }
@@ -352,5 +353,15 @@
     .loader-text {
         font-size: 0.85rem;
         letter-spacing: 0.18rem;
+    }
+}
+
+app-globe {
+    transition: filter 3s ease-out;
+    filter: blur(0px);
+    opacity: 1;
+
+    &.blur-loading {
+        filter: blur(30px);
     }
 }

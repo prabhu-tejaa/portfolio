@@ -53,6 +53,7 @@ export class GlobeEngineService {
 
     private raycaster = new THREE.Raycaster();
     private mouse = new THREE.Vector2();
+    private _lastHoverCheck: number = 0;
 
     constructor(private ngZone: NgZone) {
         this.setupLoadingManager();
@@ -109,34 +110,13 @@ export class GlobeEngineService {
         this.scene.add(sun, ambient, rimLight);
 
         const texLoader = new THREE.TextureLoader(this.loadingManager);
-        const safeLoad = (url: string) =>
-            new Promise<THREE.Texture>((resolve) =>
-                texLoader.load(url, resolve, undefined, (err) => {
-                    console.error('SafeLoad error:', err);
-                    resolve(new THREE.Texture());
-                })
-            );
 
-        const audioLoader = new THREE.AudioLoader(this.loadingManager);
-        const safeLoadAudio = (url: string) =>
-            new Promise<AudioBuffer>((resolve) =>
-                audioLoader.load(url, resolve, undefined, (err) => {
-                    console.error('SafeLoadAudio error:', err);
-                    // Return empty buffer or handle appropriately
-                    const ctx = new AudioContext(); // Create dummy context for empty buffer if needed, or just nullable
-                    resolve(ctx.createBuffer(1, 1, 22050));
-                })
-            );
-
-        const [day, cloudsTex, starsTex, normal, specular, night, audioBuffer] = await Promise.all([
-            safeLoad('textures/earth/day.webp'),
-            safeLoad('textures/earth/clouds.webp'),
-            safeLoad('textures/earth/stars_milkyway.webp'),
-            safeLoad('textures/earth/normal.png'),
-            safeLoad('textures/earth/specular.png'),
-            safeLoad('textures/earth/night.webp'),
-            safeLoadAudio('assets/audio/cosmic-glow.mp3')
-        ]);
+        const day = texLoader.load('textures/earth/day.webp');
+        const cloudsTex = texLoader.load('textures/earth/clouds.webp');
+        const starsTex = texLoader.load('textures/earth/stars_milkyway.webp');
+        const normal = texLoader.load('textures/earth/normal.png');
+        const specular = texLoader.load('textures/earth/specular.png');
+        const night = texLoader.load('textures/earth/night.webp');
 
         day.colorSpace = THREE.SRGBColorSpace;
         cloudsTex.colorSpace = THREE.SRGBColorSpace;
@@ -145,18 +125,24 @@ export class GlobeEngineService {
 
         this.dayMap = day;
         this.nightMap = night;
-        this.sharedAudioBuffer$.next(audioBuffer);
 
         // --- NEW: Global Persistent Audio ---
         const listener = new THREE.AudioListener();
         this.camera.add(listener);
 
         this.globalSound = new THREE.Audio(listener);
-        this.globalSound.setBuffer(audioBuffer);
         this.globalSound.setLoop(false); // We handle loop/restart manually for control
         this.globalSound.setVolume(0.5);
 
         this.audioAnalyser = new THREE.AudioAnalyser(this.globalSound, 32);
+
+        const audioLoader = new THREE.AudioLoader(this.loadingManager);
+        audioLoader.load('assets/audio/cosmic-glow.mp3', (buffer) => {
+            this.sharedAudioBuffer$.next(buffer);
+            this.globalSound.setBuffer(buffer);
+        }, undefined, (err) => {
+            console.error('Audio load error:', err);
+        });
 
         // Reset state when audio ends
         this.globalSound.onEnded = () => {
@@ -373,13 +359,17 @@ export class GlobeEngineService {
 
         // Hover handling for cursor
         if (!this.isDragging && this.renderer && this.camera && this.earth) {
-            this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-            this.raycaster.setFromCamera(this.mouse, this.camera);
-            const intersects = this.raycaster.intersectObject(this.earth);
+            // Apply a simple manual throttle to save CPU
+            if (!this._lastHoverCheck || (Date.now() - this._lastHoverCheck) > 50) {
+                this._lastHoverCheck = Date.now();
+                this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+                this.raycaster.setFromCamera(this.mouse, this.camera);
+                const intersects = this.raycaster.intersectObject(this.earth);
 
-            if (this.canvasElement) {
-                this.canvasElement.style.cursor = intersects.length > 0 ? 'grab' : 'default';
+                if (this.canvasElement) {
+                    this.canvasElement.style.cursor = intersects.length > 0 ? 'grab' : 'default';
+                }
             }
         }
 

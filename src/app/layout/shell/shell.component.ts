@@ -121,11 +121,9 @@ export class ShellComponent implements OnInit, OnDestroy {
 
   private checkLoaderState() {
     if (this.assetsLoaded && this.globeReady) {
-      setTimeout(() => {
-        this.isLoaded = true;
-        this.updateActiveState(); // Ensure state is correct once loaded
-        this.cdr.markForCheck();
-      }, 500);
+      this.isLoaded = true;
+      this.updateActiveState(); // Ensure state is correct once loaded
+      this.cdr.markForCheck();
     }
   }
 

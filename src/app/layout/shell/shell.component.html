@@ -1,3 +1,4 @@
+<!-- 
 <div class="loader" [class.hidden]="isLoaded">
   <div class="loader-stars"></div>
 
@@ -15,8 +16,9 @@
     <div class="loader-status">INITIALIZING</div>
   </div>
 </div>
+-->
 
-<header class="shell-header" *ngIf="isLoaded" [class.visible]="isLoaded">
+<header class="shell-header visible">
   <div class="header-left">
     <a routerLink="/" class="name" [class.active]="isHomeActive">
       PRABHU TEJA
@@ -33,13 +35,13 @@
   </div>
 </header>
 
-<app-globe (ready)="onGlobeReady()"></app-globe>
+<app-globe (ready)="onGlobeReady()" [class.blur-loading]="!isLoaded"></app-globe>
 
-<div class="router-container" [class.hidden]="!isLoaded" [@routeAnimations]="getRouteAnimationData()">
+<div class="router-container" [@routeAnimations]="getRouteAnimationData()">
   <router-outlet></router-outlet>
 </div>
 
-<div class="wip-badge" *ngIf="showWipBadge && isLoaded">
+<div class="wip-badge" *ngIf="showWipBadge">
   <div class="dot"></div>
   <span>WORK IN PROGRESS</span>
 </div>
