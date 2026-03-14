@@ -91,7 +91,7 @@ ng build
 ### Building and running in Production
 
 ```
-npx ng build --configuration=production --base-href=/portfolio/ && npx ngh --dir=dist/pamula-prabhu-teja-portfolio
+npx ng build --configuration=production --base-href=/portfolio/ ;; npx ngh --dir=dist/pamula-prabhu-teja-portfolio/browser
 ```
 
 ## License
