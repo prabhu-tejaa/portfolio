@@ -88,5 +88,11 @@ ng serve
 ng build
 ```
 
+### Building and running in Production
+
+```
+npx ng build --watch=false --configuration=development && npx ngh --dir=dist/pamula-prabhu-teja-portfolio/browser
+```
+
 ## License
 This project is created by **Pamula Prabhu Teja**. All rights reserved.
