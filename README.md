@@ -2,7 +2,7 @@
 
 A high-performance, immersive 3D portfolio website built with **Angular 19**, **Three.js**, and **GSAP**. This project showcases advanced frontend engineering skills, featuring a realistic interactive globe, 3D social hub, and glassmorphism UI design.
 
-## 🚀 Tech Stack
+## Tech Stack
 
 - **Framework**: Angular 19 (Standalone Components, Signals, SSR-ready)
 - **3D Engine**: Three.js
@@ -10,7 +10,7 @@ A high-performance, immersive 3D portfolio website built with **Angular 19**, **
 - **Styling**: SCSS (Scoped & Global)
 - **State Management**: RxJS & Angular Signals
 
-## 📂 Project Structure
+## Project Structure
 
 ### `src/app/experience`
 The heart of the 3D visualizations. This module operates largely outside of Angular's Change Detection zone for maximum performance (60fps).
@@ -47,7 +47,7 @@ Feature-specific modules for each section of the portfolio.
     - Icons react to mouse hover/touch and accelerate rotation when sending emails.
     - Integrates **EmailJS** for a functional contact form within a 3D context.
 
-## 🌟 Key Features
+## Key Features
 
 1.  **Seamless Route Transitions**: The 3D camera smoothly pans and zooms to different angles of the Earth based on the active route.
 2.  **Performance Optimization**:
@@ -57,7 +57,7 @@ Feature-specific modules for each section of the portfolio.
 3.  **Atmospheric Shader**: Custom GLSL vertex and fragment shaders to create a realistic glowing atmosphere around the Earth.
 4.  **Glassmorphism UI**: High-end UI design using backdrop-filters, noise textures, and translucent gradients.
 
-## 🛠️ Setup & Development
+## Setup & Development
 
 ### Prerequisites
 - Node.js (v18+)
@@ -88,5 +88,5 @@ ng serve
 ng build
 ```
 
-## 📝 License
+## License
 This project is created by **Pamula Prabhu Teja**. All rights reserved.
