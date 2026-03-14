@@ -111,8 +111,16 @@ export class GlobeEngineService {
 
         const texLoader = new THREE.TextureLoader(this.loadingManager);
 
-        const day = texLoader.load('textures/earth/day.webp');
-        const cloudsTex = texLoader.load('textures/earth/clouds.webp');
+        const day = texLoader.load('textures/earth/day.webp', () => {
+            if (this.earth && !this.currentRoute.includes('about')) {
+                gsap.to(this.earth.material as THREE.Material, { opacity: 1.0, duration: 2.0, ease: 'power2.out' });
+            }
+        });
+        const cloudsTex = texLoader.load('textures/earth/clouds.webp', () => {
+            if (this.clouds && !this.currentRoute.includes('work') && !this.currentRoute.includes('about')) {
+                gsap.to(this.clouds.material as THREE.Material, { opacity: 0.8, duration: 2.0, ease: 'power2.out' });
+            }
+        });
         const starsTex = texLoader.load('textures/earth/stars_milkyway.webp');
         const normal = texLoader.load('textures/earth/normal.png');
         const specular = texLoader.load('textures/earth/specular.png');
@@ -163,7 +171,7 @@ export class GlobeEngineService {
                 specular: new THREE.Color(0x333333),
                 shininess: 15,
                 transparent: true,
-                opacity: 1.0
+                opacity: 0.0 // Start at 0, fade in on texture load
             })
         );
 
@@ -172,7 +180,7 @@ export class GlobeEngineService {
             new THREE.MeshLambertMaterial({
                 map: cloudsTex,
                 transparent: true,
-                opacity: 0.8,
+                opacity: 0.0, // Start at 0, fade in on texture load
                 blending: THREE.AdditiveBlending,
                 side: THREE.DoubleSide
             })
@@ -181,7 +189,7 @@ export class GlobeEngineService {
         this.clouds.rotation.x = Math.random() * Math.PI * 2;
 
         const atmosphereMaterial = new THREE.ShaderMaterial({
-            uniforms: { opacity: { value: 0.1 } },
+            uniforms: { opacity: { value: 0.0 } }, // Start at 0, fade in
             vertexShader: `
                 varying vec3 vNormal;
                 void main() {
@@ -207,6 +215,11 @@ export class GlobeEngineService {
             new THREE.SphereGeometry(1.1, segs, segs),
             atmosphereMaterial
         );
+
+        // Instantly fade in the blue glowing aura when scene starts
+        if (!this.currentRoute.includes('about')) {
+            gsap.to(atmosphereMaterial.uniforms['opacity'], { value: 0.1, duration: 2.0, ease: 'power2.out' });
+        }
 
         this.stars = new THREE.Mesh(
             new THREE.SphereGeometry(90, 64, 64),
