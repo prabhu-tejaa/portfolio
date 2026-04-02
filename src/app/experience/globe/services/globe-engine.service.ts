@@ -1,7 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import * as THREE from 'three';
 import gsap from 'gsap';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class GlobeEngineService {
@@ -27,6 +27,7 @@ export class GlobeEngineService {
 
     private loadingManager = new THREE.LoadingManager();
     public loadingProgress$ = new BehaviorSubject<number>(0);
+    public preWarm$ = new Subject<void>();
 
     // Global Audio Properties
     public globalSound!: THREE.Audio;
@@ -66,7 +67,28 @@ export class GlobeEngineService {
         };
 
         this.loadingManager.onLoad = () => {
-            this.loadingProgress$.next(100);
+            // Eagerly upload textures to GPU after they are fully decoded into RAM
+            // We use setTimeout to ensure the progress bar hits 99% before the GPU blocks
+            setTimeout(() => {
+                if (this.nightMap && this.earth) {
+                    const tempMap = this.earth.material as THREE.MeshPhongMaterial;
+                    tempMap.map = this.nightMap;
+                    tempMap.needsUpdate = true;
+                    this.renderer.compile(this.scene, this.camera);
+                    tempMap.map = this.dayMap;
+                    tempMap.needsUpdate = true;
+                }
+                
+                // Allow SocialWorldService to pre-warm its textures synchronously!
+                this.preWarm$.next();
+
+                // Wait 50ms for the GPU stack to physically finish uploading the texture blobs
+                // BEFORE we release the loader screen and trigger the CSS Blur effect.
+                // This guarantees 0 frame drops during the cinematic fade!
+                setTimeout(() => {
+                    this.loadingProgress$.next(100);
+                }, 50);
+            }, 50);
         };
 
         this.loadingManager.onError = (url) => {
@@ -251,15 +273,6 @@ export class GlobeEngineService {
         });
 
         this.ngZone.runOutsideAngular(() => this.animate());
-
-        // --- NEW: Texture Pre-warming ---
-        // Briefly assign night map and render to ensure GPU has it cached
-        if (this.nightMap) {
-            const tempMap = this.earth.material as THREE.MeshPhongMaterial;
-            tempMap.map = this.nightMap;
-            this.renderer.render(this.scene, this.camera);
-            tempMap.map = this.dayMap;
-        }
 
         this.isReady = true;
         if (this.onReadyCallback) this.onReadyCallback();
@@ -559,7 +572,6 @@ export class GlobeEngineService {
 
         if (earthMat.map !== targetMap) {
             earthMat.map = targetMap;
-            earthMat.needsUpdate = true;
         }
 
         gsap.to(earthMat, { duration: fadeSpeed, opacity: targetFade, ease: 'power2.inOut' });

@@ -28,11 +28,12 @@ export class SocialComponent implements AfterViewInit, OnDestroy {
     ) { }
 
     ngAfterViewInit(): void {
-        this.worldService.init(this.rendererContainer.nativeElement);
-
-        this.worldService.onInteraction = (event: InteractionEvent) => {
-            this.handleInteraction(event);
-        };
+        if (this.rendererContainer) {
+            this.worldService.init(this.rendererContainer.nativeElement);
+            this.worldService.onInteraction = (event: InteractionEvent) => {
+                this.handleInteraction(event);
+            };
+        }
     }
 
     ngOnDestroy(): void {

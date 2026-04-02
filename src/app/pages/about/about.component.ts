@@ -183,25 +183,27 @@ Every trip is a reminder that while the digital world is limitless, the physical
   }
 
   ngAfterViewInit() {
-    this.lenis = new Lenis({
-      wrapper: this.containerRef.nativeElement,
-      content: this.containerRef.nativeElement.querySelector('.timeline'),
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 2,
-      infinite: false,
-    });
+    setTimeout(() => {
+      this.lenis = new Lenis({
+        wrapper: this.containerRef.nativeElement,
+        content: this.containerRef.nativeElement.querySelector('.timeline'),
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1,
+        touchMultiplier: 2,
+        infinite: false,
+      });
 
-    const raf = (time: number) => {
-      this.lenis?.raf(time);
+      const raf = (time: number) => {
+        this.lenis?.raf(time);
+        this.rafId = requestAnimationFrame(raf);
+      };
+
       this.rafId = requestAnimationFrame(raf);
-    };
-
-    this.rafId = requestAnimationFrame(raf);
+    }, 50);
   }
 
   ngOnDestroy() {

@@ -1,5 +1,9 @@
 import { Routes } from '@angular/router';
 import { ShellComponent } from './layout/shell/shell.component';
+import { HomeComponent } from './pages/home/home.component';
+import { AboutComponent } from './pages/about/about.component';
+import { WorkComponent } from './pages/work/work.component';
+import { SocialComponent } from './pages/social/social.component';
 
 export const routes: Routes = [
   {
@@ -8,22 +12,22 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent),
+        component: HomeComponent,
         data: { animation: 'HomePage' }
       },
       {
         path: 'about',
-        loadComponent: () => import('./pages/about/about.component').then(m => m.AboutComponent),
+        component: AboutComponent,
         data: { animation: 'AboutPage' }
       },
       {
         path: 'work',
-        loadComponent: () => import('./pages/work/work.component').then(m => m.WorkComponent),
+        component: WorkComponent,
         data: { animation: 'WorkPage' }
       },
       {
         path: 'social',
-        loadComponent: () => import('./pages/social/social.component').then(m => m.SocialComponent),
+        component: SocialComponent,
         data: { animation: 'SocialPage' }
       }
     ]

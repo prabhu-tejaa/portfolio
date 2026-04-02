@@ -92,6 +92,7 @@ export class ShellComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.socialWorld.preloadTextures();
+    this.socialWorld.preInitialize();
     this.updateActiveState();
 
     this.globeEngine.loadingProgress$

@@ -2,7 +2,7 @@ import { Injectable, NgZone, OnDestroy, inject } from '@angular/core';
 import * as THREE from 'three';
 import { GlobeEngineService } from '../../../experience/globe/services/globe-engine.service';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, filter, take } from 'rxjs/operators';
 
 export interface InteractionEvent {
     type: 'link' | 'contact';
@@ -58,14 +58,48 @@ export class SocialWorldService implements OnDestroy {
 
     constructor(private zone: NgZone) { }
 
+    public preInitialize(): void {
+        const dummyContainer = document.createElement('div');
+        dummyContainer.style.width = '10px';
+        dummyContainer.style.height = '10px';
+        this.container = dummyContainer;
+        
+        if (!this.renderer) {
+            this.initThree();
+            this.createSceneContent();
+            
+            // Synchronously intercept the preWarm$ emit to execute WebGL compilation
+            // BEFORE the loader screen fades out.
+            this.globeEngine.preWarm$.pipe(
+                take(1)
+            ).subscribe(() => {
+                if (this.renderer && this.scene && this.camera) {
+                    (this.renderer as any).compile(this.scene, this.camera);
+                }
+            });
+        }
+    }
+
     public init(container: HTMLElement): void {
         this.container = container;
-        this.initThree();
-        this.createSceneContent();
+        
+        if (!this.renderer) {
+            this.initThree();
+            this.createSceneContent();
+        }
 
-        this.zone.runOutsideAngular(() => {
-            this.animate();
-        });
+        // Attach canvas to real container
+        if (this.renderer.domElement.parentNode) {
+            this.renderer.domElement.parentNode.removeChild(this.renderer.domElement);
+        }
+        this.container.appendChild(this.renderer.domElement);
+        this.onWindowResize();
+
+        if (!this.animationId) {
+            this.zone.runOutsideAngular(() => {
+                this.animate();
+            });
+        }
     }
 
     public preloadTextures(): void {
@@ -131,36 +165,15 @@ export class SocialWorldService implements OnDestroy {
 
     public dispose(): void {
         this.stopCrazyRotation();
-        if (this.animationId) cancelAnimationFrame(this.animationId);
-
-        // Stop Audio on Destroy
-        // Persistent Audio is now handled by GlobeEngineService
-
-
-        if (this.scene) {
-            this.scene.traverse((object: any) => {
-                if (object.geometry) object.geometry.dispose();
-                if (object.material) {
-                    if (Array.isArray(object.material)) {
-                        object.material.forEach((m: any) => m.dispose());
-                    } else {
-                        object.material.dispose();
-                    }
-                    if (object.material.map) object.material.map.dispose();
-                }
-            });
+        if (this.animationId) {
+            cancelAnimationFrame(this.animationId);
+            this.animationId = 0;
         }
 
-        if (this.renderer) {
-            this.renderer.domElement.removeEventListener('click', this.boundOnCanvasClick);
-            this.renderer.domElement.removeEventListener('mousemove', this.boundOnMouseMove);
-            this.renderer.domElement.removeEventListener('touchstart', this.boundOnTouchStart);
-
-            this.renderer.dispose();
-            this.renderer.forceContextLoss();
-            if (this.renderer.domElement && this.renderer.domElement.parentNode) {
-                this.renderer.domElement.parentNode.removeChild(this.renderer.domElement);
-            }
+        // Do NOT destroy the WebGLRenderer or Scene!
+        // Just remove the canvas from the current container to hide it
+        if (this.renderer && this.renderer.domElement && this.renderer.domElement.parentNode) {
+            this.renderer.domElement.parentNode.removeChild(this.renderer.domElement);
         }
 
         this.onInteraction = undefined;
@@ -174,8 +187,8 @@ export class SocialWorldService implements OnDestroy {
         this.scene = new THREE.Scene();
         this.scene.fog = null;
 
-        const width = this.container.clientWidth;
-        const height = this.container.clientHeight;
+        const width = this.container.clientWidth || 100;
+        const height = this.container.clientHeight || 100;
 
         this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
         this.updateCameraPosition(width, height);
@@ -190,8 +203,6 @@ export class SocialWorldService implements OnDestroy {
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.toneMapping = THREE.NoToneMapping;
         this.renderer.outputColorSpace = THREE.SRGBColorSpace;
-
-        this.container.appendChild(this.renderer.domElement);
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
         this.scene.add(ambientLight);
