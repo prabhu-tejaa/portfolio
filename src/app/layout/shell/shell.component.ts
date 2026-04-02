@@ -72,7 +72,6 @@ import { Subject } from 'rxjs';
 })
 export class ShellComponent implements OnInit, OnDestroy {
   isLoaded = false;
-  showWipBadge = false;
   isHomeActive = false;
   progress = 0;
 
@@ -136,7 +135,6 @@ export class ShellComponent implements OnInit, OnDestroy {
 
   private updateActiveState() {
     const url = this.router.url;
-    this.showWipBadge = url.includes('/work');
 
     const matchOptions: IsActiveMatchOptions = {
       paths: 'exact',

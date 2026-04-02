@@ -18,39 +18,29 @@
     </div>
 
     <div class="content-pane">
-      <div class="glass-card" (click)="openDialog('adapt')">
+      <div class="glass-card" (click)="openDialog('teamlease')" *ngIf="projectDetails['teamlease'] as p">
         <div class="card-content">
-          <div class="card-top">
-            <span class="tag">CONTRACT 01 //</span>
-            <span class="role">Software Engineer</span>
-          </div>
-
           <div class="card-body">
-            <h2>ADAPT CHIPS</h2>
-            <p>Developed desktop & mobile apps for IoT devices.</p>
+            <h2>{{ p.cardTitle }}</h2>
+            <p>{{ p.cardSubTitle }}</p>
           </div>
 
           <div class="card-bot">
-            <span class="date">June 2022 — December 2023</span>
+            <span class="date">{{ p.period }}</span>
             <span class="icon">→</span>
           </div>
         </div>
       </div>
 
-      <div class="glass-card" (click)="openDialog('teamlease')">
+      <div class="glass-card" (click)="openDialog('adapt')" *ngIf="projectDetails['adapt'] as p">
         <div class="card-content">
-          <div class="card-top">
-            <span class="tag">CONTRACT 02 //</span>
-            <span class="role">Software Development Engineer</span>
-          </div>
-
           <div class="card-body">
-            <h2>TEAMLEASE</h2>
-            <p>Built comprehensive driver onboarding app on Mendix.</p>
+            <h2>{{ p.cardTitle }}</h2>
+            <p>{{ p.cardSubTitle }}</p>
           </div>
 
           <div class="card-bot">
-            <span class="date">January 2024 — June 2024</span>
+            <span class="date">{{ p.period }}</span>
             <span class="icon">→</span>
           </div>
         </div>
@@ -58,15 +48,87 @@
     </div>
   </div>
 
-  <div class="dialog-veil" *ngIf="activeDialog" (click)="closeDialog()">
-    <div class="dialog-box" (click)="$event.stopPropagation()">
+  <div class="dialog-veil" *ngIf="activeDialog" (click)="closeDialog()" [@pageAnimations]>
+    <div class="dialog-box" (click)="$event.stopPropagation()" *ngIf="projectDetails[activeDialog] as project">
       <div class="dialog-header">
-        <h3>PROJECT DETAILS</h3>
-        <button (click)="closeDialog()">✕</button>
+        <button class="close-btn" (click)="closeDialog()" aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
       </div>
-      <div class="dialog-body">
-        <h2>{{ activeDialog | uppercase }}</h2>
-        <p>Full breakdown of contributions and technical impact.</p>
+
+      <div class="dialog-content">
+        <!-- Project Summary (Header/Role/Desc) -->
+        <div class="project-hero" *ngIf="project.subTitle || project.desc || project.role">
+            <div class="hero-text">
+                <h2 *ngIf="project.subTitle">{{ project.subTitle }}</h2>
+                <span class="role-badge" *ngIf="project.role">{{ project.role }}</span>
+                <p class="project-desc" *ngIf="project.desc">{{ project.desc }}</p>
+            </div>
+        </div>
+
+        <div class="project-details" *ngIf="!project.subProjects">
+            <div class="detail-main">
+                <h4>CONTRIBUTIONS</h4>
+                <ul class="contributions-list">
+                    <li *ngFor="let point of project.contributions">{{ point }}</li>
+                </ul>
+            </div>
+            <div class="detail-side">
+                <div class="tech-stack">
+                    <h4>CORE TECHNOLOGIES</h4>
+                    <div class="tech-tags">
+                        <span class="tech-tag" *ngFor="let t of project.tech">{{ t }}</span>
+                    </div>
+                </div>
+                <div class="timeline-section">
+                    <h4>CONTRACT SPAN</h4>
+                    <span class="mono">{{ project.period }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-projects-container" *ngIf="project.subProjects">
+            <div class="sub-project-item" *ngFor="let sub of project.subProjects">
+                <div class="sub-project-header">
+                    <img *ngIf="sub.logo" [src]="sub.logo" class="sub-logo" [class.wide-logo]="sub.wide" alt="Project Logo">
+                    <div class="sub-title-group">
+                        <span class="sub-role">{{ sub.role }}</span>
+                        <h4>{{ sub.title }}</h4>
+                    </div>
+                </div>
+                <p class="sub-desc">{{ sub.desc }}</p>
+                <div class="sub-details">
+                    <div class="detail-main">
+                        <span class="section-label">KEY CONTRIBUTIONS</span>
+                        <ul class="contributions-list">
+                            <li *ngFor="let point of sub.contributions">{{ point }}</li>
+                        </ul>
+                    </div>
+                    <div class="detail-side">
+                        <div class="side-block" *ngIf="sub.links">
+                            <span class="section-label">LINKS</span>
+                            <div class="project-links">
+                                <a *ngFor="let link of sub.links" [href]="link.url" target="_blank" class="link-badge">
+                                    <svg *ngIf="link.type === 'web'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="link-icon"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                                    <svg *ngIf="link.type === 'android'" viewBox="0 0 24 24" fill="currentColor" class="link-icon"><path d="M17.523 15.3414C17.0634 15.3414 16.6908 14.9688 16.6908 14.5092C16.6908 14.0496 17.0634 13.677 17.523 13.677C17.9826 13.677 18.3552 14.0496 18.3552 14.5092C18.3552 14.9688 17.9826 15.3414 17.523 15.3414ZM6.47702 15.3414C6.01742 15.3414 5.64482 14.9688 5.64482 14.5092C5.64482 14.0496 6.01742 13.677 6.47702 13.677C6.93662 13.677 7.30922 14.0496 7.30922 14.5092C7.30922 14.9688 6.93662 15.3414 6.47702 15.3414ZM17.9152 10.9538L19.7828 7.7186C19.9166 7.487 19.8374 7.1906 19.6058 7.0568C19.3742 6.923 19.0778 7.0022 18.944 7.2338L17.0528 10.511C15.539 9.824 13.8422 9.4346 12 9.4346C10.1578 9.4346 8.46102 9.824 6.94722 10.511L5.05602 7.2338C4.92222 7.0022 4.62582 6.923 4.39422 7.0568C4.16262 7.1906 4.08342 7.487 4.21722 7.7186L6.08482 10.9538C2.61082 12.8318 0.28042 16.4258 0 20.6126H24C23.7196 16.4258 21.3892 12.8318 17.9152 10.9538Z"></path></svg>
+                                    <svg *ngIf="link.type === 'ios'" viewBox="0 0 24 24" fill="currentColor" class="link-icon"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.1 2.48-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .76-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.21-2.26 1.4-3.5-.83.04-2.17.76-2.55 1.5-.73.83-1.12 1.83-1.12 3.5.83 0 2-.7 2.27-1.5z"></path></svg>
+                                    {{ link.label }}
+                                </a>
+                            </div>
+                        </div>
+                        <div class="side-block">
+                            <span class="section-label">TECH STACK</span>
+                            <div class="tech-tags">
+                                <span class="tech-tag" *ngFor="let t of sub.tech">{{ t }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
       </div>
     </div>
   </div>
