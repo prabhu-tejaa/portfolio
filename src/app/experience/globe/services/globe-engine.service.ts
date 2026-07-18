@@ -70,13 +70,15 @@ export class GlobeEngineService {
             // Eagerly upload textures to GPU after they are fully decoded into RAM
             // We use setTimeout to ensure the progress bar hits 99% before the GPU blocks
             setTimeout(() => {
-                if (this.nightMap && this.earth) {
-                    const tempMap = this.earth.material as THREE.MeshPhongMaterial;
-                    tempMap.map = this.nightMap;
-                    tempMap.needsUpdate = true;
+                if (this.nightMap && this.dayMap && this.earth) {
+                    // Pre-compile the initial scene (dayMap)
                     this.renderer.compile(this.scene, this.camera);
-                    tempMap.map = this.dayMap;
-                    tempMap.needsUpdate = true;
+                    
+                    // Force upload nightMap to GPU VRAM to prevent jank when switching
+                    if (typeof this.renderer.initTexture === 'function') {
+                        this.renderer.initTexture(this.nightMap);
+                        this.renderer.initTexture(this.dayMap);
+                    }
                 }
                 
                 // Allow SocialWorldService to pre-warm its textures synchronously!

@@ -93,7 +93,10 @@
         <div class="sub-projects-container" *ngIf="project.subProjects">
             <div class="sub-project-item" *ngFor="let sub of project.subProjects">
                 <div class="sub-project-header">
-                    <img *ngIf="sub.logo" [src]="sub.logo" class="sub-logo" [class.wide-logo]="sub.wide" alt="Project Logo">
+                    <div *ngIf="sub.logo" class="logo-wrapper" [class.wide-logo]="sub.wide">
+                        <div class="skeleton-loader" *ngIf="!sub.loaded"></div>
+                        <img [src]="sub.logo" class="sub-logo" [class.wide-logo]="sub.wide" alt="Project Logo" (load)="sub.loaded = true" [class.visible]="sub.loaded">
+                    </div>
                     <div class="sub-title-group">
                         <span class="sub-role">{{ sub.role }}</span>
                         <h4>{{ sub.title }}</h4>

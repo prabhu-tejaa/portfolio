@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, inject, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { trigger, transition, style, animate, query, stagger, group } from '@angular/animations';
 
@@ -18,6 +18,7 @@ interface WorkProject {
     desc: string;
     logo?: string;
     wide?: boolean;
+    loaded?: boolean;
     links?: { label: string; url: string; type?: 'android' | 'ios' | 'web' }[];
     contributions: string[];
     tech: string[];
@@ -140,6 +141,16 @@ export class WorkComponent {
   openDialog(type: 'adapt' | 'teamlease') {
     this.activeDialog = type;
     document.body.classList.add('no-scroll');
+  }
+
+  @HostListener('document:keydown.escape', ['$event'])
+  handleEscape(event: KeyboardEvent) {
+    if (this.activeDialog) {
+      this.closeDialog();
+    }
+    if (this.selectedImage) {
+      this.closeImage();
+    }
   }
 
   closeDialog() {
