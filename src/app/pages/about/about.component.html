@@ -47,7 +47,7 @@
 
       <div class="modal-body" data-lenis-prevent>
         <!-- 1. Standard View (No Sub-items) -->
-        <p class="main-text" *ngIf="!selectedItem?.subItems">{{ selectedItem?.fullDesc }}</p>
+        <div class="html-content" *ngIf="!selectedItem?.subItems" [innerHTML]="selectedItem?.fullDesc"></div>
 
         <!-- 2. Menu View (Sub-items List) -->
         <div class="sub-item-grid" *ngIf="selectedItem?.subItems && !selectedSubItem">
@@ -63,7 +63,7 @@
 
         <!-- 3. Detail View (Selected Sub-item) -->
         <div class="detail-view" *ngIf="selectedSubItem">
-          <p class="main-text">{{ selectedSubItem.fullDesc }}</p>
+          <div class="html-content" [innerHTML]="selectedSubItem.fullDesc"></div>
         </div>
       </div>
 

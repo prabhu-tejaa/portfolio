@@ -48,52 +48,72 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
       year: '1996',
       title: 'The Origin',
       desc: 'Born in Tenali, raised between my grandparents’ home and Bapatla.',
-      fullDesc: `My story didn't actually start in 1996; it began long before my first breath.
-
-In June 1995, the specific cells that would become me were already in motion, spending months maturing and preparing. By the final week of December, just as the year was coming to an end, the spark of my life finally took hold.
-
-Nine months later, on a rainy Saturday September 21, 1996 I arrived at Uma Hospital in Tenali. The half-hour between 12:30 and 1:00 PM was a fragile time. I had swallowed amniotic fluid in the womb, and my right foot was turned completely outward.
-
-It was a complicated entrance, but nature has its own way of healing. Within a month, my foot corrected itself and the initial fears of the doctors began to fade.
-
-My early years were a mix of two worlds: the warmth of my grandparents' homes in Tenali and the time we spent in Bapatla for my father’s work. I celebrated my first birthday at my grandfather’s house—the same home where my father grew up.
-
-In 1999, my sister was born at that same hospital in Tenali, rooting our family even deeper into the history of that place.`,
+      fullDesc: `<p>My story didn't actually start in 1996; it began long before my first breath.</p>
+<p>In June 1995, the specific cells that would become me were already in motion, spending months maturing and preparing. By the final week of December, just as the year was coming to an end, the spark of my life finally took hold.</p>
+<p>Nine months later, on a rainy Saturday September 21, 1996 I arrived at Uma Hospital in Tenali. The half-hour between 12:30 and 1:00 PM was a fragile time. I had swallowed amniotic fluid in the womb, and my right foot was turned completely outward.</p>
+<p>It was a complicated entrance, but nature has its own way of healing. Within a month, my foot corrected itself and the initial fears of the doctors began to fade.</p>
+<p>My early years were a mix of two worlds: the warmth of my grandparents' homes in Tenali and the time we spent in Bapatla for my father’s work. I celebrated my first birthday at my grandfather’s house—the same home where my father grew up.</p>
+<p>In 1999, my sister was born at that same hospital in Tenali, rooting our family even deeper into the history of that place.</p>`,
       icon: '✨'
     },
     {
       year: '2000 - 2026',
       title: 'Academic Foundation',
       desc: 'A comprehensive timeline of foundational schooling and higher education.',
-      fullDesc: `Foundational & Secondary Education:
-• 2000 - 2002: St. John's High School, Gannavaram (Primary Education)
-• 2002 - 2006: Loyola Public School, Nallapadu (Elementary Studies)
-• 2006 - 2008: Narayana Concept School, Tarnaka (Middle School)
-• 2008 - 2010: David Memorial High School, Tarnaka (Middle School)
-• 2010 - 2012: Bhashyam Public School, Habsiguda (Secondary Education)
-
-Higher Secondary & Professional Studies:
-• 2012 - 2015: Intermediate Studies | Sri Chaitanya Junior College, Habsiguda
-• 2015 - 2017: Undergraduate Coursework in Civil Engineering | St. Ann's Engineering College, Chirala
-• 2018: Bachelor of Science (B.Sc.) in Computer Science | Calorx Teachers' University, Gujarat
-• 2024 - 2026: Master of Computer Applications (MCA) | Vellore Institute of Technology (VIT)`,
+      fullDesc: `<div class="section-block">
+  <h4>Foundational & Secondary Education</h4>
+  <ul class="custom-list">
+    <li><span class="highlight">2000 - 2002:</span> St. John's High School, Gannavaram (Primary Education)</li>
+    <li><span class="highlight">2002 - 2006:</span> Loyola Public School, Nallapadu (Elementary Studies)</li>
+    <li><span class="highlight">2006 - 2008:</span> Narayana Concept School, Tarnaka (Middle School)</li>
+    <li><span class="highlight">2008 - 2010:</span> David Memorial High School, Tarnaka (Middle School)</li>
+    <li><span class="highlight">2010 - 2012:</span> Bhashyam Public School, Habsiguda (Secondary Education)</li>
+  </ul>
+</div>
+<div class="section-block mt-4">
+  <h4>Higher Secondary & Professional Studies</h4>
+  <ul class="custom-list">
+    <li><span class="highlight">2012 - 2015:</span> Intermediate Studies | Sri Chaitanya Junior College, Habsiguda</li>
+    <li><span class="highlight">2015 - 2017:</span> Undergraduate Coursework in Civil Engineering | St. Ann's Engineering College, Chirala</li>
+    <li><span class="highlight">2018:</span> Bachelor of Science (B.Sc.) in Computer Science | Sabarmati University (formerly Calorx Teachers' University), Gujarat</li>
+    <li><span class="highlight">2024 - 2026:</span> Master of Computer Applications (MCA) | Vellore Institute of Technology (VIT)</li>
+  </ul>
+</div>`,
       icon: '🎓'
     },
     {
       year: '2020 - Present',
       title: 'Professional Orbit',
       desc: 'A timeline of corporate operations, specialized training, and long-term consulting.',
-      fullDesc: `Career Milestones & Corporate Training:
-• Feb 2020 - March 2020: Medical Sales Representative | Nouveau Medicament
-- Initiated career with a 15-day intensive corporate training program at the Chennai headquarters.
-- Executed field operations and medical sales strategies within the Visakhapatnam (Vizag) sector.
-
-Strategic Professional Tenure:
-• June 17, 2022 - June 30, 2024: External Consultant | Siemens
-- Dedicated a 24-month tenure as a full-time external resource, maintaining consistent daily office operations.
-- Navigated corporate payroll and contract transitions seamlessly:
-  - First 1.5 Years: Payroll and contract managed through Adept Chips.
-  - Final 6 Months: Successfully transitioned to TeamLease for payroll management.`,
+      fullDesc: `<div class="section-block">
+  <h4>Career Milestones & Corporate Training</h4>
+  <ul class="custom-list">
+    <li>
+      <span class="highlight">Feb 2020 - March 2020:</span> Medical Sales Representative | Nouveau Medicament
+      <ul class="sub-list">
+        <li>Initiated career with a 15-day intensive corporate training program at the Chennai headquarters.</li>
+        <li>Executed field operations and medical sales strategies within the Visakhapatnam (Vizag) sector.</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+<div class="section-block mt-4">
+  <h4>Strategic Professional Tenure</h4>
+  <ul class="custom-list">
+    <li>
+      <span class="highlight">June 17, 2022 - June 30, 2024:</span> External Consultant | Siemens
+      <ul class="sub-list">
+        <li>Dedicated a 24-month tenure as a full-time external resource, maintaining consistent daily office operations.</li>
+        <li>Navigated corporate payroll and contract transitions seamlessly:
+          <ul class="sub-list">
+            <li><strong class="highlight">First 1.5 Years:</strong> Payroll and contract managed through Adept Chips.</li>
+            <li><strong class="highlight">Final 6 Months:</strong> Successfully transitioned to TeamLease for payroll management.</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>`,
       icon: '💼'
     },
     {
@@ -107,39 +127,32 @@ Strategic Professional Tenure:
           title: 'The Virtual Tactician',
           icon: '🎮',
           desc: 'A strategic mind honed through immersive gaming worlds.',
-          fullDesc: `"It all started with this massive Windows setup my dad brought home—huge monitor, heavy CPU, the works. I was only four, but I was already hooked.
-
-My dad used to put passwords on it to keep me away, but that backfired. Being locked out didn't stop me; it just made me obsessed. I’d sit there staring at the screen, wondering what was happening behind that lock and how I could get inside. That curiosity was the first spark.
-
-When I finally got in, it was a total immersion. I started with the old-school 2D GTA and Vice City, eventually moving through everything from the emotional weight of The Last of Us Part II and Life is Strange to the pure chaos of High on Life.
-
-Whether I was on a PS4, Xbox, or PC, I realized playing a game is like living a character’s story—it actually changes how your brain evolves. I saw how PUBG Mobile united the world when we were all stuck inside during COVID, and it hit me: this space is powerful.
-
-Those were the stepping stones. That childhood wonder of wanting to 'create something in this space' never left me. It’s what drove me into software engineering. In life, you have to find your lane; I found mine in the logic and the stories that make the virtual world feel real.".`
+          fullDesc: `<p>"It all started with this massive Windows setup my dad brought home—huge monitor, heavy CPU, the works. I was only four, but I was already hooked.</p>
+<p>My dad used to put passwords on it to keep me away, but that backfired. Being locked out didn't stop me; it just made me obsessed. I’d sit there staring at the screen, wondering what was happening behind that lock and how I could get inside. That curiosity was the first spark.</p>
+<p>When I finally got in, it was a total immersion. I started with the old-school 2D GTA and Vice City, eventually moving through everything from the emotional weight of The Last of Us Part II and Life is Strange to the pure chaos of High on Life.</p>
+<p>Whether I was on a PS4, Xbox, or PC, I realized playing a game is like living a character’s story—it actually changes how your brain evolves. I saw how PUBG Mobile united the world when we were all stuck inside during COVID, and it hit me: this space is powerful.</p>
+<p>Those were the stepping stones. That childhood wonder of wanting to 'create something in this space' never left me. It’s what drove me into software engineering. In life, you have to find your lane; I found mine in the logic and the stories that make the virtual world feel real."</p>`
         },
         {
           title: 'The Cosmic Observer',
           icon: '🚀',
           desc: 'Fascinated by the mechanics of the universe and space tech.',
-          fullDesc: `Space has always captivated me. From the engineering marvels of SpaceX's reusable rockets to the physics of black holes, I am an avid follower of cosmic exploration.
-
-I closely follow mission launches, astronomical discoveries, and the evolving narrative of humanity's journey to the stars. This curiosity drives me to understand complex systems, whether they are orbiting in space or running in a cloud server.`
+          fullDesc: `<p>Space has always captivated me. From the engineering marvels of SpaceX's reusable rockets to the physics of black holes, I am an avid follower of cosmic exploration.</p>
+<p>I closely follow mission launches, astronomical discoveries, and the evolving narrative of humanity's journey to the stars. This curiosity drives me to understand complex systems, whether they are orbiting in space or running in a cloud server.</p>`
         },
         {
           title: 'Major events in life',
           icon: '💻',
           desc: 'Building, breaking, and refining code for the love of creation.',
-          fullDesc: `Coding isn't just a job; it's a craft. I love the process of turning abstract logic into tangible, interactive experiences.
-
-My "Personal Horizon" in tech involves constantly exploring new frameworks, optimizing performance, and creating interfaces that feel alive. This portfolio itself is a testament to that passion—a playground where 3D graphics, physics, and rigorous logic collide.`
+          fullDesc: `<p>Coding isn't just a job; it's a craft. I love the process of turning abstract logic into tangible, interactive experiences.</p>
+<p>My "Personal Horizon" in tech involves constantly exploring new frameworks, optimizing performance, and creating interfaces that feel alive. This portfolio itself is a testament to that passion—a playground where 3D graphics, physics, and rigorous logic collide.</p>`
         },
         {
           title: 'The Earthly Explorer',
           icon: '🌍',
           desc: 'Finding balance through travel and new perspectives.',
-          fullDesc: `When I step away from the screen, I seek the grounding nature of the real world. Traveling allows me to reset, gain new perspectives, and appreciate the analog beauty of life.
-
-Every trip is a reminder that while the digital world is limitless, the physical world offers a depth of experience that fuels creativity and resilience.`
+          fullDesc: `<p>When I step away from the screen, I seek the grounding nature of the real world. Traveling allows me to reset, gain new perspectives, and appreciate the analog beauty of life.</p>
+<p>Every trip is a reminder that while the digital world is limitless, the physical world offers a depth of experience that fuels creativity and resilience.</p>`
         }
       ]
     }

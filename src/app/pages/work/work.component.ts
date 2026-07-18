@@ -54,7 +54,7 @@ export class WorkComponent {
 
   projectDetails: Record<string, WorkProject> = {
     adapt: {
-      cardTitle: 'ADAPT CHIPS',
+      cardTitle: 'ADEPT CHIPS',
       cardSubTitle: 'Siemens EV Ecosystem (Desktop & Mobile)',
       title: 'SIEMENS // ADEPT CHIPS',
       subTitle: '',
@@ -75,16 +75,15 @@ export class WorkComponent {
             }
           ],
           contributions: [
-            'Contributed to the full development lifecycle of a mission-critical international product.',
-            'Collaborated with global teams to adapt tools for diverse technical and cultural use cases.',
-            'Streamlined commissioning tasks, automating manual setups for large-scale deployments.',
-            'Resolved high-priority FCM Token issues in the CAIN region, ensuring stable status updates.'
+            'Led the complex migration of the VersiCharge Configurator from Angular 9 to Angular 14, resolving critical OSS security vulnerabilities and spearheading a comprehensive UI revamp.',
+            'Engineered a voice controlled IoT commissioning Proof of Concept (POC) using the Alexa Skills Kit, demonstrating hands free hardware configuration to business stakeholders.',
+            'Resolved critical FCM token synchronization failures for the China region and executed European cellular compliance updates, ensuring stable and standards compliant international releases before project handover.'
           ],
           tech: ['Angular', 'Electron.js', 'Node.js', 'RxJS', 'Agile/Scrum', 'Jira']
         },
         {
           title: 'Sifinity Setup (Mobile)',
-          role: 'Software Development Engineer',
+          role: 'Software Engineer',
           desc: 'Built a powerful cross-platform operational app for managing EV chargers across iOS, Android, and Desktop.',
           logo: 'assets/s-s.png',
           links: [
@@ -100,10 +99,7 @@ export class WorkComponent {
             }
           ],
           contributions: [
-            'Led cross-platform implementation for intuitive fleet and charger management.',
-            'Streamlined bulk commissioning, enabling simultaneous configuration of multiple chargers.',
-            'Partnered with product owners to deliver a secure, high-quality app for large-scale logistics.',
-            'Automated key config tasks via backend integration, dramatically increasing operational efficiency.'
+            'Developed a cross platform EV commissioning suite for iOS, Android and Desktop using Ionic Angular and Electron, driven by a unified Node.js backend to ensure cross device feature parity.'
           ],
           tech: ['Ionic Framework', 'Capacitor', 'Angular', 'Apache Cordova', 'TypeScript', 'Java']
         }
@@ -129,10 +125,9 @@ export class WorkComponent {
             }
           ],
           contributions: [
-            'Role-Based Access Control (RBAC): Implemented a robust security layer for drivers, managers, and admins, improving system integrity.',
-            'Customer Lifecycle Management: Orchestrated the end-to-end journey from station purchase to real-time performance monitoring.',
-            'Data Integration & Reporting: Developed real-time OQL-based analytics tools for energy consumption and charger health tracking.',
-            'Platform Optimization: Automated complex operational workflows within the Mendix environment, increasing team productivity.'
+            'Engineered an event driven user onboarding architecture using REST based Webhooks, drastically reducing data synchronization latency from 4 hours to near real time.',
+            'Architected a custom OQL (Object Query Language) reporting engine to process and aggregate energy consumption datasets (10,000+ records), optimizing query performance for high volume data retrieval.',
+            'Developed production ready microflows for the Siemens Sifinity Fleet platform by processing and integrating incoming telemetry data, implementing complex domain models and core business logic.'
           ],
           tech: ['Mendix', 'OQL', 'CSS3', 'HTML5', 'Logic Automation', 'Jira', 'Postman', 'Git']
         }
