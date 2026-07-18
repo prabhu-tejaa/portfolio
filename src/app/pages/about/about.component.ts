@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit, HostListener } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit, HostListener, inject } from '@angular/core';
+import { AnalyticsService } from '../../services/analytics.service';
 import { CommonModule } from '@angular/common';
 import {
   trigger,
@@ -36,6 +37,7 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('container') containerRef!: ElementRef;
   private lenis: Lenis | null = null;
   private rafId: number | null = null;
+  private analytics = inject(AnalyticsService);
 
   isModalOpen = false;
   selectedItem: any = null;
@@ -157,6 +159,7 @@ Every trip is a reminder that while the digital world is limitless, the physical
   ngOnInit() { }
 
   openModal(item: any) {
+    this.analytics.trackEvent('modal_open', { modal_name: item.title });
     this.selectedItem = item;
     this.selectedSubItem = null; // Reset sub-item
     this.isModalOpen = true;
@@ -164,6 +167,7 @@ Every trip is a reminder that while the digital world is limitless, the physical
   }
 
   closeModal() {
+    this.analytics.trackEvent('modal_close', { modal_name: 'about_details' });
     this.isModalOpen = false;
     this.lenis?.start(); // Resume smooth scroll
     setTimeout(() => {
@@ -175,10 +179,12 @@ Every trip is a reminder that while the digital world is limitless, the physical
   // --- Nested Navigation Methods ---
 
   openSubItem(subItem: any) {
+    this.analytics.trackEvent('subitem_open', { item: subItem.title });
     this.selectedSubItem = subItem;
   }
 
   closeSubItem() {
+    this.analytics.trackEvent('subitem_close', { item: this.selectedSubItem?.title });
     this.selectedSubItem = null;
   }
 

@@ -1,4 +1,5 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, NgZone, inject } from '@angular/core';
+import { AnalyticsService } from '../../services/analytics.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import emailjs from '@emailjs/browser';
@@ -20,6 +21,7 @@ export class SocialComponent implements AfterViewInit, OnDestroy {
     isLoading = false;
     submissionStatus = '';
     contactForm = { email: '', message: '' };
+    private analytics = inject(AnalyticsService);
 
     constructor(
         private worldService: SocialWorldService,
@@ -42,6 +44,7 @@ export class SocialComponent implements AfterViewInit, OnDestroy {
 
     handleInteraction(event: InteractionEvent) {
         if (event.type === 'link' && event.url) {
+            this.analytics.trackEvent('outbound_click', { link_url: event.url });
             window.open(event.url, '_blank');
         } else if (event.type === 'contact') {
             this.zone.run(() => {
@@ -52,6 +55,7 @@ export class SocialComponent implements AfterViewInit, OnDestroy {
     }
 
     closeContactModal() {
+        this.analytics.trackEvent('modal_close', { modal_name: 'contact_form' });
         this.isModalOpen = false;
         this.worldService.resetScene();
         this.isLoading = false;
@@ -62,6 +66,7 @@ export class SocialComponent implements AfterViewInit, OnDestroy {
     sendEmail(): void {
         if (!this.contactForm.email) return;
 
+        this.analytics.trackEvent('form_submit', { form_name: 'contact_form' });
         this.isLoading = true;
         this.submissionStatus = 'Initializing transmission...';
         this.worldService.setSpeedUp(true);

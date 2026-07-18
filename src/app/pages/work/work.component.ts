@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy, OnInit, inject, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, ChangeDetectorRef, HostListener } from '@angular/core';
+import { AnalyticsService } from '../../services/analytics.service';
 import { CommonModule } from '@angular/common';
 import { trigger, transition, style, animate, query, stagger, group } from '@angular/animations';
 
@@ -45,6 +46,7 @@ interface WorkProject {
   ]
 })
 export class WorkComponent {
+  private analytics = inject(AnalyticsService);
   activeDialog: 'adapt' | 'teamlease' | null = null;
   selectedImage: string | null = null;
 
@@ -139,6 +141,7 @@ export class WorkComponent {
   };
 
   openDialog(type: 'adapt' | 'teamlease') {
+    this.analytics.trackEvent('dialog_open', { project_type: type });
     this.activeDialog = type;
     document.body.classList.add('no-scroll');
   }
@@ -154,15 +157,18 @@ export class WorkComponent {
   }
 
   closeDialog() {
+    this.analytics.trackEvent('dialog_close');
     this.activeDialog = null;
     document.body.classList.remove('no-scroll');
   }
 
   openImage(src: string) {
+    this.analytics.trackEvent('image_open', { image_src: src });
     this.selectedImage = src;
   }
 
   closeImage() {
+    this.analytics.trackEvent('image_close');
     this.selectedImage = null;
   }
 }

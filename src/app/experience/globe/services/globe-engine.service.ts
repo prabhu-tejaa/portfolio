@@ -1,10 +1,12 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable, NgZone, inject } from '@angular/core';
+import { AnalyticsService } from '../../../services/analytics.service';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class GlobeEngineService {
+    private analytics = inject(AnalyticsService);
     private scene!: THREE.Scene;
     private camera!: THREE.PerspectiveCamera;
     private renderer!: THREE.WebGLRenderer;
@@ -435,6 +437,7 @@ export class GlobeEngineService {
         if (this.isPlaying) {
             // Fade Out
             this.isPlaying = false;
+            this.analytics.trackEvent('audio_toggle', { status: 'paused' });
             gsap.killTweensOf(this.globalSound.gain.gain);
             gsap.to(this.globalSound.gain.gain, {
                 value: 0,
@@ -449,6 +452,7 @@ export class GlobeEngineService {
         } else {
             console.log("Playing Global Audio");
             this.isPlaying = true;
+            this.analytics.trackEvent('audio_toggle', { status: 'playing' });
 
             // Fade In
             if (!this.globalSound.isPlaying) {
