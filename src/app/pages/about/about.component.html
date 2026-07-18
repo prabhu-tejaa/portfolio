@@ -43,6 +43,31 @@
           <span class="modal-category" *ngIf="selectedSubItem">{{ selectedItem?.title }}</span>
           <h2>{{ selectedSubItem ? selectedSubItem.title : selectedItem?.title }}</h2>
         </div>
+
+        <div class="header-age-tracker" *ngIf="!selectedSubItem && selectedItem?.id === 'origin'">
+          <div class="age-label">AGE:</div>
+          <div class="time-segments">
+            <div class="segment">
+              <span class="val">{{ age.years }}</span><span class="lbl">Y</span>
+            </div>
+            <div class="segment">
+              <span class="val">{{ age.months }}</span><span class="lbl">M</span>
+            </div>
+            <div class="segment">
+              <span class="val">{{ age.days }}</span><span class="lbl">D</span>
+            </div>
+            <div class="segment separator">:</div>
+            <div class="segment">
+              <span class="val">{{ age.hours | number:'2.0-0' }}</span><span class="lbl">h</span>
+            </div>
+            <div class="segment">
+              <span class="val">{{ age.minutes | number:'2.0-0' }}</span><span class="lbl">m</span>
+            </div>
+            <div class="segment highlight">
+              <span class="val">{{ age.seconds | number:'2.0-0' }}</span><span class="lbl">s</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="modal-body" data-lenis-prevent>

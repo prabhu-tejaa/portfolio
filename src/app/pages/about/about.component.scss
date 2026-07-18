@@ -406,6 +406,91 @@ $glass-border: rgba(255, 255, 255, 0.1);
         letter-spacing: 1px;
       }
     }
+
+    .header-age-tracker {
+      margin-left: auto;
+      margin-right: 40px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(0, 243, 255, 0.2);
+      border-radius: 12px;
+      padding: 12px 20px;
+      box-shadow: inset 0 0 15px rgba(0, 243, 255, 0.05), 0 5px 15px rgba(0,0,0,0.3);
+
+      @media (max-width: 600px) {
+        margin-left: 0;
+        margin-right: 0;
+        width: 100%;
+        margin-top: 15px;
+        padding: 10px;
+        box-sizing: border-box;
+      }
+
+      .age-label {
+        color: white;
+        font-weight: 500;
+        letter-spacing: 2px;
+        font-size: 0.85rem;
+      }
+
+      .time-segments {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        font-variant-numeric: tabular-nums;
+
+        @media (max-width: 600px) {
+          justify-content: center;
+          gap: 8px;
+        }
+
+        .segment {
+          display: flex;
+          align-items: baseline;
+          gap: 2px;
+
+          &.separator {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 1.2rem;
+            margin: 0 -4px;
+          }
+
+          &.highlight {
+            .val {
+              color: #00ff66;
+              text-shadow: 0 0 10px rgba(0, 255, 102, 0.4);
+            }
+            .lbl {
+              color: rgba(0, 255, 102, 0.7);
+            }
+          }
+
+          .val {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 1px;
+
+            @media (max-width: 600px) {
+              font-size: 1.1rem;
+            }
+          }
+
+          .lbl {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            font-weight: 500;
+
+            @media (max-width: 600px) {
+              font-size: 0.65rem;
+            }
+          }
+        }
+      }
+    }
   }
 
   .modal-body {

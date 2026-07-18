@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit, HostListener, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit, HostListener, inject, ChangeDetectorRef } from '@angular/core';
 import { AnalyticsService } from '../../services/analytics.service';
 import { CommonModule } from '@angular/common';
 import {
@@ -38,13 +38,25 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
   private lenis: Lenis | null = null;
   private rafId: number | null = null;
   private analytics = inject(AnalyticsService);
+  private cdr = inject(ChangeDetectorRef);
 
   isModalOpen = false;
   selectedItem: any = null;
   selectedSubItem: any = null; // Track nested navigation state
 
+  age = {
+    years: 0,
+    months: 0,
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  };
+  private ageInterval: any;
+
   timeline = [
     {
+      id: 'origin',
       year: '1996',
       title: 'The Origin',
       desc: 'Born in Tenali, raised between my grandparents’ home and Bapatla.',
@@ -52,8 +64,7 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
 <p>In June 1995, the specific cells that would become me were already in motion, spending months maturing and preparing. By the final week of December, just as the year was coming to an end, the spark of my life finally took hold.</p>
 <p>Nine months later, on a rainy Saturday September 21, 1996 I arrived at Uma Hospital in Tenali. The half-hour between 12:30 and 1:00 PM was a fragile time. I had swallowed amniotic fluid in the womb, and my right foot was turned completely outward.</p>
 <p>It was a complicated entrance, but nature has its own way of healing. Within a month, my foot corrected itself and the initial fears of the doctors began to fade.</p>
-<p>My early years were a mix of two worlds: the warmth of my grandparents' homes in Tenali and the time we spent in Bapatla for my father’s work. I celebrated my first birthday at my grandfather’s house—the same home where my father grew up.</p>
-<p>In 1999, my sister was born at that same hospital in Tenali, rooting our family even deeper into the history of that place.</p>`,
+<p>My early years were a mix of two worlds: the warmth of my grandparents' homes in Tenali and the time we spent in Bapatla for my father’s work. I celebrated my first birthday at my grandfather’s house—the same home where my father grew up.</p>`,
       icon: '✨'
     },
     {
@@ -86,7 +97,7 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
       title: 'Professional Orbit',
       desc: 'A timeline of corporate operations, specialized training, and long-term consulting.',
       fullDesc: `<div class="section-block">
-  <h4>Career Milestones & Corporate Training</h4>
+  <h4>Early Professional Experience</h4>
   <ul class="custom-list">
     <li>
       <span class="highlight">Feb 2020 - March 2020:</span> Medical Sales Representative | Nouveau Medicament
@@ -98,12 +109,12 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
   </ul>
 </div>
 <div class="section-block mt-4">
-  <h4>Strategic Professional Tenure</h4>
+  <h4>Software Engineering Tenure</h4>
   <ul class="custom-list">
     <li>
-      <span class="highlight">June 17, 2022 - June 30, 2024:</span> External Consultant | Siemens
+      <span class="highlight">June 17, 2022 - June 30, 2024:</span> Software Engineer | Siemens
       <ul class="sub-list">
-        <li>Dedicated a 24-month tenure as a full-time external resource, maintaining consistent daily office operations.</li>
+        <li>Dedicated a 24-month tenure as a full-time Software Engineer, contributing to engineering and development operations.</li>
         <li>Navigated corporate payroll and contract transitions seamlessly:
           <ul class="sub-list">
             <li><strong class="highlight">First 1.5 Years:</strong> Payroll and contract managed through Adept Chips.</li>
@@ -136,23 +147,51 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           title: 'The Cosmic Observer',
           icon: '🚀',
-          desc: 'Fascinated by the mechanics of the universe and space tech.',
-          fullDesc: `<p>Space has always captivated me. From the engineering marvels of SpaceX's reusable rockets to the physics of black holes, I am an avid follower of cosmic exploration.</p>
-<p>I closely follow mission launches, astronomical discoveries, and the evolving narrative of humanity's journey to the stars. This curiosity drives me to understand complex systems, whether they are orbiting in space or running in a cloud server.</p>`
+          desc: 'Fascinated by the mechanics of the universe, quantum reality, and the illusion of the mind.',
+          fullDesc: `<p>In my view, there is no grand, mystical meaning to life. We are simply a biological event playing out in a massive universe. The cosmos doesn't care about our philosophies—it runs purely on the cold, beautiful mechanics of physics, atoms, and quantum reality.</p>
+<p>I find this raw, unadulterated reality fascinating. To me, the mind is mostly an illusion—just a collection of memory and conditioning. Stripping away all the romanticism leaves me with a relentless drive to simply observe and understand how complex systems actually work.</p>
+<p>Whether it's the sheer engineering force of a reusable rocket, the strange rules of quantum mechanics, or the raw logic behind a cloud server, I just like looking at things exactly as they are.</p>`
         },
         {
-          title: 'Major events in life',
-          icon: '💻',
-          desc: 'Building, breaking, and refining code for the love of creation.',
-          fullDesc: `<p>Coding isn't just a job; it's a craft. I love the process of turning abstract logic into tangible, interactive experiences.</p>
-<p>My "Personal Horizon" in tech involves constantly exploring new frameworks, optimizing performance, and creating interfaces that feel alive. This portfolio itself is a testament to that passion—a playground where 3D graphics, physics, and rigorous logic collide.</p>`
+          title: 'Places Lived',
+          icon: '📍',
+          desc: 'A geographic footprint of the cities I have called home.',
+          fullDesc: `<div class="section-block">
+  <h4>The Journey So Far</h4>
+  <p>My life has been a continuous journey across diverse cities, each shaping a different chapter of my personal and professional evolution.</p>
+  <div class="places-path mt-4" style="line-height: 2.4; font-size: 1.1rem; color: rgba(255, 255, 255, 0.8);">
+    <span class="highlight">Tenali</span> <span style="color: #00f3ff; margin: 0 8px;">→</span>
+    <span class="highlight">Bapatla</span> <span style="color: #00f3ff; margin: 0 8px;">→</span>
+    <span class="highlight">Gannavaram</span> <span style="color: #00f3ff; margin: 0 8px;">→</span>
+    <span class="highlight">Guntur</span> <span style="color: #00f3ff; margin: 0 8px;">→</span>
+    <span class="highlight">Hyderabad (Mettuguda)</span> <span style="color: #00f3ff; margin: 0 8px;">→</span>
+    <span class="highlight">Bapatla</span> <span style="color: #00f3ff; margin: 0 8px;">→</span>
+    <span class="highlight">Chirala</span> <span style="color: #00f3ff; margin: 0 8px;">→</span>
+    <span class="highlight">Vetapalem</span> <span style="color: #00f3ff; margin: 0 8px;">→</span>
+    <span class="highlight">Tirupati</span> <span style="color: #00f3ff; margin: 0 8px;">→</span>
+    <span class="highlight">Guntur</span> <span style="color: #00f3ff; margin: 0 8px;">→</span>
+    <span class="highlight">Visakhapatnam</span> <span style="color: #00f3ff; margin: 0 8px;">→</span>
+    <span class="highlight">Guntur</span> <span style="color: #00f3ff; margin: 0 8px;">→</span>
+    <span class="highlight">Bangalore</span> <span style="color: #00f3ff; margin: 0 8px;">→</span>
+    <span class="highlight">Hyderabad</span> <span style="color: #00f3ff; margin: 0 8px;">→</span>
+    <span class="highlight">Guntur</span>
+  </div>
+</div>`
         },
         {
-          title: 'The Earthly Explorer',
-          icon: '🌍',
-          desc: 'Finding balance through travel and new perspectives.',
-          fullDesc: `<p>When I step away from the screen, I seek the grounding nature of the real world. Traveling allows me to reset, gain new perspectives, and appreciate the analog beauty of life.</p>
-<p>Every trip is a reminder that while the digital world is limitless, the physical world offers a depth of experience that fuels creativity and resilience.</p>`
+          title: 'The Casual Enthusiast',
+          icon: '🧩',
+          desc: 'A jack of all trades, master of having a good time.',
+          fullDesc: `<div class="section-block">
+  <h4>Beyond the Code</h4>
+  <p>When I'm not writing code or pondering the cosmos, I like to dabble in a bit of everything. I might not be a pro at all of them, but I definitely enjoy the process!</p>
+  <ul class="custom-list mt-3">
+    <li><span class="highlight">Music & Arts:</span> Strumming the guitar, messing around on the keyboard, and appreciating painting and art.</li>
+    <li><span class="highlight">Entertainment:</span> Getting lost in movies, listening to music, gaming, and endlessly exploring the weird corners of the web.</li>
+    <li><span class="highlight">The Essentials:</span> Eating good food and catching up on sleep (the ultimate reset button).</li>
+    <li><span class="highlight">Exploration:</span> Traveling and seeing new places!</li>
+  </ul>
+</div>`
         }
       ]
     }
@@ -177,12 +216,17 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedSubItem = null; // Reset sub-item
     this.isModalOpen = true;
     this.lenis?.stop(); // Pause smooth scroll
+    
+    if (item.id === 'origin') {
+      this.startAgeTracker();
+    }
   }
 
   closeModal() {
     this.analytics.trackEvent('modal_close', { modal_name: 'about_details' });
     this.isModalOpen = false;
     this.lenis?.start(); // Resume smooth scroll
+    this.stopAgeTracker();
     setTimeout(() => {
       this.selectedItem = null;
       this.selectedSubItem = null;
@@ -230,5 +274,58 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
       cancelAnimationFrame(this.rafId);
     }
     this.lenis?.destroy();
+    this.stopAgeTracker();
+  }
+
+  startAgeTracker() {
+    this.calculateAge();
+    this.ageInterval = setInterval(() => {
+      this.calculateAge();
+      this.cdr.markForCheck();
+    }, 1000);
+  }
+
+  stopAgeTracker() {
+    if (this.ageInterval) {
+      clearInterval(this.ageInterval);
+      this.ageInterval = null;
+    }
+  }
+
+  calculateAge() {
+    const birthDate = new Date('1996-09-21T12:37:37+05:30');
+    const now = new Date();
+    
+    let years = now.getFullYear() - birthDate.getFullYear();
+    let months = now.getMonth() - birthDate.getMonth();
+    let days = now.getDate() - birthDate.getDate();
+    let hours = now.getHours() - birthDate.getHours();
+    let minutes = now.getMinutes() - birthDate.getMinutes();
+    let seconds = now.getSeconds() - birthDate.getSeconds();
+
+    if (seconds < 0) {
+      minutes--;
+      seconds += 60;
+    }
+    if (minutes < 0) {
+      hours--;
+      minutes += 60;
+    }
+    if (hours < 0) {
+      days--;
+      hours += 24;
+    }
+    if (days < 0) {
+      months--;
+      // get days in previous month
+      const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+      days += prevMonth.getDate();
+    }
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+
+    this.age = { years, months, days, hours, minutes, seconds };
   }
 }
