@@ -602,21 +602,23 @@ export class GlobeEngineService {
 
     private animate = () => {
         this.animationId = requestAnimationFrame(this.animate);
-        let delta = this.clock.getDelta();
+        let rawDelta = this.clock.getDelta();
 
-        // Tightly clamp delta to prevent stutters or jumps during lag spikes.
-        // Even if a frame drops, it will max out at 33ms (30fps equivalent), 
-        // ensuring the rotation always looks visually continuous and buttery smooth.
-        delta = Math.max(0.008, Math.min(delta, 0.033));
+        // Now that the canvas is no longer occlusion-culled by Chrome, it runs at 60fps in the background.
+        // We tightly clamp delta again (max 50ms) to ensure that if a micro-stutter happens during the CSS fade, 
+        // the Earth doesn't visually "jump" or teleport forward.
+        const clampedDelta = Math.min(rawDelta, 0.05);
+        const timeDelta = clampedDelta;
+        const physicsDelta = clampedDelta;
 
         if (this.autoSpin) {
-            this.earth.rotation.y += 0.04 * delta;
-            this.clouds.rotation.y += 0.03 * delta;
+            this.earth.rotation.y += 0.04 * timeDelta;
+            this.clouds.rotation.y += 0.03 * timeDelta;
         } else {
-            this.clouds.rotation.y += 0.01 * delta;
+            this.clouds.rotation.y += 0.01 * timeDelta;
         }
 
-        const lerpSpeed = 1.0 - Math.pow(0.0001, delta);
+        const lerpSpeed = 1.0 - Math.pow(0.0001, physicsDelta);
         this.currentRotation.x += (this.targetRotation.x - this.currentRotation.x) * lerpSpeed;
         this.currentRotation.y += (this.targetRotation.y - this.currentRotation.y) * lerpSpeed;
 
@@ -625,8 +627,8 @@ export class GlobeEngineService {
             this.interactionGroup.rotation.y = this.currentRotation.y;
         }
 
-        this.stars.rotation.y += 0.009 * delta;
-        this.stars.rotation.x += 0.009 * delta;
+        this.stars.rotation.y += 0.009 * timeDelta;
+        this.stars.rotation.x += 0.009 * timeDelta;
 
         this.renderer.render(this.scene, this.camera);
     };

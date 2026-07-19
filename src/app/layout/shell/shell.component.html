@@ -1,5 +1,5 @@
 <div class="loader" [class.hidden]="isLoaded" [class.done]="isLoaded">
-  <div class="loader-stars"></div>
+
   <div class="loader-content">
     <div class="name-horizon">
       <div class="loader-text">PRABHU TEJA PAMULA</div>
@@ -10,7 +10,7 @@
       </div>
     </div>
     <div class="loader-status">
-      please wait, loading assets<span class="dots"></span>
+      please wait, loading assets<span class="dots"><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></span>
     </div>
   </div>
 </div>
@@ -32,7 +32,7 @@
   </div>
 </header>
 
-<app-globe (ready)="onGlobeReady()" [class.blur-loading]="!isLoaded"></app-globe>
+<app-globe (ready)="onGlobeReady()"></app-globe>
 
 <div class="router-container" [@routeAnimations]="getRouteAnimationData()">
   <router-outlet></router-outlet>
