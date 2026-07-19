@@ -225,6 +225,7 @@
             rgba(255, 255, 255, 0.7),
             rgba(255, 255, 255, 0.95),
             rgba(255, 255, 255, 0.7));
+    transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* ===============================
@@ -304,11 +305,30 @@
     font-family: 'Inter', system-ui, sans-serif;
     font-size: 0.65rem;
     letter-spacing: 0.5rem;
-    text-transform: uppercase;
+    text-transform: lowercase;
     color: rgba(255, 255, 255, 0.5);
     /* Increased from 0.25 for better visibility */
     animation: status-pulse 3.5s ease-in-out infinite;
     margin-top: -20px;
+}
+
+.loader-status .dots {
+    display: inline-block;
+    width: 3rem; /* Fixed width to prevent the sentence from jumping */
+    text-align: left;
+}
+
+.loader-status .dots::after {
+    content: '';
+    animation: loading-dots 1.5s infinite steps(1, end);
+}
+
+@keyframes loading-dots {
+    0%   { content: ''; }
+    25%  { content: '.'; }
+    50%  { content: '..'; }
+    75%  { content: '...'; }
+    100% { content: ''; }
 }
 
 @keyframes status-pulse {
@@ -354,14 +374,22 @@
         font-size: 0.85rem;
         letter-spacing: 0.18rem;
     }
+    
+    .loader-status {
+        font-size: 0.5rem;
+        letter-spacing: 0.15rem;
+    }
+
+    .loader-status .dots {
+        width: 1.5rem;
+    }
 }
 
 app-globe {
-    transition: filter 3s ease-out;
-    filter: blur(0px);
+    transition: opacity 1s ease-out;
     opacity: 1;
 
     &.blur-loading {
-        filter: blur(30px);
+        opacity: 0;
     }
 }

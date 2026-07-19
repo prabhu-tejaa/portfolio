@@ -75,6 +75,14 @@ export class SocialWorldService implements OnDestroy {
             ).subscribe(() => {
                 if (this.renderer && this.scene && this.camera) {
                     (this.renderer as any).compile(this.scene, this.camera);
+                    
+                    if (typeof (this.renderer as any).initTexture === 'function') {
+                        this.textureCache.forEach(tex => (this.renderer as any).initTexture(tex));
+                        if (this.avatarTexture) (this.renderer as any).initTexture(this.avatarTexture);
+                        if (this.particleSystem && (this.particleSystem.material as any).map) {
+                            (this.renderer as any).initTexture((this.particleSystem.material as any).map);
+                        }
+                    }
                 }
             });
         }
@@ -187,8 +195,8 @@ export class SocialWorldService implements OnDestroy {
         this.scene = new THREE.Scene();
         this.scene.fog = null;
 
-        const width = this.container.clientWidth || 100;
-        const height = this.container.clientHeight || 100;
+        const width = this.container.clientWidth || (typeof window !== 'undefined' ? window.innerWidth : 100);
+        const height = this.container.clientHeight || (typeof window !== 'undefined' ? window.innerHeight : 100);
 
         this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
         this.updateCameraPosition(width, height);

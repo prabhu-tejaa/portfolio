@@ -1,4 +1,21 @@
-<header class="shell-header visible">
+<div class="loader" [class.hidden]="isLoaded" [class.done]="isLoaded">
+  <div class="loader-stars"></div>
+  <div class="loader-content">
+    <div class="name-horizon">
+      <div class="loader-text">PRABHU TEJA PAMULA</div>
+      <div class="progress-container">
+        <div class="progress-bar" [style.width.%]="progress">
+          <div class="progress-flare"></div>
+        </div>
+      </div>
+    </div>
+    <div class="loader-status">
+      please wait, loading assets<span class="dots"></span>
+    </div>
+  </div>
+</div>
+
+<header class="shell-header" [class.visible]="isLoaded">
   <div class="header-left">
     <a routerLink="/" class="name" [class.active]="isHomeActive">
       PRABHU TEJA PAMULA

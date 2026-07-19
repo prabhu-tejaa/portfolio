@@ -424,8 +424,11 @@ $glass-border: rgba(255, 255, 255, 0.1);
         margin-right: 0;
         width: 100%;
         margin-top: 15px;
-        padding: 10px;
+        padding: 12px 10px;
         box-sizing: border-box;
+        flex-direction: column;
+        justify-content: center;
+        gap: 8px;
       }
 
       .age-label {
@@ -440,10 +443,11 @@ $glass-border: rgba(255, 255, 255, 0.1);
         align-items: baseline;
         gap: 12px;
         font-variant-numeric: tabular-nums;
+        flex-wrap: wrap;
+        justify-content: center;
 
         @media (max-width: 600px) {
-          justify-content: center;
-          gap: 8px;
+          gap: 6px;
         }
 
         .segment {
@@ -455,6 +459,11 @@ $glass-border: rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.3);
             font-size: 1.2rem;
             margin: 0 -4px;
+
+            @media (max-width: 600px) {
+              font-size: 1rem;
+              margin: 0 -2px;
+            }
           }
 
           &.highlight {
@@ -474,7 +483,8 @@ $glass-border: rgba(255, 255, 255, 0.1);
             letter-spacing: 1px;
 
             @media (max-width: 600px) {
-              font-size: 1.1rem;
+              font-size: 0.95rem;
+              letter-spacing: 0.5px;
             }
           }
 
@@ -485,7 +495,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
             font-weight: 500;
 
             @media (max-width: 600px) {
-              font-size: 0.65rem;
+              font-size: 0.6rem;
             }
           }
         }
@@ -735,22 +745,14 @@ $glass-border: rgba(255, 255, 255, 0.1);
   }
 
   @media (max-width: 768px) {
-    .discovery-hint {
-      opacity: 0.8 !important;
+    .modal-header {
+      flex-direction: column;
+      text-align: center;
+      gap: 15px;
     }
 
-    .modal-content {
-      padding: 30px;
-
-      .modal-header {
-        flex-direction: column;
-        text-align: center;
-        gap: 15px;
-      }
-
-      .header-text h2 {
-        font-size: 1.8rem;
-      }
+    .header-text h2 {
+      font-size: 1.8rem;
     }
   }
 
@@ -764,6 +766,12 @@ $glass-border: rgba(255, 255, 255, 0.1);
       opacity: 1;
       transform: translateY(0);
     }
+  }
+}
+
+@media (max-width: 768px) {
+  .discovery-hint {
+    opacity: 0.8 !important;
   }
 }
 

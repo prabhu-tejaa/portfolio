@@ -86,12 +86,12 @@ export class GlobeEngineService {
                 // Allow SocialWorldService to pre-warm its textures synchronously!
                 this.preWarm$.next();
 
-                // Wait 50ms for the GPU stack to physically finish uploading the texture blobs
-                // BEFORE we release the loader screen and trigger the CSS Blur effect.
+                // Wait 500ms for the GPU stack to physically finish uploading the texture blobs
+                // BEFORE we release the loader screen and trigger the CSS fade.
                 // This guarantees 0 frame drops during the cinematic fade!
                 setTimeout(() => {
                     this.loadingProgress$.next(100);
-                }, 50);
+                }, 500);
             }, 50);
         };
 
@@ -602,7 +602,12 @@ export class GlobeEngineService {
 
     private animate = () => {
         this.animationId = requestAnimationFrame(this.animate);
-        const delta = this.clock.getDelta();
+        let delta = this.clock.getDelta();
+
+        // Tightly clamp delta to prevent stutters or jumps during lag spikes.
+        // Even if a frame drops, it will max out at 33ms (30fps equivalent), 
+        // ensuring the rotation always looks visually continuous and buttery smooth.
+        delta = Math.max(0.008, Math.min(delta, 0.033));
 
         if (this.autoSpin) {
             this.earth.rotation.y += 0.04 * delta;
