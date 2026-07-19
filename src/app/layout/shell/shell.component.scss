@@ -41,6 +41,10 @@
     color: white;
 }
 
+.short-name {
+    display: none;
+}
+
 .header-center {
     display: flex;
     gap: 40px;
@@ -83,6 +87,32 @@
         padding: 20px 24px;
         display: flex;
         justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .header-left .name {
+        font-size: 12px; /* Shrunk slightly to help it fit on normal phones */
+        letter-spacing: 1px;
+    }
+
+    .header-center {
+        gap: 16px;
+    }
+
+    .header-center a, .social-link {
+        font-size: 13px;
+    }
+}
+
+/* Only truncate the name to 'PRABHU' on extremely narrow screens (< 450px) where it would overlap */
+@media (max-width: 450px) {
+    .full-name {
+        display: none;
+    }
+
+    .short-name {
+        display: inline;
     }
 }
 

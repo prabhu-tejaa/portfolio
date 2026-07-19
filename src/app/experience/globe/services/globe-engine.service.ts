@@ -517,6 +517,7 @@ export class GlobeEngineService {
         let targetFade = 1.0;
         let spin = true;
         let targetMap = this.dayMap;
+        let targetAtmo = 0.15; // Standard bright blue glow for all pages
 
         const isWork = cleanRoute.includes('work');
         const fadeSpeed = cleanRoute.includes('about') ? 1.2 : 1.5;
@@ -558,14 +559,17 @@ export class GlobeEngineService {
             targetFade = 0;
             spin = false;
             targetMap = this.dayMap;
+            targetAtmo = 0; // Hide atmosphere in about
         }
         else if (isWork) {
             targetX = 0; targetY = 0.2; targetZ = 3.5;
             targetFade = 1.0; spin = true; targetMap = this.nightMap;
+            targetAtmo = 0.15;
         }
         else if (cleanRoute.includes('social')) {
             targetX = 0; targetY = 1.4; targetZ = 3.5;
             targetFade = 1; spin = true; targetMap = this.dayMap;
+            targetAtmo = 0.06; // Lower opacity to compensate for the overhead camera angle
         }
 
         const finalCloudOpacity = targetFade === 0 ? 0 : 0.8;
@@ -591,7 +595,7 @@ export class GlobeEngineService {
         } else {
             gsap.to(cloudMat, { duration: fadeSpeed, opacity: finalCloudOpacity, ease: 'power2.inOut' });
         }
-        gsap.to(atmoMat.uniforms['opacity'], { duration: fadeSpeed, value: 0.06, ease: 'power2.inOut' });
+        gsap.to(atmoMat.uniforms['opacity'], { duration: fadeSpeed, value: targetAtmo, ease: 'power2.inOut' });
 
         this.autoSpin = spin;
 
