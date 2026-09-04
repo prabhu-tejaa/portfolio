@@ -63,11 +63,11 @@ export class SocialWorldService implements OnDestroy {
         dummyContainer.style.width = '10px';
         dummyContainer.style.height = '10px';
         this.container = dummyContainer;
-        
+
         if (!this.renderer) {
             this.initThree();
             this.createSceneContent();
-            
+
             // Synchronously intercept the preWarm$ emit to execute WebGL compilation
             // BEFORE the loader screen fades out.
             this.globeEngine.preWarm$.pipe(
@@ -75,7 +75,7 @@ export class SocialWorldService implements OnDestroy {
             ).subscribe(() => {
                 if (this.renderer && this.scene && this.camera) {
                     (this.renderer as any).compile(this.scene, this.camera);
-                    
+
                     if (typeof (this.renderer as any).initTexture === 'function') {
                         this.textureCache.forEach(tex => (this.renderer as any).initTexture(tex));
                         if (this.avatarTexture) (this.renderer as any).initTexture(this.avatarTexture);
@@ -90,7 +90,7 @@ export class SocialWorldService implements OnDestroy {
 
     public init(container: HTMLElement): void {
         this.container = container;
-        
+
         if (!this.renderer) {
             this.initThree();
             this.createSceneContent();
@@ -121,7 +121,9 @@ export class SocialWorldService implements OnDestroy {
             'assets/linkedin.png',
             'assets/github.png',
             'assets/discord.png',
-            'assets/photography.png'
+            'assets/photography.png',
+            'assets/resume.png'
+
         ];
 
         assets.forEach(path => {
@@ -363,6 +365,7 @@ export class SocialWorldService implements OnDestroy {
             { type: 'link', url: 'https://github.com/prabhu-tejaa', icon: 'assets/github.png' },
             { type: 'link', url: 'https://discord.com/users/1065107790525378570', icon: 'assets/discord.png' },
             { type: 'link', url: 'https://www.instagram.com/prabhuniverse137', icon: 'assets/photography.png' },
+            { type: 'link', url: 'https://prabhu-tejaa.github.io/resume/', icon: 'assets/resume.png' },
         ];
 
         objectsData.forEach((data, index) => {
